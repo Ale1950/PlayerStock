@@ -1,0 +1,46 @@
+# ─── Segreti ───
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ─── Know-how riservato (NON versionare — vedi DECISIONS.md D0.3/D0.6) ───
+Gioco 5.xls
+*.xls
+*.xlsx
+
+# ─── Python ───
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# ─── Node / Expo / RN ───
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# ─── OS / editor ───
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ─── Build / coverage ───
+coverage/
+.coverage
+htmlcov/
