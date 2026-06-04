@@ -72,7 +72,8 @@ Due economie separate, Crediti senza cash-out → argomenti a favore di "gioco d
 | # | Domanda | Per chi | Blocca fase |
 |---|---|---|---|
 | Q1 | **APP_ID di listen-and-mine (`0x00…01`) è riusabile per PlayerStock, o serve registrare un app_dapp_id separato presso Acki Nacki?** L'approvazione AN di listen-and-mine **non** estende automaticamente a PlayerStock. | Acki Nacki | Fase 5 |
-| Q2 | Google OAuth Client ID/Secret | Fondatore | Fase 1 |
+| Q2 | Google OAuth Client ID/Secret — ✅ forniti, nel `.env` locale (NON nel repo) | Fondatore | Fase 1 |
+| Q2b | **Google OAuth redirect URI**: ora PLACEHOLDER `http://localhost:8001/api/auth/google/callback`. Sostituire con l'URI di callback reale quando si implementa l'auth, e aggiornarlo in Google Cloud Console → Auth Platform → Client. | Claude/Emergent | Fase 1 |
 | Q3 | Football-Data.org API token | Fondatore | Fase 1 |
 | Q4 | MongoDB connection string (locale o Atlas) + Redis | Fondatore | Fase 1 |
 | Q5 | Mining key / wallet di test AN (shellnet) | Fondatore/AN | Fase 5 |
