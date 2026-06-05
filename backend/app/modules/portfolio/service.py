@@ -155,6 +155,11 @@ async def build_portfolio_response(db, user_id) -> dict:
             lots=h.get("lots", []),
             current_price=current_price,
         )
+        # Squadra fantasy denormalizzata (NON è sul doc atleta) → lookup
+        team = None
+        if athlete.get("team_fantasy_id") is not None:
+            team = await db.teams_fantasy.find_one({"_id": athlete["team_fantasy_id"]})
+        team = team or {}
         positions.append({
             "athlete_id": str(h["athlete_id"]),
             "display_label": athlete.get("display_label"),
@@ -162,8 +167,8 @@ async def build_portfolio_response(db, user_id) -> dict:
             "display_lastname": athlete.get("display_lastname"),
             "role": athlete.get("role"),
             "nationality_iso3": athlete.get("nationality_iso3"),
-            "team_fantasy_name": athlete.get("team_fantasy_name"),
-            "team_color_primary": athlete.get("team_color_primary"),
+            "team_fantasy_name": team.get("fantasy_name"),
+            "team_color_primary": team.get("color_primary"),
             "prezzo_iniziale_crediti": float(athlete.get("prezzo_iniziale_crediti", 0.0)),
             "status": athlete.get("status", "ACTIVE"),
             **pnl,
