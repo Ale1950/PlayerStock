@@ -132,6 +132,33 @@ borsa. `cli/seed_roster.py` li cabla nel valuation engine (prezzi in banda + aud
 
 ---
 
+## D3 — Fase 3 (2026-06-05, Claude Code)
+
+### D3.1 — Modello prezzo: quotazione + book (NON CLOB)
+Il prezzo è guidato dalla **formula** (perf% + mercato% + eng%, clamp+floor): è la quotazione
+ufficiale. Gli scambi avvengono **al prezzo di quotazione corrente**, non a prezzi limite. Il
+flusso ordini muove la quotazione via **mercato%** al tick successivo. (Un CLOB puro con price
+discovery dal book è stato scartato: divergerebbe dalla spec §155/§184.)
+
+### D3.2 — MVP: pool a DUE LATI (casa controparte), order book P2P rimandato
+Semplificazione MVP: la **casa** è sempre controparte sia in acquisto sia in vendita, al prezzo
+di quotazione (buy ×(1+3.5%), sell ×(1−3.5%)). **Droppati per ora**: order book P2P, ordini
+limite, matching ask/bid (feature futura). Motivi: liquidità sempre garantita (niente vendite
+bloccate con pochi utenti), molto più semplice, e nel modello a quotazione il book non fa price
+discovery → complessità senza valore per l'MVP. La casa ha crediti virtuali illimitati (sempre
+controparte, incassa le fee). **Scarsità preservata**: float = `primary_pool_qty` + `circulating_qty`
+= 1.000.000; il pool può esaurirsi (sold out). Buy: pool↓ circolante↑. Sell: pool↑ circolante↓.
+
+### D3.3 — Regole mercato
+Fee 7% totale (3.5% buyer + 3.5% seller) → `house_account` (sink economia). Cap utente **3%**
+(30.000 quote/atleta). **Holding minimo 7 giorni** (anti-flip), consumo lotti **FIFO**. `mercato%`:
+net flow finestra per atleta → bucket (1-5/6-20/>20 → ±1.2/2.0/2.5%) → `apply_tick` → `price_history`.
+Moduli `app/market/` (rules, trade, market_pct) + route `/api/market/*` (orders, holdings, quote).
+Collezioni: `holdings` (lotti), `orders`, `trades`, `house_account`. NOTA: scritture trade
+sequenziali in MVP (mongomock no-tx); in produzione su Atlas avvolgere in transazione multi-doc.
+
+---
+
 ## ❓ DOMANDE APERTE (da risolvere col fondatore / terzi)
 
 | # | Domanda | Per chi | Blocca fase |

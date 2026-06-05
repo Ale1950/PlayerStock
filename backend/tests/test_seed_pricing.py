@@ -29,3 +29,13 @@ async def test_seed_writes_audit_fields(mock_db):
     assert 0.5 <= d["score_performance"] <= 2.0
     assert d["prezzo_corrente_crediti"] == d["prezzo_iniziale_crediti"]
     assert d["prezzo_iniziale_crediti"] == d["valore_iniziale_crediti"] / 1_000_000
+
+
+async def test_seed_initializes_primary_pool(mock_db):
+    """Float intero in emissione primaria (IPO): pool = float, circolante = 0."""
+    await run_all_seeds(mock_db)
+    await seed_athletes(mock_db, FictionalRosterProvider(), season=2024, limit_per_team=20)
+    d = await mock_db.athletes.find_one({})
+    assert d["primary_pool_qty"] == 1_000_000
+    assert d["circulating_qty"] == 0
+    assert d["primary_pool_qty"] + d["circulating_qty"] == d["float_quote"]

@@ -34,6 +34,20 @@ async def ensure_indexes(db: AsyncIOMotorDatabase) -> None:
     await db.athletes.create_index([("sport_id", 1), ("internal_full_name", 1), ("team_fantasy_id", 1)],
                                     unique=True, name="ux_athlete_dedup")
 
+    # ─── holdings (Fase 3) ───
+    await db.holdings.create_index([("user_id", 1), ("athlete_id", 1)], unique=True)
+    await db.holdings.create_index("athlete_id")
+
+    # ─── orders (Fase 3) ───
+    await db.orders.create_index([("user_id", 1), ("created_at", -1)])
+    await db.orders.create_index([("athlete_id", 1), ("created_at", -1)])
+
+    # ─── trades (Fase 3) ───
+    await db.trades.create_index([("athlete_id", 1), ("ts", -1)])
+
+    # ─── price_history (Fase 2b/3 — sparkline) ───
+    await db.price_history.create_index([("athlete_id", 1), ("ts", 1)])
+
     # ─── events (schema-only Fase 1) ───
     await db.events.create_index([("athlete_id", 1), ("season", 1), ("matchday", 1)])
 
