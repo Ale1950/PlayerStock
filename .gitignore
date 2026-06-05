@@ -5,6 +5,9 @@
 *.pem
 *.key
 
+# ─── Pacchetto handoff Emergent (artefatto locale, non versionare) ───
+_emergent-handoff/
+
 # ─── Know-how riservato (NON versionare — vedi DECISIONS.md D0.3/D0.6) ───
 Gioco 5.xls
 *.xls
