@@ -25,10 +25,12 @@ from app.data_providers.football_data_org import FootballDataOrgProvider
 from app.db.indexes import ensure_indexes
 from app.db.seed import run_all_seeds
 from app.models.common import utc_now
-from app.config.pricing_constants import (
-    FLOAT_AZIONI_PER_GIOCATORE,
-    PREZZO_BASE_AZIONE_CREDITI,
-    VALORE_BASE_GIOCATORE_CREDITI,
+from app.config.pricing_constants import FLOAT_AZIONI_PER_GIOCATORE
+from app.valuation.engine import valuation
+from app.valuation.synthetic_score import (
+    synthetic_minutaggio,
+    synthetic_score,
+    synthetic_team_tier,
 )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -116,6 +118,16 @@ async def seed_athletes(
         for p in selected[:limit_per_team]:
             name = p["internal_full_name"]
             initial, lastname, label = anonymize_name(name)
+            role = p["role"]
+            # Fase 2b: input SINTETICI deterministici (segnaposto, vedi DECISIONS.md)
+            score = synthetic_score(role, p["external_id"])
+            fattore_squadra = synthetic_team_tier(team_doc["internal_real_id"])
+            minutaggio = synthetic_minutaggio(p["external_id"])
+            valore = valuation(
+                role=role, score=score, eta=p.get("age"),
+                minutaggio_pct=minutaggio, fattore_squadra=fattore_squadra,
+            )
+            prezzo = valore / FLOAT_AZIONI_PER_GIOCATORE
             doc = {
                 "sport_id": "calcio",
                 "internal_full_name": name,
@@ -123,14 +135,16 @@ async def seed_athletes(
                 "display_lastname": lastname,
                 "display_label": label,
                 "nationality_iso3": p["nationality_iso3"],
-                "role": p["role"],
+                "role": role,
                 "age": p.get("age"),
                 "team_fantasy_id": team_doc["_id"],
-                "minutaggio_pct": 0.75,
-                "valore_iniziale_crediti": VALORE_BASE_GIOCATORE_CREDITI,
+                "minutaggio_pct": minutaggio,
+                "score_performance": score,       # audit (sintetico)
+                "fattore_squadra": fattore_squadra,  # audit (sintetico)
+                "valore_iniziale_crediti": valore,
                 "float_quote": FLOAT_AZIONI_PER_GIOCATORE,
-                "prezzo_iniziale_crediti": PREZZO_BASE_AZIONE_CREDITI,
-                "prezzo_corrente_crediti": PREZZO_BASE_AZIONE_CREDITI,
+                "prezzo_iniziale_crediti": prezzo,
+                "prezzo_corrente_crediti": prezzo,
                 "status": "ACTIVE",
                 "data_source": provider.provider_name,
                 "source_external_id": p["external_id"],
