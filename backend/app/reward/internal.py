@@ -19,14 +19,20 @@ class InternalRewardProvider(RewardProvider):
     async def can_earn(self, db, user_id, *, now: datetime) -> bool:
         return True
 
-    async def accrue(self, db, user_id, *, amount: float, reason: str, now: datetime) -> float:
+    async def accrue(
+        self, db, user_id, *, amount: float, reason: str, now: datetime,
+        metadata: dict | None = None,
+    ) -> float:
         if amount <= 0:
             cur = await self.balance(db, user_id)
             return cur["amount"]
-        await db.nackl_ledger.insert_one({
+        entry = {
             "user_id": user_id, "amount": float(amount), "reason": reason,
             "placeholder": True, "ts": now,
-        })
+        }
+        if metadata:
+            entry["metadata"] = metadata
+        await db.nackl_ledger.insert_one(entry)
         await db.reward_balances.update_one(
             {"user_id": user_id},
             {"$inc": {"amount": float(amount)}, "$set": {"updated_at": now},
