@@ -42,6 +42,17 @@ class Settings:
     # Admin
     ADMIN_BOOTSTRAP_EMAIL: str = os.getenv("ADMIN_BOOTSTRAP_EMAIL", "")
 
+    # Reward NACKL (Fase 5). Internal = PLACEHOLDER dev; testnet = scaffold inerte (Q1/Q5).
+    REWARD_PROVIDER: str = os.getenv("REWARD_PROVIDER", "internal")
+    AN_NETWORK: str = os.getenv("AN_NETWORK", "shellnet")
+    AN_APP_ID: str = os.getenv("AN_APP_ID", "")
+    AN_GRAPHQL_ENDPOINT: str = os.getenv("AN_GRAPHQL_ENDPOINT", "")
+    REWARD_HEARTBEAT_SECRET: str = os.getenv("REWARD_HEARTBEAT_SECRET", "dev-reward-secret")
+    REWARD_HEARTBEAT_INTERVAL_SEC: int = int(os.getenv("REWARD_HEARTBEAT_INTERVAL_SEC", "300"))
+    REWARD_DAILY_CAP_NACKL: float = float(os.getenv("REWARD_DAILY_CAP_NACKL", "50"))  # conservativo
+    REWARD_BASE_PER_BEAT: float = float(os.getenv("REWARD_BASE_PER_BEAT", "0.1"))
+    REWARD_PER_ACTIVITY: float = float(os.getenv("REWARD_PER_ACTIVITY", "1.0"))
+
     # Game economy constants (mirrored from pricing_constants for quick access)
     BUDGET_INIZIALE_UTENTE: float = 10_000.0
 

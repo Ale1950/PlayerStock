@@ -159,6 +159,39 @@ sequenziali in MVP (mongomock no-tx); in produzione su Atlas avvolgere in transa
 
 ---
 
+## D5 — Fase 5 (2026-06-05, Claude Code)
+
+### D5.1 — Architettura RewardProvider a 2 strati
+ABC `RewardProvider` (`can_earn`/`accrue`/`balance`/`provider_name`, +`is_placeholder`).
+Due implementazioni: `InternalRewardProvider` (DB, completo, MVP) e
+`TestnetWalletRewardProvider` (Acki Nacki shellnet) **scaffold INERTE** (no-op robusto)
+finché Q1/Q5 non sciolte. Selezione via `REWARD_PROVIDER=internal|testnet`. Moduli
+`app/reward/` (base, internal, testnet, heartbeat, wallet, service, factory) + route `/api/reward/*`.
+
+### D5.2 — Il NACKL interno è un PLACEHOLDER, non NACKL reale
+Il NACKL reale è **emesso dal protocollo** (no pre-mine; l'app non lo crea). Quindi l'accrual
+dell'`InternalRewardProvider` (`is_placeholder=True`, `source="internal_placeholder"`) è un
+**segnaposto dev/MVP**: NON va presentato come "NACKL guadagnato reale". Quando Q1/Q5 si
+sciolgono, il saldo reale = ciò che il miner mina, letto **on-chain via GraphQL** dal
+`TestnetWalletRewardProvider` — concettualmente distinto dal placeholder.
+
+### D5.3 — Accrual via heartbeat firmato, legato all'attività, cap conservativo
+Accrual placeholder = `base_per_beat` (passivo, piccolo) + `per_activity × attività osservata
+dal server` (ordini reali nella finestra) — limitato dal **cap giornaliero conservativo**
+(`REWARD_DAILY_CAP_NACKL`, default 50). Heartbeat firmato **HMAC+nonce** con anti-replay e
+rate-limit. ⚠️ **Farmabile**: l'HMAC con secret lato client è estraibile (decompilazione) → il
+cap è l'unica vera protezione ora; legare all'attività osservata riduce la falsificabilità.
+**Da indurire in Fase 8** prima di qualsiasi valore reale. Wallet connect accetta **solo la
+mining PUBLIC key** (rifiuta seed/mnemonic/chiavi di spesa — test essenziale).
+
+### D5.4 — WebView miner rimandato; schermata Reward viva
+Il miner vero (bundle web listen-and-mine in WebView, `bee_sdk` WASM + `@eversdk`) **dipende da
+Q1/Q5** → rimandato (niente scaffold inerte lato miner). Costruita però la **schermata Reward**
+funzionante: saldo (provider interno, etichettato placeholder), wallet/connect (public key,
+QR/deep link "in arrivo"), stato "mining in arrivo".
+
+---
+
 ## ❓ DOMANDE APERTE (da risolvere col fondatore / terzi)
 
 | # | Domanda | Per chi | Blocca fase |
