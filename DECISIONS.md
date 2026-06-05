@@ -103,6 +103,35 @@ Quando verde → Cancello 1 passato → Fase 2 (valuation/pricing da `Gioco 5.xl
 
 ---
 
+## D2 — Fase 2 (2026-06-05, Claude Code)
+
+### D2.1 — Driver di pricing estratti da `Gioco 5.xls` / "Serie 1"
+Estratti gli 11 driver (minuti, gol fatti/subiti, ammonizione, espulsione, assist, rigori
+segnati/sbagliati/parati, voto portiere, autorete) × 4 ruoli × bande, + clamp settimanale
+per ruolo. Strumento `backend/tools/extract_gioco5.py` (committabile: legge l'xls esterno,
+nessun valore proprietario al suo interno). Valori in `config/pricing_constants.py` (`DRIVERS`,
+`RANGE_CLAMP`). `tests/test_gioco5_golden.py` rilegge l'xls (se presente) come guard anti-drift.
+Engine: `app/pricing/` (drivers→performance→engine `apply_tick`) e `app/valuation/` (engine).
+
+### D2.2 — Calibrazione K_GLOBAL + tuning spread (~8x)
+`K_GLOBAL=10.000` (neutro ≈ 0.01). Fattori (ruolo/età/minutaggio/squadra/score) **compressi**
+per stare nella banda decisa [0.005, 0.050]. **Tuning**: top allargato a ~0.035 alzando SOLO gli
+upper bound (base ATT, premio età giovane, squadra top) — il floor 0.005 è indipendente e resta
+intatto. Esito: min ≈ 0.00507, max ≈ 0.03505 (spread ≈ 7x). Fasce: riserve 0.005–0.010, medi
+0.010–0.022, top 0.030–0.040. (score capato a 2.0 da spec → top fermo ~0.035; per superarlo
+servirebbero moltiplicatori distorti.)
+
+### D2b — Input SINTETICI per dar vita al motore (MVP)
+`score_performance`, `fattore_squadra` (tier) e `minutaggio_pct` dei 400 giocatori fittizi sono
+**sintetici e DETERMINISTICI** (hash dell'identità giocatore/squadra → `app/valuation/synthetic_score.py`):
+**segnaposto**, nessuna pretesa di accuratezza, da **sostituire con statistiche reali** quando
+disponibili. Servono solo a rendere i prezzi iniziali VARIATI (non più tutti 0.01) e a muovere la
+borsa. `cli/seed_roster.py` li cabla nel valuation engine (prezzi in banda + audit fields nel doc).
+`cli/simulate_rounds.py` genera N giornate sintetiche → `apply_tick` → collezione `price_history`
+(sparkline) — utile anche per testare la Fase 3 senza utenti reali.
+
+---
+
 ## ❓ DOMANDE APERTE (da risolvere col fondatore / terzi)
 
 | # | Domanda | Per chi | Blocca fase |

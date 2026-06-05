@@ -7,7 +7,7 @@ from app.config.pricing_constants import (
     FLOAT_AZIONI_PER_GIOCATORE,
     VALORE_BASE_GIOCATORE_CREDITI,
 )
-from app.config.valuation_constants import BASE_RUOLO, K_GLOBAL
+from app.config.valuation_constants import BASE_RUOLO, K_GLOBAL, SQUADRA_MAX, SQUADRA_MIN
 from app.valuation.engine import prezzo_iniziale, valuation
 
 
@@ -35,11 +35,13 @@ def test_prezzo_iniziale_is_valore_over_float():
 
 
 def test_extremes_within_decided_price_band():
-    """Estremi ATT-top-giovane / POR-scarso-anziano dentro ~0.005–0.050."""
-    top = prezzo_iniziale(role="ATT", score=2.0, eta=25, minutaggio_pct=1.0, fattore_squadra=1.20)
-    bottom = prezzo_iniziale(role="POR", score=0.5, eta=37, minutaggio_pct=0.1, fattore_squadra=0.92)
-    assert 0.005 <= bottom <= 0.050
-    assert 0.005 <= top <= 0.050
+    """Spread ~8x: stella ATT giovane top ~0.030–0.040, riserva POR ~0.005–0.010."""
+    top = prezzo_iniziale(role="ATT", score=2.0, eta=20, minutaggio_pct=1.0,
+                          fattore_squadra=SQUADRA_MAX)
+    bottom = prezzo_iniziale(role="POR", score=0.5, eta=37, minutaggio_pct=0.1,
+                             fattore_squadra=SQUADRA_MIN)
+    assert 0.005 <= bottom <= 0.010
+    assert 0.030 <= top <= 0.040
     assert top > bottom
 
 

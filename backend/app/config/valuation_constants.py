@@ -10,14 +10,16 @@ CALIBRAZIONE K_GLOBAL + banda prezzo (decisa nel progetto):
   - banda prezzo target: top 0.035–0.050, medi 0.010–0.020, riserve 0.005–0.010;
   - VINCOLO DURO: gli estremi devono cadere DENTRO ~0.005–0.050.
 
-Poiché i fattori sono MOLTIPLICATIVI, lo spread naturale (range pieni) sfora il floor 0.005
-verso il basso. Per rispettare il vincolo i range dei fattori sono stati COMPRESSI (vedi sotto).
+I fattori sono MOLTIPLICATIVI: gli upper bound (stelle) e i lower bound (riserve) sono
+INDIPENDENTI, quindi si può alzare il top senza toccare il floor 0.005. Tuning deciso
+(spread ~8x): top allargato a ~0.035 alzando SOLO gli upper bound (base ATT, premio età
+giovane, squadra top), floor invariato.
 Esito documentato (estremi calcolati, vedi tests/test_valuation_engine.py):
-  - min  (POR, score≤0.80, età≥35, minutaggio basso, squadra debole) ≈ 5.071 cr  ⇒ prezzo ≈ 0.00507
-  - max  (ATT, score 2.0, età picco, minutaggio pieno, squadra top)   ≈ 26.880 cr ⇒ prezzo ≈ 0.02688
-Entrambi ⊂ [0.005, 0.050] ✓. NOTA: il top naturale si ferma ~0.027 (fascia medio-alta): per
-toccare 0.035–0.050 servirebbe allargare score/squadra, ma ciò sfonderebbe il floor 0.005 →
-priorità al vincolo duro. Da rivedere col fondatore se si vuole un top più alto.
+  - min  (POR, score≤0.80, età≥35, minutaggio basso, squadra debole 0.92) ≈ 5.071 cr  ⇒ prezzo ≈ 0.00507
+  - max  (ATT, score 2.0, età ≤21, minutaggio pieno, squadra top 1.35)      ≈ 35.046 cr ⇒ prezzo ≈ 0.03505
+Spread ≈ 6.9x, entrambi ⊂ [0.005, 0.050] ✓. Fasce: riserve 0.005–0.010, medi 0.010–0.022,
+top 0.030–0.040. (score capato a 2.0 da spec: per superare ~0.040 servirebbero moltiplicatori
+distorti → fermati a top ~0.035.)
 """
 from __future__ import annotations
 
@@ -32,9 +34,9 @@ K_GLOBAL: float = 10_000.0
 # ───────────────────────────────────────────────────────────────
 BASE_RUOLO: dict[str, float] = {
     "POR": 0.88,
-    "DIF": 0.95,
-    "CC":  1.05,
-    "ATT": 1.12,
+    "DIF": 0.94,
+    "CC":  1.00,
+    "ATT": 1.18,
 }
 
 # ───────────────────────────────────────────────────────────────
@@ -53,17 +55,18 @@ def fattore_score(score: float) -> float:
 
 
 # ───────────────────────────────────────────────────────────────
-# FATTORE ETÀ — campana COMPRESSA, picco 24–27 = 1.0, minimo 0.87 (>=35)
+# FATTORE ETÀ — premio "potenziale" ai giovani (>1.0), riferimento 24–27 = 1.0,
+# declino verso il minimo 0.87 (>=35). N.B. eta=25 = 1.0 (neutro di calibrazione).
 # ───────────────────────────────────────────────────────────────
 def fattore_eta(eta: int | None) -> float:
     if eta is None or eta <= 0:
         return 1.0
     if eta <= 21:
-        return 0.93
+        return 1.10  # giovane talento (premio potenziale)
     if eta <= 23:
-        return 0.96
+        return 1.06
     if eta <= 27:
-        return 1.00  # picco
+        return 1.00  # riferimento (maturità)
     if eta <= 29:
         return 0.96
     if eta == 30:
@@ -97,7 +100,7 @@ def fattore_minutaggio(pct: float | None) -> float:
 # (calibrazione fine dei singoli club in fase dati reali)
 # ───────────────────────────────────────────────────────────────
 SQUADRA_MIN: float = 0.92
-SQUADRA_MAX: float = 1.20
+SQUADRA_MAX: float = 1.35
 DEFAULT_FATTORE_SQUADRA: float = 1.00
 
 
