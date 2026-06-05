@@ -38,3 +38,7 @@ def err_bad_request(code: str, msg: str, extra: dict | None = None) -> APIError:
 
 def err_conflict(code: str, msg: str) -> APIError:
     return APIError(http_status=status.HTTP_409_CONFLICT, error_code=code, message_it=msg)
+
+
+def err_too_many(code: str, msg: str) -> APIError:
+    return APIError(http_status=status.HTTP_429_TOO_MANY_REQUESTS, error_code=code, message_it=msg)

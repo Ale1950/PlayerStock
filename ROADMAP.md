@@ -64,8 +64,10 @@ holding 7gg FIFO + cap 3% + `mercato%` (net flow→tick). → Cancello 2.
 Budget iniziale 10.000, daily reward, 5 boost, sink/house edge, P&L portafoglio.
 
 ### Fase 5 — Reward NACKL su testnet · Claude Code
-`RewardProvider` (internal + testnet shellnet) + connessione wallet via QR (solo mining key).
-Riuso pattern `listen-and-mine` dietro WebView. → vedi domanda aperta Q1 (app_dapp_id).
+`RewardProvider` a 2 strati: **Internal** (placeholder dev, completo) + **Testnet shellnet**
+(scaffold INERTE fino a Q1/Q5). Wallet connect solo mining PUBLIC key (QR/deep link). Schermata
+Reward viva (saldo/connect/"mining in arrivo"). **WebView miner rimandato** (dipende da Q1+Q5).
+Accrual placeholder via heartbeat firmato legato all'attività, cap conservativo (D5.2–D5.4).
 
 ### Fase 6 — Engagement · Emergent
 Quiz, predictions, allenamenti, leghe + chat, streak, eventi a tempo.

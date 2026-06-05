@@ -105,7 +105,22 @@
     "title": "Reward NACKL",
     "soon_title": "Disponibile in Fase 5",
     "soon_subtitle": "Qui potrai connettere il tuo wallet Acki Nacki di test e iniziare a guadagnare NACKL usando l'app.",
-    "info_separated": "I Reward NACKL sono separati dai Crediti di gioco e non vengono usati per comprare quote."
+    "info_separated": "I Reward NACKL sono separati dai Crediti di gioco e non vengono usati per comprare quote.",
+    "balance_title": "Saldo NACKL",
+    "placeholder_badge": "Segnaposto MVP",
+    "placeholder_note": "Saldo dimostrativo: il NACKL reale verrà minato on-chain e mostrato qui.",
+    "provider_title": "Provider",
+    "network": "Rete",
+    "wallet_title": "Wallet Acki Nacki",
+    "wallet_connected": "Mining key collegata",
+    "wallet_not_connected": "Nessuna mining key collegata",
+    "connect_cta": "Collega mining key",
+    "connect_hint": "Incolla la mining PUBLIC key (mai seed o chiavi segrete).",
+    "connect_placeholder": "Mining public key (hex)",
+    "scan_qr_soon": "Scansione QR in arrivo",
+    "mining_coming": "Mining on-chain in arrivo",
+    "connect_ok": "Wallet collegato",
+    "connect_err": "Chiave non valida: serve la mining public key"
   },
   "profile": {
     "title": "Profilo",

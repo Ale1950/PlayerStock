@@ -48,6 +48,13 @@ async def ensure_indexes(db: AsyncIOMotorDatabase) -> None:
     # ─── price_history (Fase 2b/3 — sparkline) ───
     await db.price_history.create_index([("athlete_id", 1), ("ts", 1)])
 
+    # ─── reward NACKL (Fase 5) ───
+    await db.reward_balances.create_index("user_id", unique=True)
+    await db.reward_wallets.create_index("user_id", unique=True)
+    await db.reward_state.create_index("user_id", unique=True)
+    await db.heartbeat_nonces.create_index([("user_id", 1), ("nonce", 1)], unique=True)
+    await db.nackl_ledger.create_index([("user_id", 1), ("ts", -1)])
+
     # ─── events (schema-only Fase 1) ───
     await db.events.create_index([("athlete_id", 1), ("season", 1), ("matchday", 1)])
 
