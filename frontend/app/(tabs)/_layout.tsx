@@ -34,6 +34,10 @@ export default function TabsLayout() {
         title: t('tabs.portfolio'),
         tabBarIcon: ({ color, size }) => <Ionicons name="briefcase" size={size} color={color} />,
       }} />
+      <Tabs.Screen name="leaderboard" options={{
+        title: t('tabs.leaderboard'),
+        tabBarIcon: ({ color, size }) => <Ionicons name="trophy" size={size} color={color} />,
+      }} />
       <Tabs.Screen name="wallet" options={{
         title: t('tabs.wallet'),
         tabBarIcon: ({ color, size }) => <Ionicons name="wallet" size={size} color={color} />,

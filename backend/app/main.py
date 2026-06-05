@@ -15,6 +15,7 @@ from app.modules.admin import routes as admin_routes
 from app.modules.auth import routes as auth_routes
 from app.modules.market import routes as market_routes
 from app.modules.player import routes as player_routes
+from app.modules.portfolio import routes as portfolio_routes
 from app.modules.user import routes as user_routes
 
 logger = logging.getLogger(__name__)
@@ -60,6 +61,7 @@ def create_app() -> FastAPI:
     api.include_router(user_routes.router)
     api.include_router(player_routes.router)
     api.include_router(market_routes.router)
+    api.include_router(portfolio_routes.router)
     api.include_router(admin_routes.router)
 
     app.include_router(api)
