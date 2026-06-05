@@ -29,7 +29,10 @@ vanno validati da professionisti.
 ---
 
 ## I 3 cancelli decisionali
-1. **Tecnico (fine Fase 1)**: MVP gira + reward testnet validato? → prosegui.
+1. **Tecnico (fine Fase 1)**: **MVP core gira** → prosegui. (Il reward testnet è **Fase 5**,
+   NON richiesto qui — vedi D1.2.) Criteri: backend su Atlas (`DB_NAME=playerstock`) con
+   `/api/health` `/sports` `/teams` `/players` OK · seed popola **400 atleti fittizi** (D1.1) ·
+   **nessun `internal_full_name`** nelle response · test base verdi.
 2. **Valore/legale (fine Fase 3)**: metriche beta promettenti + qualificazione legale gestibile? → registra IP, avvia AN.
 3. **Commerciale (fine Fase 4)**: accordo Acki Nacki accettabile? → Mainnet + pubblica.
 
@@ -43,8 +46,8 @@ Setup repo privato + spec/docs + spike `@teamgosh/bee-sdk` / Acki Nacki (via rep
 
 ### Fase 1 — MVP core · Emergent (PARTENZA)
 Auth Google OAuth + onboarding + modello dati multi-sport + generatore/seed roster 400 giocatori
-Serie A (anonimizzazione L2) + i18n architecture. Crea moduli `auth/user/player/events`.
-Avvio locale verificato. → Cancello 1.
+Serie A (**fittizi realistici**, anonimizzazione L2 — vedi D1.1) + i18n architecture. Crea moduli
+`auth/user/player/events`. Avvio locale verificato. → Cancello 1 (criteri in §"3 cancelli", D1.2).
 
 ### Fase 2 — Valuation + Pricing engine + test · Claude Code
 Motore valutazione iniziale + pricing engine (calcio) + unit test su fixture. **Estrarre i valori

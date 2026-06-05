@@ -67,6 +67,42 @@ Due economie separate, Crediti senza cash-out → argomenti a favore di "gioco d
 
 ---
 
+## D1 — Fase 1 (2026-06-05, Claude Code)
+
+### D1.1 — Seed roster: giocatori FITTIZI realistici (Opzione 3 raffinata)
+Il roster dei 400 giocatori è **generato fittizio ma realistico**, NON dati reali e NON
+placeholder grezzi. Override del D0.2 ("Dati = reali Football-Data.org") **limitatamente ai
+nomi dei giocatori** in Fase 1 (le squadre restano mappate L2 come da spec).
+
+Caratteristiche:
+- ~400 giocatori inventati ma plausibili: nomi coerenti per nazionalità, età realistiche,
+  composizione **2 POR + 6 DIF + 6 CC + 6 ATT** per ciascuna delle 20 squadre fantasy.
+- **Nessuna persona reale**: i nomi sono combinazioni casuali (seed deterministico) di pool
+  per-nazionalità → nessun rischio diritti d'immagine / banca dati altrui.
+- **File seed statico nel repo**: `backend/app/data/serie_a_roster_fittizio.json`
+  (rigenerabile con `python -m app.cli.generate_fictional_roster`).
+- Il seeder (`seed_roster`) legge da lì: **niente token Football-Data per i giocatori**.
+  Default `DATA_PROVIDER=fictional_roster`. Provider reale (`football_data_org`) resta
+  disponibile via `--source football_data_org` per uso futuro.
+- **Anonimizzazione L2 gira comunque** a valle: `internal_full_name` solo nel DB, le response
+  espongono solo `display_*` (iniziale + cognome troncato + nazionalità + ruolo + età + squadra).
+
+Motivazione: sblocca Cancello 1 senza dipendere da Q3/Q7 (token + completezza roster reale),
+riduce rischio legale sui nomi, mantiene il modello dati e la pipeline di anonimizzazione
+identici a quelli che useranno i dati reali. Vedi `app/data_providers/fictional_roster.py`.
+
+### D1.2 — Cancello 1 (fine Fase 1): NON richiede reward testnet
+Chiarimento al ROADMAP §"3 cancelli": il reward NACKL su testnet è **Fase 5**, non Fase 1.
+Il gate per chiudere Fase 1 → Fase 2 è **solo "MVP core gira"**:
+- backend su Atlas (`DB_NAME=playerstock`), endpoint `/api/health` `/sports` `/teams` `/players` OK;
+- seed popola **400 atleti fittizi** (D1.1);
+- **nessun `internal_full_name`** nelle response (anonimizzazione L2);
+- i **test base verdi** (suite `backend/tests/`).
+
+Quando verde → Cancello 1 passato → Fase 2 (valuation/pricing da `Gioco 5.xls`, vedi D0.3).
+
+---
+
 ## ❓ DOMANDE APERTE (da risolvere col fondatore / terzi)
 
 | # | Domanda | Per chi | Blocca fase |
@@ -74,8 +110,8 @@ Due economie separate, Crediti senza cash-out → argomenti a favore di "gioco d
 | Q1 | **APP_ID di listen-and-mine (`0x00…01`) è riusabile per PlayerStock, o serve registrare un app_dapp_id separato presso Acki Nacki?** L'approvazione AN di listen-and-mine **non** estende automaticamente a PlayerStock. | Acki Nacki | Fase 5 |
 | Q2 | Google OAuth Client ID/Secret — ✅ forniti, nel `.env` locale (NON nel repo) | Fondatore | Fase 1 |
 | Q2b | **Google OAuth redirect URI**: ora PLACEHOLDER `http://localhost:8001/api/auth/google/callback`. Sostituire con l'URI di callback reale quando si implementa l'auth, e aggiornarlo in Google Cloud Console → Auth Platform → Client. | Claude/Emergent | Fase 1 |
-| Q3 | Football-Data.org API token | Fondatore | Fase 1 |
+| Q3 | Football-Data.org API token | Fondatore | ~~Fase 1~~ → **non blocca** (roster fittizio D1.1); serve solo per passare a dati reali |
 | Q4 | MongoDB connection string (locale o Atlas) + Redis | Fondatore | Fase 1 |
 | Q5 | Mining key / wallet di test AN (shellnet) | Fondatore/AN | Fase 5 |
 | Q6 | Qualificazione giuridica (gioco vs strumento finanziario vs azzardo) | Legale | pre-lancio |
-| Q7 | Football-Data.org dà roster completi o serve fallback Wikipedia? | da verificare | Fase 1 |
+| Q7 | Football-Data.org dà roster completi o serve fallback Wikipedia? | da verificare | ~~Fase 1~~ → **non blocca** (roster fittizio D1.1); rilevante solo al passaggio a dati reali |

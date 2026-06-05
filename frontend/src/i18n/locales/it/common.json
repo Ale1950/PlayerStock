@@ -1,3 +1,132 @@
 {
-  "_comment": "PlayerStock IT strings — popolato in Fase 1 (Emergent)"
+  "app": {
+    "name": "PlayerStock",
+    "tagline": "La borsa virtuale degli atleti",
+    "loading": "Caricamento..."
+  },
+  "disclaimer": {
+    "short": "Gioco di simulazione. Statistiche pubbliche; squadre di fantasia.",
+    "long": "PlayerStock è un gioco di simulazione. I riferimenti agli atleti utilizzano iniziali e dati di cronaca pubblicamente disponibili. I nomi delle squadre sono di fantasia e non rappresentano affiliazioni ufficiali con alcun club professionistico."
+  },
+  "welcome": {
+    "title": "Benvenuto su PlayerStock",
+    "subtitle": "Compra quote dei tuoi atleti preferiti. Cresci nei livelli. Diventa il miglior trader sportivo.",
+    "bullet1": "1.000.000 di quote per ogni atleta",
+    "bullet2": "Mercato secondario P2P con prezzi live",
+    "bullet3": "10.000 Crediti di benvenuto",
+    "cta": "Inizia con Google",
+    "terms": "Continuando accetti i Termini e la Privacy Policy."
+  },
+  "login": {
+    "title": "Accedi a PlayerStock",
+    "googleButton": "Accedi con Google",
+    "error_generic": "Errore di autenticazione. Riprova.",
+    "errorTitle": "Errore di accesso"
+  },
+  "consent": {
+    "title": "Termini e Privacy",
+    "subtitle": "Per iniziare devi accettare i nostri T&C e la Privacy Policy.",
+    "termsLabel": "Accetto i Termini & Condizioni",
+    "privacyLabel": "Accetto la Privacy Policy",
+    "cta": "Continua",
+    "tcsLink": "Leggi i T&C",
+    "privacyLink": "Leggi la Privacy Policy"
+  },
+  "tabs": {
+    "home": "Mercato",
+    "portfolio": "Portafoglio",
+    "wallet": "Crediti",
+    "reward": "Reward",
+    "profile": "Profilo"
+  },
+  "home": {
+    "title": "Mercato",
+    "subtitle": "Serie A 2024-25",
+    "search_placeholder": "Cerca atleta...",
+    "filter_all": "Tutti",
+    "filter_por": "POR",
+    "filter_dif": "DIF",
+    "filter_cc": "CC",
+    "filter_att": "ATT",
+    "empty": "Nessun giocatore trovato",
+    "loadMore": "Carica altri"
+  },
+  "player": {
+    "back": "Indietro",
+    "role_POR": "Portiere",
+    "role_DIF": "Difensore",
+    "role_CC": "Centrocampista",
+    "role_ATT": "Attaccante",
+    "age": "Età",
+    "team": "Squadra",
+    "nationality": "Nazionalità",
+    "price_current": "Prezzo attuale",
+    "price_initial": "Prezzo iniziale",
+    "float": "Quote totali",
+    "buy_disabled_phase1": "Acquisto/vendita disponibili dopo l'attivazione del mercato.",
+    "phase2_note": "Il pricing dinamico verrà attivato in Fase 2."
+  },
+  "portfolio": {
+    "title": "Portafoglio",
+    "empty_title": "Nessuna posizione",
+    "empty_subtitle": "Quando il mercato sarà attivo, vedrai qui le tue quote.",
+    "phase4_note": "Disponibile in Fase 4."
+  },
+  "wallet": {
+    "title": "Crediti",
+    "balance": "Saldo disponibile",
+    "movements": "Movimenti",
+    "no_movements": "Nessun movimento ancora.",
+    "tx_welcome_bonus": "Bonus di benvenuto",
+    "tx_daily_reward": "Reward giornaliero",
+    "tx_trade_buy": "Acquisto quote",
+    "tx_trade_sell": "Vendita quote",
+    "tx_fee_buyer": "Commissione acquisto",
+    "tx_fee_seller": "Commissione vendita",
+    "tx_refund_transfer": "Rimborso trasferimento",
+    "tx_engagement_reward": "Reward attività",
+    "tx_adjustment": "Aggiustamento"
+  },
+  "reward": {
+    "title": "Reward NACKL",
+    "soon_title": "Disponibile in Fase 5",
+    "soon_subtitle": "Qui potrai connettere il tuo wallet Acki Nacki di test e iniziare a guadagnare NACKL usando l'app.",
+    "info_separated": "I Reward NACKL sono separati dai Crediti di gioco e non vengono usati per comprare quote."
+  },
+  "profile": {
+    "title": "Profilo",
+    "language": "Lingua",
+    "logout": "Esci",
+    "delete_account": "Elimina account",
+    "delete_account_confirm_title": "Eliminare l'account?",
+    "delete_account_confirm_msg": "L'azione è irreversibile. Tutti i tuoi dati verranno marcati come eliminati.",
+    "delete_account_confirm_yes": "Sì, elimina",
+    "delete_account_confirm_no": "Annulla",
+    "logout_confirm_title": "Uscire?",
+    "logout_confirm_yes": "Sì",
+    "logout_confirm_no": "Annulla",
+    "member_since": "Membro dal",
+    "version": "Versione"
+  },
+  "common": {
+    "currency_unit": "Crediti",
+    "currency_symbol": "C",
+    "cancel": "Annulla",
+    "confirm": "Conferma",
+    "retry": "Riprova",
+    "loading": "Caricamento...",
+    "error_generic": "Si è verificato un errore. Riprova."
+  },
+  "error": {
+    "auth.missing_token": "Effettua l'accesso per continuare.",
+    "auth.invalid_token": "Sessione scaduta. Accedi di nuovo.",
+    "auth.user_not_found": "Utente non trovato.",
+    "auth.google_invalid_token": "Token Google non valido.",
+    "auth.google_not_configured": "Login Google non configurato sul server.",
+    "auth.admin_required": "Permessi amministratore richiesti.",
+    "resource.not_found": "Risorsa non trovata.",
+    "data.no_token": "Token Football-Data.org non configurato.",
+    "data.fetch_failed": "Errore nello scaricamento dei dati.",
+    "terms.required": "Devi accettare entrambi: T&C e Privacy."
+  }
 }

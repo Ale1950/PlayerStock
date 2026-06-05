@@ -1,0 +1,138 @@
+"""Auth module: Google OAuth + JWT issuance."""
+from __future__ import annotations
+
+import logging
+from datetime import datetime, timezone
+
+from bson import ObjectId
+from fastapi import APIRouter
+from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token as google_id_token
+
+from app.config.pricing_constants import BUDGET_INIZIALE_UTENTE_CREDITI
+from app.config.settings import get_settings
+from app.core.deps import CurrentUserDep, DBDep, SettingsDep
+from app.core.errors import err_bad_request, err_unauthorized
+from app.core.security import create_access_token
+from app.models.common import utc_now
+from app.models.user import (
+    AcceptTermsRequest,
+    AuthResponse,
+    GoogleSignInRequest,
+    UpdateLocaleRequest,
+    UserPublic,
+    WalletPublic,
+)
+
+logger = logging.getLogger(__name__)
+router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+def _verify_google_id_token(token: str, client_id: str) -> dict:
+    try:
+        info = google_id_token.verify_oauth2_token(
+            token, google_requests.Request(), client_id, clock_skew_in_seconds=10
+        )
+        # Audience checks
+        if info.get("aud") != client_id:
+            raise ValueError("Audience mismatch")
+        if not info.get("email_verified"):
+            raise ValueError("Email not verified")
+        return info
+    except Exception as e:
+        logger.warning("Google id_token verification failed: %s", e)
+        raise err_unauthorized(code="auth.google_invalid_token", msg="Token Google non valido")
+
+
+@router.post("/google/callback", response_model=AuthResponse)
+async def google_callback(req: GoogleSignInRequest, db: DBDep, settings: SettingsDep) -> AuthResponse:
+    """Exchange a Google id_token for an app JWT. Creates user + wallet on first sign-in."""
+    if not settings.GOOGLE_OAUTH_CLIENT_ID:
+        raise err_bad_request("auth.google_not_configured", "Google OAuth non configurato sul server")
+
+    info = _verify_google_id_token(req.id_token, settings.GOOGLE_OAUTH_CLIENT_ID)
+    google_sub = info["sub"]
+    email = info.get("email")
+    name = info.get("name") or (email.split("@")[0] if email else "User")
+    picture = info.get("picture")
+    locale = (req.locale or info.get("locale") or "it").lower()[:2]
+
+    now = utc_now()
+    existing = await db.users.find_one({"google_sub": google_sub})
+
+    if existing:
+        await db.users.update_one(
+            {"_id": existing["_id"]},
+            {"$set": {"last_login_at": now, "name": name, "picture": picture, "locale": locale}},
+        )
+        user_id = existing["_id"]
+        wallet = await db.user_wallets.find_one({"user_id": user_id})
+        if not wallet:
+            # Defensive: bootstrap wallet if missing
+            wallet = {"user_id": user_id, "balance_credits": BUDGET_INIZIALE_UTENTE_CREDITI, "updated_at": now}
+            await db.user_wallets.insert_one(wallet)
+            await db.wallet_transactions.insert_one({
+                "user_id": user_id, "type": "welcome_bonus",
+                "amount": BUDGET_INIZIALE_UTENTE_CREDITI, "balance_after": BUDGET_INIZIALE_UTENTE_CREDITI,
+                "description_it": "Bonus di benvenuto",
+                "created_at": now,
+            })
+    else:
+        # Determine role (admin if bootstrap email matches)
+        role = "admin" if (settings.ADMIN_BOOTSTRAP_EMAIL and email == settings.ADMIN_BOOTSTRAP_EMAIL) else "user"
+        user_doc = {
+            "google_sub": google_sub, "email": email, "name": name, "picture": picture,
+            "locale": locale, "country_iso2": None, "role": role,
+            "terms_accepted_at": None, "privacy_accepted_at": None,
+            "created_at": now, "last_login_at": now,
+            "status": "active", "delete_requested_at": None,
+        }
+        result = await db.users.insert_one(user_doc)
+        user_id = result.inserted_id
+        # Bootstrap wallet with welcome bonus
+        wallet_doc = {"user_id": user_id, "balance_credits": BUDGET_INIZIALE_UTENTE_CREDITI, "updated_at": now}
+        await db.user_wallets.insert_one(wallet_doc)
+        await db.wallet_transactions.insert_one({
+            "user_id": user_id, "type": "welcome_bonus",
+            "amount": BUDGET_INIZIALE_UTENTE_CREDITI, "balance_after": BUDGET_INIZIALE_UTENTE_CREDITI,
+            "description_it": "Bonus di benvenuto",
+            "created_at": now,
+        })
+
+    # Reload user
+    user = await db.users.find_one({"_id": user_id})
+    wallet = await db.user_wallets.find_one({"user_id": user_id})
+
+    access_token = create_access_token(user_id=str(user_id))
+
+    return AuthResponse(
+        access_token=access_token,
+        expires_in=settings.JWT_EXPIRES_MIN * 60,
+        user=UserPublic.model_validate(user),
+        wallet=WalletPublic(balance_credits=wallet["balance_credits"], updated_at=wallet["updated_at"]),
+    )
+
+
+@router.post("/refresh")
+async def refresh(user: CurrentUserDep):
+    """Issue a fresh JWT for the current user."""
+    settings = get_settings()
+    access_token = create_access_token(user_id=str(user["_id"]))
+    return {"access_token": access_token, "token_type": "bearer", "expires_in": settings.JWT_EXPIRES_MIN * 60}
+
+
+@router.post("/logout")
+async def logout(user: CurrentUserDep):
+    """In MVP stateless JWT, logout is client-side (drop the token)."""
+    return {"ok": True}
+
+
+@router.delete("/me")
+async def delete_account(user: CurrentUserDep, db: DBDep):
+    """GDPR soft-delete: marca utente come 'deleted' e svuota dati."""
+    now = utc_now()
+    await db.users.update_one(
+        {"_id": user["_id"]},
+        {"$set": {"status": "deleted", "delete_requested_at": now, "email": f"deleted_{user['_id']}@playerstock.app"}},
+    )
+    return {"ok": True, "deleted_at": now.isoformat()}
