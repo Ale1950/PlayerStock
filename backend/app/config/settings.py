@@ -30,8 +30,8 @@ class Settings:
     GOOGLE_OAUTH_CLIENT_ID: str = os.getenv("GOOGLE_OAUTH_CLIENT_ID", "")
     GOOGLE_OAUTH_CLIENT_SECRET: str = os.getenv("GOOGLE_OAUTH_CLIENT_SECRET", "")
 
-    # Football-Data.org
-    DATA_PROVIDER: str = os.getenv("DATA_PROVIDER", "football_data_org")
+    # Roster provider: 'fictional_roster' (default, no token) | 'football_data_org'
+    DATA_PROVIDER: str = os.getenv("DATA_PROVIDER", "fictional_roster")
     FOOTBALL_DATA_ORG_TOKEN: str = os.getenv("FOOTBALL_DATA_ORG_TOKEN", "")
     FOOTBALL_DATA_ORG_BASE_URL: str = os.getenv(
         "FOOTBALL_DATA_ORG_BASE_URL", "https://api.football-data.org/v4"

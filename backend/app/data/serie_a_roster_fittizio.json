@@ -1,0 +1,4002 @@
+[
+  {
+    "external_id": "FIC0001",
+    "internal_full_name": "Mamadou Sy",
+    "role": "POR",
+    "nationality_iso3": "SEN",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0002",
+    "internal_full_name": "Lorenzo Conti",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0003",
+    "internal_full_name": "Filippo Coppola",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0004",
+    "internal_full_name": "Lorenzo Rinaldi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0005",
+    "internal_full_name": "Nikola Milosevic",
+    "role": "DIF",
+    "nationality_iso3": "SRB",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0006",
+    "internal_full_name": "Andrea Ferrara",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 35,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0007",
+    "internal_full_name": "Nicolo Leone",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0008",
+    "internal_full_name": "Pietro Longo",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0009",
+    "internal_full_name": "Emanuele Fontana",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0010",
+    "internal_full_name": "Fabio Vitale",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0011",
+    "internal_full_name": "Loic Morel",
+    "role": "CC",
+    "nationality_iso3": "FRA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0012",
+    "internal_full_name": "Marco Marino",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0013",
+    "internal_full_name": "Lorenzo Lombardo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0014",
+    "internal_full_name": "Salvatore Ricci",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0015",
+    "internal_full_name": "Lazar Nikolic",
+    "role": "ATT",
+    "nationality_iso3": "SRB",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0016",
+    "internal_full_name": "Federico Martini",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0017",
+    "internal_full_name": "Giuseppe Parisi",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0018",
+    "internal_full_name": "Andrea Martinelli",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0019",
+    "internal_full_name": "Christian Greco",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0020",
+    "internal_full_name": "Emanuele Mancini",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Inter",
+    "team_fd_id": "inter"
+  },
+  {
+    "external_id": "FIC0021",
+    "internal_full_name": "Samuele Marchetti",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0022",
+    "internal_full_name": "Domagoj Knezevic",
+    "role": "POR",
+    "nationality_iso3": "HRV",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0023",
+    "internal_full_name": "Michele Colombo",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0024",
+    "internal_full_name": "Alessandro Gentile",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0025",
+    "internal_full_name": "Nikola Jovanovic",
+    "role": "DIF",
+    "nationality_iso3": "SRB",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0026",
+    "internal_full_name": "Pedro Santos",
+    "role": "DIF",
+    "nationality_iso3": "PRT",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0027",
+    "internal_full_name": "Tommaso Lombardi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0028",
+    "internal_full_name": "Joaquin Martinez",
+    "role": "DIF",
+    "nationality_iso3": "ARG",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0029",
+    "internal_full_name": "Babacar Fall",
+    "role": "CC",
+    "nationality_iso3": "SEN",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0030",
+    "internal_full_name": "Alvaro Rodriguez",
+    "role": "CC",
+    "nationality_iso3": "ESP",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0031",
+    "internal_full_name": "Francesco Romano",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0032",
+    "internal_full_name": "Joao Barbosa",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0033",
+    "internal_full_name": "Pape Faye",
+    "role": "CC",
+    "nationality_iso3": "SEN",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0034",
+    "internal_full_name": "Fallou Diop",
+    "role": "CC",
+    "nationality_iso3": "SEN",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0035",
+    "internal_full_name": "Sergio Fernandez",
+    "role": "ATT",
+    "nationality_iso3": "ESP",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0036",
+    "internal_full_name": "Nikola Djordjevic",
+    "role": "ATT",
+    "nationality_iso3": "SRB",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0037",
+    "internal_full_name": "Andrea Caruso",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0038",
+    "internal_full_name": "Enrico Bruno",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0039",
+    "internal_full_name": "Chidi Adebayo",
+    "role": "ATT",
+    "nationality_iso3": "NGA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0040",
+    "internal_full_name": "Andrea Mancini",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Juventus",
+    "team_fd_id": "juventus"
+  },
+  {
+    "external_id": "FIC0041",
+    "internal_full_name": "Bruno Almeida",
+    "role": "POR",
+    "nationality_iso3": "BRA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0042",
+    "internal_full_name": "Krzysztof Piotrowski",
+    "role": "POR",
+    "nationality_iso3": "POL",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0043",
+    "internal_full_name": "Nicolo Coppola",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0044",
+    "internal_full_name": "Christian Lombardi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0045",
+    "internal_full_name": "Paolo Romano",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0046",
+    "internal_full_name": "Edoardo De Luca",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0047",
+    "internal_full_name": "Fabio Greco",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0048",
+    "internal_full_name": "Samuele Greco",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0049",
+    "internal_full_name": "Domenico Caruso",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0050",
+    "internal_full_name": "Tijn de Boer",
+    "role": "CC",
+    "nationality_iso3": "NLD",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0051",
+    "internal_full_name": "Stan Wouters",
+    "role": "CC",
+    "nationality_iso3": "BEL",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0052",
+    "internal_full_name": "Cristian Ricci",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0053",
+    "internal_full_name": "Lander Vermeulen",
+    "role": "CC",
+    "nationality_iso3": "BEL",
+    "age": 17,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0054",
+    "internal_full_name": "Karlo Saric",
+    "role": "CC",
+    "nationality_iso3": "HRV",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0055",
+    "internal_full_name": "Roberto Santoro",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0056",
+    "internal_full_name": "Federico Rinaldi",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0057",
+    "internal_full_name": "Matheus Almeida",
+    "role": "ATT",
+    "nationality_iso3": "BRA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0058",
+    "internal_full_name": "Mathis Jacobs",
+    "role": "ATT",
+    "nationality_iso3": "BEL",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0059",
+    "internal_full_name": "Roberto Gallo",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0060",
+    "internal_full_name": "Mateo Sosa",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Milan",
+    "team_fd_id": "milan"
+  },
+  {
+    "external_id": "FIC0061",
+    "internal_full_name": "Erik Hoffmann",
+    "role": "POR",
+    "nationality_iso3": "DEU",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0062",
+    "internal_full_name": "Clement Robin",
+    "role": "POR",
+    "nationality_iso3": "FRA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0063",
+    "internal_full_name": "Maxime Martin",
+    "role": "DIF",
+    "nationality_iso3": "FRA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0064",
+    "internal_full_name": "Bram de Boer",
+    "role": "DIF",
+    "nationality_iso3": "NLD",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0065",
+    "internal_full_name": "Petar Nikolic",
+    "role": "DIF",
+    "nationality_iso3": "SRB",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0066",
+    "internal_full_name": "Leonardo Gentile",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0067",
+    "internal_full_name": "Lucas Garnier",
+    "role": "DIF",
+    "nationality_iso3": "FRA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0068",
+    "internal_full_name": "Mario Sanchez",
+    "role": "DIF",
+    "nationality_iso3": "ESP",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0069",
+    "internal_full_name": "Stefano Coppola",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0070",
+    "internal_full_name": "Murilo Carvalho",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0071",
+    "internal_full_name": "Christian Santoro",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0072",
+    "internal_full_name": "Alvaro Torres",
+    "role": "CC",
+    "nationality_iso3": "ESP",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0073",
+    "internal_full_name": "Facundo Acosta",
+    "role": "CC",
+    "nationality_iso3": "ARG",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0074",
+    "internal_full_name": "Manuel Galli",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0075",
+    "internal_full_name": "Giuseppe Russo",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0076",
+    "internal_full_name": "Vincenzo Romano",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0077",
+    "internal_full_name": "Marko Milosevic",
+    "role": "ATT",
+    "nationality_iso3": "SRB",
+    "age": 36,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0078",
+    "internal_full_name": "Domenico Moretti",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0079",
+    "internal_full_name": "Alessandro Serra",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0080",
+    "internal_full_name": "Daniele Bruno",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Napoli",
+    "team_fd_id": "napoli"
+  },
+  {
+    "external_id": "FIC0081",
+    "internal_full_name": "Luca Longo",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0082",
+    "internal_full_name": "Giacomo Moretti",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0083",
+    "internal_full_name": "Christian Romano",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0084",
+    "internal_full_name": "Andrej Kovacevic",
+    "role": "DIF",
+    "nationality_iso3": "SRB",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0085",
+    "internal_full_name": "Matteo Parisi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0086",
+    "internal_full_name": "Franco Paredes",
+    "role": "DIF",
+    "nationality_iso3": "ARG",
+    "age": 19,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0087",
+    "internal_full_name": "Mathis Lefevre",
+    "role": "DIF",
+    "nationality_iso3": "FRA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0088",
+    "internal_full_name": "Stijn van Dijk",
+    "role": "DIF",
+    "nationality_iso3": "NLD",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0089",
+    "internal_full_name": "Enrico Parisi",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0090",
+    "internal_full_name": "Filippo Costa",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0091",
+    "internal_full_name": "Michele Gallo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 19,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0092",
+    "internal_full_name": "Roko Novak",
+    "role": "CC",
+    "nationality_iso3": "HRV",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0093",
+    "internal_full_name": "Emanuele Martini",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 19,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0094",
+    "internal_full_name": "Cristian Leone",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0095",
+    "internal_full_name": "Leonardo Coppola",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0096",
+    "internal_full_name": "Nicolas Fernandez",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0097",
+    "internal_full_name": "Idrissa Faye",
+    "role": "ATT",
+    "nationality_iso3": "SEN",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0098",
+    "internal_full_name": "Sem de Boer",
+    "role": "ATT",
+    "nationality_iso3": "NLD",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0099",
+    "internal_full_name": "Michele De Luca",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0100",
+    "internal_full_name": "Christian Rossi",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Roma",
+    "team_fd_id": "roma"
+  },
+  {
+    "external_id": "FIC0101",
+    "internal_full_name": "Giuseppe Barbieri",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0102",
+    "internal_full_name": "Riccardo Rizzo",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0103",
+    "internal_full_name": "Roberto Marchetti",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0104",
+    "internal_full_name": "Wout Visser",
+    "role": "DIF",
+    "nationality_iso3": "NLD",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0105",
+    "internal_full_name": "Davide Marino",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0106",
+    "internal_full_name": "Christian Galli",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0107",
+    "internal_full_name": "Lucas Lima",
+    "role": "DIF",
+    "nationality_iso3": "BRA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0108",
+    "internal_full_name": "Stefan Kovacevic",
+    "role": "DIF",
+    "nationality_iso3": "SRB",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0109",
+    "internal_full_name": "Filippo Serra",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0110",
+    "internal_full_name": "Caio Almeida",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 35,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0111",
+    "internal_full_name": "Simone Giordano",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0112",
+    "internal_full_name": "Matteo Giordano",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0113",
+    "internal_full_name": "Agustin Romero",
+    "role": "CC",
+    "nationality_iso3": "ARG",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0114",
+    "internal_full_name": "Lander Wouters",
+    "role": "CC",
+    "nationality_iso3": "BEL",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0115",
+    "internal_full_name": "Romain Laurent",
+    "role": "ATT",
+    "nationality_iso3": "FRA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0116",
+    "internal_full_name": "Andrea Santoro",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0117",
+    "internal_full_name": "Dawid Kowalczyk",
+    "role": "ATT",
+    "nationality_iso3": "POL",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0118",
+    "internal_full_name": "Emanuele Moretti",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0119",
+    "internal_full_name": "Paolo Esposito",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0120",
+    "internal_full_name": "Filippo Esposito",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 35,
+    "date_of_birth": null,
+    "team_fd_name": "Lazio",
+    "team_fd_id": "lazio"
+  },
+  {
+    "external_id": "FIC0121",
+    "internal_full_name": "Mamadou Faye",
+    "role": "POR",
+    "nationality_iso3": "SEN",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0122",
+    "internal_full_name": "Tommaso Galli",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0123",
+    "internal_full_name": "Gabriele Russo",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0124",
+    "internal_full_name": "Mattia De Santis",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0125",
+    "internal_full_name": "Pedro Mendes",
+    "role": "DIF",
+    "nationality_iso3": "PRT",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0126",
+    "internal_full_name": "Tim Peters",
+    "role": "DIF",
+    "nationality_iso3": "NLD",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0127",
+    "internal_full_name": "Gabriele Marchetti",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0128",
+    "internal_full_name": "Karlo Markovic",
+    "role": "DIF",
+    "nationality_iso3": "HRV",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0129",
+    "internal_full_name": "Moussa Sarr",
+    "role": "CC",
+    "nationality_iso3": "SEN",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0130",
+    "internal_full_name": "Domenico Mariani",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0131",
+    "internal_full_name": "Domenico Esposito",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0132",
+    "internal_full_name": "Pietro Esposito",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0133",
+    "internal_full_name": "Chidi Eze",
+    "role": "CC",
+    "nationality_iso3": "NGA",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0134",
+    "internal_full_name": "Davide Longo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0135",
+    "internal_full_name": "Andrea Gentile",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0136",
+    "internal_full_name": "Joaquin Herrera",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0137",
+    "internal_full_name": "Joao Pereira",
+    "role": "ATT",
+    "nationality_iso3": "BRA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0138",
+    "internal_full_name": "Vincenzo Leone",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0139",
+    "internal_full_name": "Aaron Mertens",
+    "role": "ATT",
+    "nationality_iso3": "BEL",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0140",
+    "internal_full_name": "Luka Saric",
+    "role": "ATT",
+    "nationality_iso3": "HRV",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Atalanta",
+    "team_fd_id": "atalanta"
+  },
+  {
+    "external_id": "FIC0141",
+    "internal_full_name": "Daniele Lombardo",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0142",
+    "internal_full_name": "Abdou Diouf",
+    "role": "POR",
+    "nationality_iso3": "SEN",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0143",
+    "internal_full_name": "Tommaso Serra",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0144",
+    "internal_full_name": "Leonardo Moretti",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0145",
+    "internal_full_name": "Domenico Leone",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0146",
+    "internal_full_name": "Gabriel Silva",
+    "role": "DIF",
+    "nationality_iso3": "BRA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0147",
+    "internal_full_name": "Fabio Sousa",
+    "role": "DIF",
+    "nationality_iso3": "PRT",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0148",
+    "internal_full_name": "Filippo Mariani",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0149",
+    "internal_full_name": "Felipe Gomes",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0150",
+    "internal_full_name": "Fabio Marino",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0151",
+    "internal_full_name": "Francesco Russo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 19,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0152",
+    "internal_full_name": "Fabio Rossi",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0153",
+    "internal_full_name": "Jan Richter",
+    "role": "CC",
+    "nationality_iso3": "DEU",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0154",
+    "internal_full_name": "Tiago Ferreira",
+    "role": "CC",
+    "nationality_iso3": "PRT",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0155",
+    "internal_full_name": "Miguel Rodrigues",
+    "role": "ATT",
+    "nationality_iso3": "PRT",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0156",
+    "internal_full_name": "Edoardo Bianchi",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0157",
+    "internal_full_name": "Joaquin Romero",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0158",
+    "internal_full_name": "Goncalo Oliveira",
+    "role": "ATT",
+    "nationality_iso3": "PRT",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0159",
+    "internal_full_name": "Andrea Martini",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0160",
+    "internal_full_name": "Tobias Koch",
+    "role": "ATT",
+    "nationality_iso3": "DEU",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Fiorentina",
+    "team_fd_id": "fiorentina"
+  },
+  {
+    "external_id": "FIC0161",
+    "internal_full_name": "Lazar Pavlovic",
+    "role": "POR",
+    "nationality_iso3": "SRB",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0162",
+    "internal_full_name": "Cristian Gentile",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0163",
+    "internal_full_name": "Milos Milosevic",
+    "role": "DIF",
+    "nationality_iso3": "SRB",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0164",
+    "internal_full_name": "Adrian Moreno",
+    "role": "DIF",
+    "nationality_iso3": "ESP",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0165",
+    "internal_full_name": "Pietro Parisi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0166",
+    "internal_full_name": "Uros Djordjevic",
+    "role": "DIF",
+    "nationality_iso3": "SRB",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0167",
+    "internal_full_name": "Luca Mancini",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0168",
+    "internal_full_name": "Luca Gallo",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0169",
+    "internal_full_name": "Filippo Galli",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0170",
+    "internal_full_name": "Samuel Nwachukwu",
+    "role": "CC",
+    "nationality_iso3": "NGA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0171",
+    "internal_full_name": "Cristian Galli",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0172",
+    "internal_full_name": "Nicolas Medina",
+    "role": "CC",
+    "nationality_iso3": "ARG",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0173",
+    "internal_full_name": "Alberto Ferrara",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0174",
+    "internal_full_name": "Milos Jovanovic",
+    "role": "CC",
+    "nationality_iso3": "SRB",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0175",
+    "internal_full_name": "Fabio Gentile",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0176",
+    "internal_full_name": "Petar Maric",
+    "role": "ATT",
+    "nationality_iso3": "HRV",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0177",
+    "internal_full_name": "Borna Kovacevic",
+    "role": "ATT",
+    "nationality_iso3": "HRV",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0178",
+    "internal_full_name": "Agustin Suarez",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0179",
+    "internal_full_name": "Manuel Lombardi",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0180",
+    "internal_full_name": "Giuseppe Rinaldi",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Bologna",
+    "team_fd_id": "bologna"
+  },
+  {
+    "external_id": "FIC0181",
+    "internal_full_name": "Andre Martins",
+    "role": "POR",
+    "nationality_iso3": "PRT",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0182",
+    "internal_full_name": "Manuel Longo",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0183",
+    "internal_full_name": "Francesco Fontana",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0184",
+    "internal_full_name": "Aitor Fernandez",
+    "role": "DIF",
+    "nationality_iso3": "ESP",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0185",
+    "internal_full_name": "Duarte Silva",
+    "role": "DIF",
+    "nationality_iso3": "PRT",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0186",
+    "internal_full_name": "Samuele Martinelli",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0187",
+    "internal_full_name": "Franco Diaz",
+    "role": "DIF",
+    "nationality_iso3": "ARG",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0188",
+    "internal_full_name": "Peter Ibrahim",
+    "role": "DIF",
+    "nationality_iso3": "NGA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0189",
+    "internal_full_name": "Roberto Colombo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0190",
+    "internal_full_name": "Wesley Ferreira",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0191",
+    "internal_full_name": "Bastien Martin",
+    "role": "CC",
+    "nationality_iso3": "FRA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0192",
+    "internal_full_name": "Marco Santoro",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0193",
+    "internal_full_name": "Michele Parisi",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0194",
+    "internal_full_name": "Danilo Barbosa",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0195",
+    "internal_full_name": "Giacomo Santoro",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0196",
+    "internal_full_name": "Daniele Marino",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0197",
+    "internal_full_name": "Lautaro Acosta",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0198",
+    "internal_full_name": "Jakub Kowalczyk",
+    "role": "ATT",
+    "nationality_iso3": "POL",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0199",
+    "internal_full_name": "Simone Ferrara",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0200",
+    "internal_full_name": "Lucas Souza",
+    "role": "ATT",
+    "nationality_iso3": "BRA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Torino",
+    "team_fd_id": "torino"
+  },
+  {
+    "external_id": "FIC0201",
+    "internal_full_name": "Enrico Longo",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0202",
+    "internal_full_name": "Marco Costa",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0203",
+    "internal_full_name": "Senne Jacobs",
+    "role": "DIF",
+    "nationality_iso3": "BEL",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0204",
+    "internal_full_name": "Joost Vos",
+    "role": "DIF",
+    "nationality_iso3": "NLD",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0205",
+    "internal_full_name": "Alberto Marino",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0206",
+    "internal_full_name": "Christian Rinaldi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0207",
+    "internal_full_name": "Tijn Bakker",
+    "role": "DIF",
+    "nationality_iso3": "NLD",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0208",
+    "internal_full_name": "Marco Coppola",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0209",
+    "internal_full_name": "Fabio Ferreira",
+    "role": "CC",
+    "nationality_iso3": "PRT",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0210",
+    "internal_full_name": "Giacomo Martinelli",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0211",
+    "internal_full_name": "Nathan Fontaine",
+    "role": "CC",
+    "nationality_iso3": "FRA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0212",
+    "internal_full_name": "Michele De Santis",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0213",
+    "internal_full_name": "Igor Rocha",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0214",
+    "internal_full_name": "Enrico De Luca",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0215",
+    "internal_full_name": "Michele Russo",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0216",
+    "internal_full_name": "Lorenzo Marchetti",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 19,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0217",
+    "internal_full_name": "Vincenzo Russo",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0218",
+    "internal_full_name": "Riccardo Ferrari",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0219",
+    "internal_full_name": "Domagoj Novak",
+    "role": "ATT",
+    "nationality_iso3": "HRV",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0220",
+    "internal_full_name": "Caio Cardoso",
+    "role": "ATT",
+    "nationality_iso3": "BRA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Genoa",
+    "team_fd_id": "genoa"
+  },
+  {
+    "external_id": "FIC0221",
+    "internal_full_name": "Maximilian Schmidt",
+    "role": "POR",
+    "nationality_iso3": "DEU",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0222",
+    "internal_full_name": "Vincenzo Gallo",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0223",
+    "internal_full_name": "Maxime Mercier",
+    "role": "DIF",
+    "nationality_iso3": "FRA",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0224",
+    "internal_full_name": "Filip Vukovic",
+    "role": "DIF",
+    "nationality_iso3": "HRV",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0225",
+    "internal_full_name": "Leonardo Russo",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0226",
+    "internal_full_name": "Loic Martin",
+    "role": "DIF",
+    "nationality_iso3": "FRA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0227",
+    "internal_full_name": "Gabriele Ricci",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0228",
+    "internal_full_name": "Nicolo Fontana",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0229",
+    "internal_full_name": "Alberto Lombardi",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0230",
+    "internal_full_name": "Christian Rizzo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 19,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0231",
+    "internal_full_name": "Cristian Longo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0232",
+    "internal_full_name": "Lucas Martin",
+    "role": "CC",
+    "nationality_iso3": "FRA",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0233",
+    "internal_full_name": "Stefano Martini",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0234",
+    "internal_full_name": "Pietro Marino",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0235",
+    "internal_full_name": "Roberto Gentile",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0236",
+    "internal_full_name": "Filip Saric",
+    "role": "ATT",
+    "nationality_iso3": "HRV",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0237",
+    "internal_full_name": "Marcin Dabrowski",
+    "role": "ATT",
+    "nationality_iso3": "POL",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0238",
+    "internal_full_name": "Aleksandar Pavlovic",
+    "role": "ATT",
+    "nationality_iso3": "SRB",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0239",
+    "internal_full_name": "Iker Sanchez",
+    "role": "ATT",
+    "nationality_iso3": "ESP",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0240",
+    "internal_full_name": "Tomas Fernandes",
+    "role": "ATT",
+    "nationality_iso3": "PRT",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Lecce",
+    "team_fd_id": "lecce"
+  },
+  {
+    "external_id": "FIC0241",
+    "internal_full_name": "Rodrigo Costa",
+    "role": "POR",
+    "nationality_iso3": "PRT",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0242",
+    "internal_full_name": "Tin Kovacevic",
+    "role": "POR",
+    "nationality_iso3": "HRV",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0243",
+    "internal_full_name": "Victor De Smet",
+    "role": "DIF",
+    "nationality_iso3": "BEL",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0244",
+    "internal_full_name": "Bruno Costa",
+    "role": "DIF",
+    "nationality_iso3": "BRA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0245",
+    "internal_full_name": "Wout Goossens",
+    "role": "DIF",
+    "nationality_iso3": "BEL",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0246",
+    "internal_full_name": "Daniele Conti",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0247",
+    "internal_full_name": "Vincenzo Rossi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0248",
+    "internal_full_name": "Felipe Ribeiro",
+    "role": "DIF",
+    "nationality_iso3": "BRA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0249",
+    "internal_full_name": "Giacomo Colombo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0250",
+    "internal_full_name": "Clement Roussel",
+    "role": "CC",
+    "nationality_iso3": "FRA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0251",
+    "internal_full_name": "Borna Novak",
+    "role": "CC",
+    "nationality_iso3": "HRV",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0252",
+    "internal_full_name": "Luka Nikolic",
+    "role": "CC",
+    "nationality_iso3": "SRB",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0253",
+    "internal_full_name": "Roko Juric",
+    "role": "CC",
+    "nationality_iso3": "HRV",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0254",
+    "internal_full_name": "Yanis Morel",
+    "role": "CC",
+    "nationality_iso3": "FRA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0255",
+    "internal_full_name": "Marco Gentile",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0256",
+    "internal_full_name": "Everton Cardoso",
+    "role": "ATT",
+    "nationality_iso3": "BRA",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0257",
+    "internal_full_name": "Javier Moreno",
+    "role": "ATT",
+    "nationality_iso3": "ESP",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0258",
+    "internal_full_name": "Emanuele Santoro",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0259",
+    "internal_full_name": "Franco Lopez",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0260",
+    "internal_full_name": "Giuseppe Costa",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Udinese",
+    "team_fd_id": "udinese"
+  },
+  {
+    "external_id": "FIC0261",
+    "internal_full_name": "Marko Djordjevic",
+    "role": "POR",
+    "nationality_iso3": "SRB",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0262",
+    "internal_full_name": "Thijs Mulder",
+    "role": "POR",
+    "nationality_iso3": "NLD",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0263",
+    "internal_full_name": "Dragan Ilic",
+    "role": "DIF",
+    "nationality_iso3": "SRB",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0264",
+    "internal_full_name": "Gonzalo Herrera",
+    "role": "DIF",
+    "nationality_iso3": "ARG",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0265",
+    "internal_full_name": "Florian Schafer",
+    "role": "DIF",
+    "nationality_iso3": "DEU",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0266",
+    "internal_full_name": "Filippo Ricci",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0267",
+    "internal_full_name": "Peter Olawale",
+    "role": "DIF",
+    "nationality_iso3": "NGA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0268",
+    "internal_full_name": "Edoardo Conti",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 35,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0269",
+    "internal_full_name": "Khadim Sow",
+    "role": "CC",
+    "nationality_iso3": "SEN",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0270",
+    "internal_full_name": "Uros Ilic",
+    "role": "CC",
+    "nationality_iso3": "SRB",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0271",
+    "internal_full_name": "Emanuele Colombo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0272",
+    "internal_full_name": "Filip Petrovic",
+    "role": "CC",
+    "nationality_iso3": "HRV",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0273",
+    "internal_full_name": "Antonio Russo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0274",
+    "internal_full_name": "Danilo Souza",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 35,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0275",
+    "internal_full_name": "Filippo Romano",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0276",
+    "internal_full_name": "Antoine Dubois",
+    "role": "ATT",
+    "nationality_iso3": "FRA",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0277",
+    "internal_full_name": "Facundo Medina",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0278",
+    "internal_full_name": "Tommaso Caruso",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0279",
+    "internal_full_name": "Emeka Adeyemi",
+    "role": "ATT",
+    "nationality_iso3": "NGA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0280",
+    "internal_full_name": "Simone Ferrari",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Cagliari",
+    "team_fd_id": "cagliari"
+  },
+  {
+    "external_id": "FIC0281",
+    "internal_full_name": "Daniele Longo",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0282",
+    "internal_full_name": "Daniel Uche",
+    "role": "POR",
+    "nationality_iso3": "NGA",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0283",
+    "internal_full_name": "Moussa Fall",
+    "role": "DIF",
+    "nationality_iso3": "SEN",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0284",
+    "internal_full_name": "Idrissa Diop",
+    "role": "DIF",
+    "nationality_iso3": "SEN",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0285",
+    "internal_full_name": "Roberto De Santis",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0286",
+    "internal_full_name": "Fabio Moretti",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0287",
+    "internal_full_name": "Gabriele Conti",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0288",
+    "internal_full_name": "Idrissa Ba",
+    "role": "DIF",
+    "nationality_iso3": "SEN",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0289",
+    "internal_full_name": "Bram Mulder",
+    "role": "CC",
+    "nationality_iso3": "NLD",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0290",
+    "internal_full_name": "Leonardo Galli",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0291",
+    "internal_full_name": "Leonardo Lombardi",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0292",
+    "internal_full_name": "Antonio Gentile",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0293",
+    "internal_full_name": "Vincenzo Colombo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0294",
+    "internal_full_name": "Cristian Barbieri",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0295",
+    "internal_full_name": "Tomas Paredes",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0296",
+    "internal_full_name": "Emiliano Acosta",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0297",
+    "internal_full_name": "Filippo Rossi",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0298",
+    "internal_full_name": "Nicolo Vitale",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0299",
+    "internal_full_name": "Lucas Ribeiro",
+    "role": "ATT",
+    "nationality_iso3": "BRA",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0300",
+    "internal_full_name": "Salvatore De Santis",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Monza",
+    "team_fd_id": "monza"
+  },
+  {
+    "external_id": "FIC0301",
+    "internal_full_name": "Bas Visser",
+    "role": "POR",
+    "nationality_iso3": "NLD",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0302",
+    "internal_full_name": "Carlos Martinez",
+    "role": "POR",
+    "nationality_iso3": "ESP",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0303",
+    "internal_full_name": "Christian Mancini",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0304",
+    "internal_full_name": "Federico Rizzo",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0305",
+    "internal_full_name": "Josip Maric",
+    "role": "DIF",
+    "nationality_iso3": "HRV",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0306",
+    "internal_full_name": "Pietro Caruso",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0307",
+    "internal_full_name": "Pape Gueye",
+    "role": "DIF",
+    "nationality_iso3": "SEN",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0308",
+    "internal_full_name": "Julian Richter",
+    "role": "DIF",
+    "nationality_iso3": "DEU",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0309",
+    "internal_full_name": "Giuseppe Greco",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0310",
+    "internal_full_name": "Unai Torres",
+    "role": "CC",
+    "nationality_iso3": "ESP",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0311",
+    "internal_full_name": "Tomas Costa",
+    "role": "CC",
+    "nationality_iso3": "PRT",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0312",
+    "internal_full_name": "Felix Schmidt",
+    "role": "CC",
+    "nationality_iso3": "DEU",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0313",
+    "internal_full_name": "Marco Galli",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0314",
+    "internal_full_name": "Andrea Serra",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0315",
+    "internal_full_name": "Paolo Vitale",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0316",
+    "internal_full_name": "Alessandro Marchetti",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0317",
+    "internal_full_name": "Karlo Babic",
+    "role": "ATT",
+    "nationality_iso3": "HRV",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0318",
+    "internal_full_name": "Clement Moreau",
+    "role": "ATT",
+    "nationality_iso3": "FRA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0319",
+    "internal_full_name": "Alessandro Costa",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 19,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0320",
+    "internal_full_name": "Giacomo Ricci",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 19,
+    "date_of_birth": null,
+    "team_fd_name": "Hellas Verona",
+    "team_fd_id": "verona"
+  },
+  {
+    "external_id": "FIC0321",
+    "internal_full_name": "Leonardo Ferrara",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0322",
+    "internal_full_name": "Erik Klein",
+    "role": "POR",
+    "nationality_iso3": "DEU",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0323",
+    "internal_full_name": "Samuele Fontana",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0324",
+    "internal_full_name": "Agustin Paredes",
+    "role": "DIF",
+    "nationality_iso3": "ARG",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0325",
+    "internal_full_name": "Ricardo Costa",
+    "role": "DIF",
+    "nationality_iso3": "PRT",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0326",
+    "internal_full_name": "Roberto Moretti",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0327",
+    "internal_full_name": "Nicolo Lombardi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0328",
+    "internal_full_name": "Gonzalo Acosta",
+    "role": "DIF",
+    "nationality_iso3": "ARG",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0329",
+    "internal_full_name": "Simone Parisi",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0330",
+    "internal_full_name": "Franco Romero",
+    "role": "CC",
+    "nationality_iso3": "ARG",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0331",
+    "internal_full_name": "Nikola Juric",
+    "role": "CC",
+    "nationality_iso3": "HRV",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0332",
+    "internal_full_name": "Loic Laurent",
+    "role": "CC",
+    "nationality_iso3": "FRA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0333",
+    "internal_full_name": "Gabriel Rocha",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0334",
+    "internal_full_name": "Krzysztof Krawczyk",
+    "role": "CC",
+    "nationality_iso3": "POL",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0335",
+    "internal_full_name": "Manuel Fontana",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0336",
+    "internal_full_name": "Bruno Sosa",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0337",
+    "internal_full_name": "Bas Bos",
+    "role": "ATT",
+    "nationality_iso3": "NLD",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0338",
+    "internal_full_name": "Leonardo Giordano",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0339",
+    "internal_full_name": "Salvatore Marchetti",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0340",
+    "internal_full_name": "Francesco Ferrara",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Empoli",
+    "team_fd_id": "empoli"
+  },
+  {
+    "external_id": "FIC0341",
+    "internal_full_name": "Iker Jimenez",
+    "role": "POR",
+    "nationality_iso3": "ESP",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0342",
+    "internal_full_name": "Paolo Moretti",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 36,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0343",
+    "internal_full_name": "Dawid Kozlowski",
+    "role": "DIF",
+    "nationality_iso3": "POL",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0344",
+    "internal_full_name": "Christian De Santis",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0345",
+    "internal_full_name": "Rodrigo Oliveira",
+    "role": "DIF",
+    "nationality_iso3": "PRT",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0346",
+    "internal_full_name": "Matheus Santos",
+    "role": "DIF",
+    "nationality_iso3": "BRA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0347",
+    "internal_full_name": "Hugo Garcia",
+    "role": "DIF",
+    "nationality_iso3": "ESP",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0348",
+    "internal_full_name": "Raul Sanchez",
+    "role": "DIF",
+    "nationality_iso3": "ESP",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0349",
+    "internal_full_name": "Mamadou Diop",
+    "role": "CC",
+    "nationality_iso3": "SEN",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0350",
+    "internal_full_name": "Alessandro Fontana",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0351",
+    "internal_full_name": "Vincenzo Fontana",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0352",
+    "internal_full_name": "Andrea Mariani",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0353",
+    "internal_full_name": "Unai Lopez",
+    "role": "CC",
+    "nationality_iso3": "ESP",
+    "age": 33,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0354",
+    "internal_full_name": "Giuseppe Santoro",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0355",
+    "internal_full_name": "Mattia Lombardo",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0356",
+    "internal_full_name": "Mattia Santoro",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0357",
+    "internal_full_name": "Federico De Santis",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0358",
+    "internal_full_name": "Ibrahima Sy",
+    "role": "ATT",
+    "nationality_iso3": "SEN",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0359",
+    "internal_full_name": "Wesley Souza",
+    "role": "ATT",
+    "nationality_iso3": "BRA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0360",
+    "internal_full_name": "Michele Bianchi",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 35,
+    "date_of_birth": null,
+    "team_fd_name": "Parma",
+    "team_fd_id": "parma"
+  },
+  {
+    "external_id": "FIC0361",
+    "internal_full_name": "Nicolo Mancini",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0362",
+    "internal_full_name": "Emiliano Romero",
+    "role": "POR",
+    "nationality_iso3": "ARG",
+    "age": 36,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0363",
+    "internal_full_name": "Joao Silva",
+    "role": "DIF",
+    "nationality_iso3": "BRA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0364",
+    "internal_full_name": "Domenico Lombardi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0365",
+    "internal_full_name": "Lamine Diallo",
+    "role": "DIF",
+    "nationality_iso3": "SEN",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0366",
+    "internal_full_name": "Daniel Ibrahim",
+    "role": "DIF",
+    "nationality_iso3": "NGA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0367",
+    "internal_full_name": "Lucas Sosa",
+    "role": "DIF",
+    "nationality_iso3": "ARG",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0368",
+    "internal_full_name": "Franco Suarez",
+    "role": "DIF",
+    "nationality_iso3": "ARG",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0369",
+    "internal_full_name": "Stefano Lombardo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0370",
+    "internal_full_name": "Simone Greco",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0371",
+    "internal_full_name": "Gonzalo Benitez",
+    "role": "CC",
+    "nationality_iso3": "ARG",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0372",
+    "internal_full_name": "Murilo Rocha",
+    "role": "CC",
+    "nationality_iso3": "BRA",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0373",
+    "internal_full_name": "Giuseppe Gentile",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 18,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0374",
+    "internal_full_name": "Daan Vos",
+    "role": "CC",
+    "nationality_iso3": "NLD",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0375",
+    "internal_full_name": "Mattia Galli",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0376",
+    "internal_full_name": "Maxime Garnier",
+    "role": "ATT",
+    "nationality_iso3": "FRA",
+    "age": 34,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0377",
+    "internal_full_name": "Alessandro Martinelli",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 23,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0378",
+    "internal_full_name": "Antoine Robin",
+    "role": "ATT",
+    "nationality_iso3": "FRA",
+    "age": 21,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0379",
+    "internal_full_name": "Marco Barbieri",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0380",
+    "internal_full_name": "Caio Rocha",
+    "role": "ATT",
+    "nationality_iso3": "BRA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Como",
+    "team_fd_id": "como"
+  },
+  {
+    "external_id": "FIC0381",
+    "internal_full_name": "Giacomo Rossi",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0382",
+    "internal_full_name": "Riccardo Rinaldi",
+    "role": "POR",
+    "nationality_iso3": "ITA",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0383",
+    "internal_full_name": "Stefano Marino",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0384",
+    "internal_full_name": "Giacomo Galli",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0385",
+    "internal_full_name": "Roberto Rossi",
+    "role": "DIF",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0386",
+    "internal_full_name": "Danilo Silva",
+    "role": "DIF",
+    "nationality_iso3": "BRA",
+    "age": 27,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0387",
+    "internal_full_name": "Joao Mendes",
+    "role": "DIF",
+    "nationality_iso3": "PRT",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0388",
+    "internal_full_name": "Filip Todorovic",
+    "role": "DIF",
+    "nationality_iso3": "SRB",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0389",
+    "internal_full_name": "Santiago Lopez",
+    "role": "CC",
+    "nationality_iso3": "ARG",
+    "age": 28,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0390",
+    "internal_full_name": "Matteo Russo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 32,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0391",
+    "internal_full_name": "Leonardo Lombardo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 26,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0392",
+    "internal_full_name": "Mattia Longo",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 25,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0393",
+    "internal_full_name": "Federico Moretti",
+    "role": "CC",
+    "nationality_iso3": "ITA",
+    "age": 31,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0394",
+    "internal_full_name": "Demba Fall",
+    "role": "CC",
+    "nationality_iso3": "SEN",
+    "age": 20,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0395",
+    "internal_full_name": "Lukas Wagner",
+    "role": "ATT",
+    "nationality_iso3": "DEU",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0396",
+    "internal_full_name": "Manuel Greco",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 24,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0397",
+    "internal_full_name": "Matteo Colombo",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 30,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0398",
+    "internal_full_name": "Domenico Martini",
+    "role": "ATT",
+    "nationality_iso3": "ITA",
+    "age": 22,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0399",
+    "internal_full_name": "Santiago Gomez",
+    "role": "ATT",
+    "nationality_iso3": "ARG",
+    "age": 29,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  },
+  {
+    "external_id": "FIC0400",
+    "internal_full_name": "Murilo Gomes",
+    "role": "ATT",
+    "nationality_iso3": "BRA",
+    "age": 19,
+    "date_of_birth": null,
+    "team_fd_name": "Venezia",
+    "team_fd_id": "venezia"
+  }
+]

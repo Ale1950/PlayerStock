@@ -1,7 +1,12 @@
 """CLI: popola DB con sports/teams + roster 400 giocatori Serie A.
 
+Sorgente roster (default = settings.DATA_PROVIDER = 'fictional_roster'):
+  - fictional_roster   → 400 giocatori FITTIZI da file statico nel repo (no token)
+  - football_data_org  → roster reale via API (richiede FOOTBALL_DATA_ORG_TOKEN)
+
 Uso (dalla cartella backend/):
-    python -m app.cli.seed_roster --season 2024 --limit 20
+    python -m app.cli.seed_roster                         # fittizio (default)
+    python -m app.cli.seed_roster --source football_data_org --season 2024
 """
 from __future__ import annotations
 
@@ -14,6 +19,8 @@ from app.config.settings import get_settings
 from app.config.teams_fantasy_map import find_fantasy_by_real_name
 from app.core.db import close_db, get_db, init_db
 from app.data_providers.anonymization import anonymize_name
+from app.data_providers.base import DataProvider
+from app.data_providers.fictional_roster import FictionalRosterProvider
 from app.data_providers.football_data_org import FootballDataOrgProvider
 from app.db.indexes import ensure_indexes
 from app.db.seed import run_all_seeds
@@ -28,23 +35,31 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger("seed_cli")
 
 
-async def main(season: int, limit_per_team: int) -> int:
-    settings = get_settings()
-    if not settings.FOOTBALL_DATA_ORG_TOKEN:
-        logger.error("FOOTBALL_DATA_ORG_TOKEN non configurato in .env")
-        return 1
+def _build_provider(settings, source: str) -> DataProvider:
+    """Sceglie il provider roster. Default 'fictional_roster' (nessun token)."""
+    if source == "football_data_org":
+        if not settings.FOOTBALL_DATA_ORG_TOKEN:
+            raise RuntimeError("FOOTBALL_DATA_ORG_TOKEN non configurato in .env")
+        return FootballDataOrgProvider(
+            api_token=settings.FOOTBALL_DATA_ORG_TOKEN,
+            base_url=settings.FOOTBALL_DATA_ORG_BASE_URL,
+        )
+    return FictionalRosterProvider()
 
-    init_db()
-    db = get_db()
-    await ensure_indexes(db)
-    await run_all_seeds(db)
 
-    provider = FootballDataOrgProvider(
-        api_token=settings.FOOTBALL_DATA_ORG_TOKEN,
-        base_url=settings.FOOTBALL_DATA_ORG_BASE_URL,
-    )
+async def seed_athletes(
+    db,
+    provider: DataProvider,
+    *,
+    season: int,
+    limit_per_team: int = 20,
+) -> dict:
+    """Scarica il roster dal provider e fa upsert degli atleti. Ritorna le stats.
 
-    logger.info("Fetching Serie A roster season=%d ...", season)
+    Testabile con mongomock: col provider fittizio non c'è I/O di rete.
+    Assume che sports/teams siano già seedati (run_all_seeds).
+    """
+    logger.info("Fetching Serie A roster season=%d (provider=%s) ...", season, provider.provider_name)
     players = await provider.fetch_serie_a_full(season=season)
     logger.info("Totale giocatori scaricati: %d", len(players))
 
@@ -117,7 +132,7 @@ async def main(season: int, limit_per_team: int) -> int:
                 "prezzo_iniziale_crediti": PREZZO_BASE_AZIONE_CREDITI,
                 "prezzo_corrente_crediti": PREZZO_BASE_AZIONE_CREDITI,
                 "status": "ACTIVE",
-                "data_source": "football_data_org",
+                "data_source": provider.provider_name,
                 "source_external_id": p["external_id"],
                 "updated_at": now,
             }
@@ -134,24 +149,45 @@ async def main(season: int, limit_per_team: int) -> int:
             except Exception as e:
                 errors.append(f"{name}@{fd_team_name}: {e}")
 
-    await db.data_sync_log.insert_one({
-        "source": provider.provider_name,
-        "endpoint": f"/competitions/SA/teams?season={season}",
-        "status": "ok" if not errors else "partial",
+    stats = {
         "items_synced": items_synced,
         "skipped_no_team": skipped_no_team,
         "skipped_dup": skipped_dup,
         "errors_count": len(errors),
         "errors_sample": errors[:5],
+    }
+    await db.data_sync_log.insert_one({
+        "source": provider.provider_name,
+        "endpoint": f"/competitions/SA/teams?season={season}",
+        "status": "ok" if not errors else "partial",
+        **stats,
         "ran_at": now,
         "finished_at": utc_now(),
     })
+    return stats
 
-    logger.info("✅ DONE | synced=%d | skipped_no_team=%d | dup=%d | errors=%d",
-                items_synced, skipped_no_team, skipped_dup, len(errors))
-    if errors:
-        for e in errors[:5]:
-            logger.warning("  → %s", e)
+
+async def main(season: int, limit_per_team: int, source: str) -> int:
+    settings = get_settings()
+    try:
+        provider = _build_provider(settings, source)
+    except RuntimeError as e:
+        logger.error(str(e))
+        return 1
+
+    init_db()
+    db = get_db()
+    await ensure_indexes(db)
+    await run_all_seeds(db)
+    logger.info("Provider roster: %s", provider.provider_name)
+
+    stats = await seed_athletes(db, provider, season=season, limit_per_team=limit_per_team)
+
+    logger.info("DONE | synced=%d | skipped_no_team=%d | dup=%d | errors=%d",
+                stats["items_synced"], stats["skipped_no_team"],
+                stats["skipped_dup"], stats["errors_count"])
+    for e in stats["errors_sample"]:
+        logger.warning("  -> %s", e)
 
     close_db()
     return 0
@@ -161,5 +197,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--season", type=int, default=2024)
     parser.add_argument("--limit", type=int, default=20)
+    parser.add_argument(
+        "--source",
+        default=get_settings().DATA_PROVIDER,
+        choices=["fictional_roster", "football_data_org"],
+        help="Sorgente roster (default: settings.DATA_PROVIDER)",
+    )
     args = parser.parse_args()
-    sys.exit(asyncio.run(main(args.season, args.limit)))
+    sys.exit(asyncio.run(main(args.season, args.limit, args.source)))
