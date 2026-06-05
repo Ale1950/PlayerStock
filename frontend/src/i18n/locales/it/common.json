@@ -35,6 +35,7 @@
   "tabs": {
     "home": "Mercato",
     "portfolio": "Portafoglio",
+    "leaderboard": "Classifica",
     "wallet": "Crediti",
     "reward": "Reward",
     "profile": "Profilo"
@@ -69,8 +70,21 @@
   "portfolio": {
     "title": "Portafoglio",
     "empty_title": "Nessuna posizione",
-    "empty_subtitle": "Quando il mercato sarà attivo, vedrai qui le tue quote.",
+    "empty_subtitle": "Vai al Mercato per acquistare le tue prime quote.",
+    "total_equity": "Patrimonio totale",
+    "cash": "Cassa",
+    "positions_value": "Titoli",
+    "pnl": "P&L",
     "phase4_note": "Disponibile in Fase 4."
+  },
+  "leaderboard": {
+    "title": "Classifica",
+    "users_count": "trader",
+    "your_rank": "La tua posizione",
+    "you": "tu",
+    "positions_value": "Titoli",
+    "cash": "Cassa",
+    "empty": "Nessun trader in classifica per ora"
   },
   "wallet": {
     "title": "Crediti",
