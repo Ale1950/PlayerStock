@@ -38,6 +38,10 @@ export default function TabsLayout() {
         title: t('tabs.leaderboard'),
         tabBarIcon: ({ color, size }) => <Ionicons name="trophy" size={size} color={color} />,
       }} />
+      <Tabs.Screen name="engage" options={{
+        title: t('tabs.engage'),
+        tabBarIcon: ({ color, size }) => <Ionicons name="flame" size={size} color={color} />,
+      }} />
       <Tabs.Screen name="wallet" options={{
         title: t('tabs.wallet'),
         tabBarIcon: ({ color, size }) => <Ionicons name="wallet" size={size} color={color} />,

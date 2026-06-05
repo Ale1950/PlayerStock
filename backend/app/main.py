@@ -13,6 +13,7 @@ from app.db.indexes import ensure_indexes
 from app.db.seed import run_all_seeds
 from app.modules.admin import routes as admin_routes
 from app.modules.auth import routes as auth_routes
+from app.modules.engagement import routes as engagement_routes
 from app.modules.market import routes as market_routes
 from app.modules.player import routes as player_routes
 from app.modules.portfolio import routes as portfolio_routes
@@ -64,6 +65,7 @@ def create_app() -> FastAPI:
     api.include_router(market_routes.router)
     api.include_router(portfolio_routes.router)
     api.include_router(reward_routes.router)
+    api.include_router(engagement_routes.router)
     api.include_router(admin_routes.router)
 
     app.include_router(api)

@@ -55,6 +55,13 @@ async def ensure_indexes(db: AsyncIOMotorDatabase) -> None:
     await db.heartbeat_nonces.create_index([("user_id", 1), ("nonce", 1)], unique=True)
     await db.nackl_ledger.create_index([("user_id", 1), ("ts", -1)])
 
+    # ─── engagement (Fase 6) ───
+    await db.login_streaks.create_index("user_id", unique=True)
+    await db.quiz_attempts.create_index([("user_id", 1), ("quiz_id", 1)], unique=True)
+    await db.quizzes.create_index("active")
+    await db.predictions.create_index([("user_id", 1), ("status", 1)])
+    await db.predictions.create_index([("expires_at", 1), ("status", 1)])
+
     # ─── events (schema-only Fase 1) ───
     await db.events.create_index([("athlete_id", 1), ("season", 1), ("matchday", 1)])
 

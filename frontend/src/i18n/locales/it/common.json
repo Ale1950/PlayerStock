@@ -38,7 +38,8 @@
     "leaderboard": "Classifica",
     "wallet": "Crediti",
     "reward": "Reward",
-    "profile": "Profilo"
+    "profile": "Profilo",
+    "engage": "Engage"
   },
   "home": {
     "title": "Mercato",
@@ -157,5 +158,28 @@
     "data.no_token": "Token Football-Data.org non configurato.",
     "data.fetch_failed": "Errore nello scaricamento dei dati.",
     "terms.required": "Devi accettare entrambi: T&C e Privacy."
+  },
+  "engage": {
+    "title": "Engage & Earn",
+    "subtitle": "Guadagna NACKL completando attività. NACKL è separato dai Crediti.",
+    "streak_title": "Streak quotidiano",
+    "streak_days": "consecutivi",
+    "streak_longest": "record",
+    "streak_next_reward": "prossima reward",
+    "streak_claim_btn": "Ritira reward giornaliero",
+    "streak_already_claimed": "Già ritirato oggi",
+    "streak_claimed_msg": "+{{reward}} NACKL · streak {{streak}} giorni 🔥",
+    "quiz_title": "Quiz giornaliero",
+    "quiz_questions": "domande",
+    "quiz_play": "Gioca",
+    "quiz_done_msg": "{{correct}}/{{total}} corrette · +{{reward}} NACKL",
+    "quiz_note_phase7": "UI quiz interattiva in arrivo (Fase 7)",
+    "no_quiz": "Nessun quiz attivo. Torna domani!",
+    "predictions_title": "Le tue predizioni",
+    "predictions_note": "Le predizioni si chiudono dopo 24h: se indovini la direzione del prezzo guadagni 2,5 NACKL.",
+    "pred_up": "Salirà",
+    "pred_down": "Scenderà",
+    "no_predictions": "Nessuna predizione. Vai al Mercato per crearne una.",
+    "reward_note": "I NACKL guadagnati qui sono separati dai Crediti del trading e non possono essere usati per comprare azioni."
   }
 }
