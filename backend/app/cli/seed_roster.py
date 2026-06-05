@@ -143,6 +143,8 @@ async def seed_athletes(
                 "fattore_squadra": fattore_squadra,  # audit (sintetico)
                 "valore_iniziale_crediti": valore,
                 "float_quote": FLOAT_AZIONI_PER_GIOCATORE,
+                "primary_pool_qty": FLOAT_AZIONI_PER_GIOCATORE,  # IPO: float intero nel pool
+                "circulating_qty": 0,
                 "prezzo_iniziale_crediti": prezzo,
                 "prezzo_corrente_crediti": prezzo,
                 "status": "ACTIVE",

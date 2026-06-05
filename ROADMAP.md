@@ -33,7 +33,9 @@ vanno validati da professionisti.
    NON richiesto qui — vedi D1.2.) Criteri: backend su Atlas (`DB_NAME=playerstock`) con
    `/api/health` `/sports` `/teams` `/players` OK · seed popola **400 atleti fittizi** (D1.1) ·
    **nessun `internal_full_name`** nelle response · test base verdi.
-2. **Valore/legale (fine Fase 3)**: metriche beta promettenti + qualificazione legale gestibile? → registra IP, avvia AN.
+2. **Valore/legale (fine Fase 3)**: mercato a quantità reali (pool a due lati) + fee/cap/holding +
+   `mercato%` che muove i prezzi funzionante; metriche beta promettenti + qualificazione legale
+   gestibile? → registra IP, avvia AN.
 3. **Commerciale (fine Fase 4)**: accordo Acki Nacki accettabile? → Mainnet + pubblica.
 
 ---
@@ -53,9 +55,10 @@ Serie A (**fittizi realistici**, anonimizzazione L2 — vedi D1.1) + i18n archit
 Motore valutazione iniziale + pricing engine (calcio) + unit test su fixture. **Estrarre i valori
 esatti da `Gioco 5.xls` foglio "Serie 1"** in `pricing_constants.py`/`valuation_constants.py`.
 
-### Fase 3 — Mercato / order book · Claude Code
-Emissione primaria + order book secondario P2P (quantità reali) + fee 7% (3.5+3.5) + holding 7gg +
-cap 3%. → Cancello 2.
+### Fase 3 — Mercato · Claude Code
+**MVP (D3.2): pool a DUE LATI** (casa controparte al prezzo di quotazione), order book P2P/ordini
+limite **rimandati**. Emissione primaria (IPO, float intero nel pool) + fee 7% (3.5+3.5)→house +
+holding 7gg FIFO + cap 3% + `mercato%` (net flow→tick). → Cancello 2.
 
 ### Fase 4 — Economia Crediti + Portfolio · Emergent
 Budget iniziale 10.000, daily reward, 5 boost, sink/house edge, P&L portafoglio.
