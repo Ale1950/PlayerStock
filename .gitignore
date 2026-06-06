@@ -29,8 +29,13 @@ build/
 node_modules/
 .expo/
 .expo-shared/
+.metro-cache/
 dist/
 web-build/
+
+# ─── Artefatti locali (NON versionare) ───
+.tmp_ngrok/
+.claude/
 *.log
 npm-debug.*
 yarn-debug.*

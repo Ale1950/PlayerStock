@@ -4,7 +4,7 @@
 import api from './api';
 
 export interface WalletBalance {
-  balance_credits: number;
+  balance_eur: number;
   updated_at: string;
 }
 

@@ -70,14 +70,14 @@ async def my_holdings(user: CurrentUserDep, db: DBDep) -> list[dict]:
         a = await db.athletes.find_one({"_id": h["athlete_id"]})
         if not a:
             continue
-        price = a["prezzo_corrente_crediti"]
+        price = a["prezzo_corrente_eur"]
         out.append({
             "athlete_id": str(h["athlete_id"]),
             "display_label": a.get("display_label"),
             "role": a.get("role"),
             "quantity": h["quantity"],
-            "prezzo_corrente_crediti": price,
-            "valore_corrente_crediti": h["quantity"] * price,
+            "prezzo_corrente_eur": price,
+            "valore_corrente_eur": h["quantity"] * price,
         })
     return out
 
@@ -90,10 +90,10 @@ async def quote(
     a = await db.athletes.find_one({"_id": aid, "status": "ACTIVE"})
     if not a:
         raise err_not_found("athlete.not_found", "Atleta non trovato")
-    price = a["prezzo_corrente_crediti"]
+    price = a["prezzo_corrente_eur"]
     return {
         "athlete_id": athlete_id,
-        "prezzo_corrente_crediti": price,
+        "prezzo_corrente_eur": price,
         "primary_pool_qty": a.get("primary_pool_qty", 0),
         "qty": qty,
         "buy_cost": buy_cost(qty, price),

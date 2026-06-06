@@ -18,6 +18,7 @@ from app.modules.market import routes as market_routes
 from app.modules.player import routes as player_routes
 from app.modules.portfolio import routes as portfolio_routes
 from app.modules.reward import routes as reward_routes
+from app.modules.stats import routes as stats_routes
 from app.modules.user import routes as user_routes
 
 logger = logging.getLogger(__name__)
@@ -27,10 +28,25 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     init_db()
     db = get_db()
-    await ensure_indexes(db)
-    await run_all_seeds(db)
+    # RESILIENZA: index/seed sono IDEMPOTENTI e Atlas è già seedato → se Atlas ha un
+    # blip TLS all'avvio NON facciamo morire l'app. Si parte "degradati" e motor
+    # riconnette da solo quando Atlas torna (era una debolezza nota — DECISIONS).
+    try:
+        await ensure_indexes(db)
+        await run_all_seeds(db)
+    except Exception as e:  # noqa: BLE001
+        logger.warning(
+            "Startup DB init SALTATO (Atlas non raggiungibile?): %s — app avviata in modalità "
+            "degradata, riconnessione automatica.", e,
+        )
+    from app.scheduler import shutdown_scheduler, start_scheduler
+    try:
+        start_scheduler(db)  # job ricorrenti. PROD: 1 solo processo.
+    except Exception as e:  # noqa: BLE001
+        logger.warning("Scheduler non avviato: %s", e)
     logger.info("PlayerStock backend started")
     yield
+    shutdown_scheduler()
     close_db()
     logger.info("PlayerStock backend stopped")
 
@@ -57,7 +73,10 @@ def create_app() -> FastAPI:
 
     @api.get("/health")
     async def health():
-        return {"status": "ok", "app": "PlayerStock", "version": "0.1.0-fase1"}
+        # Non crasha mai: riporta lo stato DB (ok/degraded) senza far cadere l'app.
+        from app.core.db import db_health
+        return {"status": "ok", "app": "PlayerStock", "version": "0.1.0-fase1",
+                "db": await db_health()}
 
     api.include_router(auth_routes.router)
     api.include_router(user_routes.router)
@@ -67,6 +86,7 @@ def create_app() -> FastAPI:
     api.include_router(reward_routes.router)
     api.include_router(engagement_routes.router)
     api.include_router(admin_routes.router)
+    api.include_router(stats_routes.router)
 
     app.include_router(api)
 

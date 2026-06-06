@@ -10,26 +10,54 @@ DO NOT EDIT manually without updating PROJECT_SPEC.md and DECISIONS.md.
 """
 from __future__ import annotations
 
+import math
+
 # ───────────────────────────────────────────────────────────────
 # STRUTTURA AZIONARIA — DECISIONI FINALI PROJECT_SPEC.md §2
 # ───────────────────────────────────────────────────────────────
 FLOAT_AZIONI_PER_GIOCATORE: int = 1_000_000
-VALORE_BASE_GIOCATORE_CREDITI: float = 10_000.0
-PREZZO_BASE_AZIONE_CREDITI: float = 0.01  # = VALORE_BASE / FLOAT
+# Migrazione € (D7): prezzo quota = market_value_eur / FLOAT (ancora = €M Fase 2c,
+# coda pesante €0,50–€115). value mostrato = prezzo × FLOAT (una sola fonte di verità).
+# Le costanti BASE qui sotto sono solo DEFAULT per atleti creati a mano (admin):
+# valore di mercato mediano ~€5M → prezzo €5,00.
+VALORE_BASE_GIOCATORE_EUR: float = 5_000_000.0
+PREZZO_BASE_AZIONE_EUR: float = 5.0  # = VALORE_BASE / FLOAT
 CAP_UTENTE_PCT: float = 0.03  # 3%
 CAP_UTENTE_AZIONI: int = 30_000
 HOLDING_MINIMO_GIORNI: int = 7
 FLOOR_PCT_PREZZO_INIZIALE: float = 0.10
-DISPLAY_DECIMALS: int = 4
+DISPLAY_DECIMALS: int = 2  # € → 2 decimali (es. €86,30)
 
 # ───────────────────────────────────────────────────────────────
-# ECONOMIA CREDITI
+# PREZZO IBRIDO — Fase 3b (impatto trading + rientro verso l'àncora)
+#
+# prezzo_mercato = clamp( prezzo_equo × (1 + deviazione_ora), floor, tetto )
+#   deviazione: buy q → += K×(q/FLOAT) · sell q → -= K×(q/FLOAT), clamp ±CAP
+#   rientro LAZY: deviazione_ora = deviazione_ultima × e^(-λ·Δt)
+#
+# Calibrazione (vedi ragionamento nel task / smoke):
+#  - K_IMPATTO_TRADING=1.5 → un ordine al cap utente (30.000 = 3% del float)
+#    muove la deviazione di 1.5×30.000/1.000.000 = +4,5% (dentro il tetto 0,40).
+#    (Tarato da 1.0→1.5 dopo il report di ritaratura: il trading era troppo lieve
+#     vs il rendimento.)
+#  - emivita 3h → λ = ln2/(3·3600). La deviazione si dimezza in 3 ore (rientro
+#    "in poche ore") e ~svanisce in mezza giornata.
+#  - DEVIAZIONE_CAP=±0.40 → anti-fuga: servono ~13 ordini-cap consecutivi prima
+#    del decadimento per arrivarci, quindi in pratica il prezzo non scappa.
 # ───────────────────────────────────────────────────────────────
-BUDGET_INIZIALE_UTENTE_CREDITI: float = 10_000.0
+K_IMPATTO_TRADING: float = 1.5
+DEVIAZIONE_CAP: float = 0.40
+_EMIVITA_DEVIAZIONE_ORE: float = 3.0
+LAMBDA_DEVIAZIONE: float = math.log(2) / (_EMIVITA_DEVIAZIONE_ORE * 3600.0)
+SNAPSHOT_PRICE_INTERVALLO_MIN: int = 30  # snapshot periodico per la sparkline (rientro)
+
+# ───────────────────────────────────────────────────────────────
+# ECONOMIA € (virtuale, simulazione — nessun valore monetario reale, nessun prelievo)
+# ───────────────────────────────────────────────────────────────
+BUDGET_INIZIALE_UTENTE_EUR: float = 1_000_000.0  # fondo iniziale €1.000.000 (D7)
 FEE_MARKETPLACE_TOTALE_PCT: float = 0.07
 FEE_BUYER_PCT: float = 0.035
 FEE_SELLER_PCT: float = 0.035
-CREDITI_TO_EUR_RATE: float = 1.0  # fittizio, NON convertibile
 
 # ───────────────────────────────────────────────────────────────
 # PRICING DRIVER — Fase 2: estratti da `Gioco 5.xls` foglio "Serie 1".

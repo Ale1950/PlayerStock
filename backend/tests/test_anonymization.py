@@ -62,10 +62,10 @@ def test_athlete_public_strips_internal_full_name():
         "team_fantasy_id": ObjectId(),
         "team_fantasy_name": "Nerazzurri Milano",
         "team_color_primary": "#0033A0",
-        "valore_iniziale_crediti": 1000.0,
+        "valore_iniziale_eur": 1000.0,
         "float_quote": 1_000_000,
-        "prezzo_iniziale_crediti": 0.01,
-        "prezzo_corrente_crediti": 0.01,
+        "prezzo_iniziale_eur": 0.01,
+        "prezzo_corrente_eur": 0.01,
         "status": "ACTIVE",
     }
     public = AthletePublic.model_validate(doc)

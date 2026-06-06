@@ -25,8 +25,7 @@ from app.data_providers.football_data_org import FootballDataOrgProvider
 from app.db.indexes import ensure_indexes
 from app.db.seed import run_all_seeds
 from app.models.common import utc_now
-from app.config.pricing_constants import FLOAT_AZIONI_PER_GIOCATORE
-from app.valuation.engine import valuation
+from app.config.pricing_constants import FLOAT_AZIONI_PER_GIOCATORE, PREZZO_BASE_AZIONE_EUR
 from app.valuation.synthetic_score import (
     synthetic_minutaggio,
     synthetic_score,
@@ -123,11 +122,10 @@ async def seed_athletes(
             score = synthetic_score(role, p["external_id"])
             fattore_squadra = synthetic_team_tier(team_doc["internal_real_id"])
             minutaggio = synthetic_minutaggio(p["external_id"])
-            valore = valuation(
-                role=role, score=score, eta=p.get("age"),
-                minutaggio_pct=minutaggio, fattore_squadra=fattore_squadra,
-            )
-            prezzo = valore / FLOAT_AZIONI_PER_GIOCATORE
+            # Migrazione € (D7): il prezzo NON viene più da valuation() in Crediti.
+            # L'ancora € (= market_value_eur_seed / FLOAT, Opzione B) è assegnata per
+            # squadra subito dopo da backfill_market_values(). Qui solo placeholder.
+            prezzo = PREZZO_BASE_AZIONE_EUR
             doc = {
                 "sport_id": "calcio",
                 "internal_full_name": name,
@@ -139,14 +137,15 @@ async def seed_athletes(
                 "age": p.get("age"),
                 "team_fantasy_id": team_doc["_id"],
                 "minutaggio_pct": minutaggio,
-                "score_performance": score,       # audit (sintetico)
-                "fattore_squadra": fattore_squadra,  # audit (sintetico)
-                "valore_iniziale_crediti": valore,
+                "score_performance": score,       # audit (sintetico) → rank Opzione B
+                "fattore_squadra": fattore_squadra,  # audit (sintetico) → premio club
+                "valore_iniziale_eur": prezzo * FLOAT_AZIONI_PER_GIOCATORE,  # placeholder
                 "float_quote": FLOAT_AZIONI_PER_GIOCATORE,
                 "primary_pool_qty": FLOAT_AZIONI_PER_GIOCATORE,  # IPO: float intero nel pool
                 "circulating_qty": 0,
-                "prezzo_iniziale_crediti": prezzo,
-                "prezzo_corrente_crediti": prezzo,
+                "prezzo_iniziale_eur": prezzo,       # placeholder → backfill ancora €
+                "prezzo_equo_eur": prezzo,           # placeholder → backfill ancora €
+                "prezzo_corrente_eur": prezzo,
                 "status": "ACTIVE",
                 "data_source": provider.provider_name,
                 "source_external_id": p["external_id"],
@@ -164,6 +163,10 @@ async def seed_athletes(
                     skipped_dup += 1
             except Exception as e:
                 errors.append(f"{name}@{fd_team_name}: {e}")
+
+    # Fase 2c: valore di mercato €M (layer display) — deterministico dal roster appena seedato.
+    from app.cli.backfill_market_value import backfill_market_values
+    await backfill_market_values(db)
 
     stats = {
         "items_synced": items_synced,

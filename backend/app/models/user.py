@@ -27,7 +27,7 @@ class UserPublic(BaseModel):
 
 
 class WalletPublic(BaseModel):
-    balance_credits: float
+    balance_eur: float
     updated_at: datetime
 
 
@@ -38,6 +38,14 @@ class UserWithWallet(BaseModel):
 
 class GoogleSignInRequest(BaseModel):
     id_token: str = Field(..., description="Google ID token (JWT) issued by Google Sign-In")
+    locale: str | None = None
+
+
+class GoogleCodeExchangeRequest(BaseModel):
+    """Auth-code + PKCE: il client manda il code + verifier; il backend scambia con Google."""
+    code: str = Field(..., description="Authorization code da Google")
+    code_verifier: str = Field(..., description="PKCE code_verifier generato dal client")
+    redirect_uri: str = Field(..., description="Stesso redirect_uri usato nella auth request")
     locale: str | None = None
 
 

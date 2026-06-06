@@ -3,6 +3,13 @@
  */
 import api from './api';
 
+export interface WeeklyStatsCompact {
+  gol: number;
+  assist: number;
+  parate: number | null;
+  presenze: number;
+}
+
 export interface AthletePublic {
   _id: string;
   sport_id: string;
@@ -15,10 +22,14 @@ export interface AthletePublic {
   team_fantasy_id: string;
   team_fantasy_name?: string;
   team_color_primary?: string;
-  valore_iniziale_crediti: number;
+  team_color_secondary?: string;
+  weekly_stats?: WeeklyStatsCompact | null;
+  valore_iniziale_eur: number;
   float_quote: number;
-  prezzo_iniziale_crediti: number;
-  prezzo_corrente_crediti: number;
+  primary_pool_qty?: number | null;
+  prezzo_iniziale_eur: number;
+  prezzo_corrente_eur: number;
+  market_value_eur?: number | null;   // valore di mercato €M corrente (Fase 2c)
   status: 'ACTIVE' | 'TRANSFERRED' | 'RETIRED';
 }
 

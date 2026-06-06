@@ -23,7 +23,7 @@ export async function saveToken(token: string): Promise<void> {
 }
 
 export async function getToken(): Promise<string | null> {
-  return storage.getItem(TOKEN_KEY);
+  return storage.getItem<string | null>(TOKEN_KEY, null);
 }
 
 export async function clearAuth(): Promise<void> {
@@ -36,8 +36,8 @@ export async function saveUser(user: StoredUser): Promise<void> {
 }
 
 export async function getUser(): Promise<StoredUser | null> {
-  const raw = await storage.getItem(USER_KEY);
-  if (!raw) return null;
+  const raw = await storage.getItem<string | null>(USER_KEY, null);
+  if (!raw || typeof raw !== 'string') return null;
   try {
     return JSON.parse(raw) as StoredUser;
   } catch {

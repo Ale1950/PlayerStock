@@ -74,13 +74,13 @@ def position_pnl(*, qty: int, lots: Sequence[dict], current_price: float) -> dic
     }
 
 
-def aggregate_totals(*, balance_credits: float, positions: Iterable[dict]) -> dict:
+def aggregate_totals(*, balance_eur: float, positions: Iterable[dict]) -> dict:
     """Aggrega i totali del portafoglio.
 
     `positions` è un iterabile di dict con almeno `current_value`, `cost_basis`.
     Restituisce:
         {
-          "cash_credits": float,
+          "cash_eur": float,
           "positions_value": float,       # Σ current_value
           "positions_cost_basis": float,  # Σ cost_basis
           "total_equity": float,          # cash + positions_value
@@ -98,10 +98,10 @@ def aggregate_totals(*, balance_credits: float, positions: Iterable[dict]) -> di
     else:
         total_pnl_pct = None
     return {
-        "cash_credits": float(balance_credits or 0.0),
+        "cash_eur": float(balance_eur or 0.0),
         "positions_value": positions_value,
         "positions_cost_basis": cost_basis,
-        "total_equity": float(balance_credits or 0.0) + positions_value,
+        "total_equity": float(balance_eur or 0.0) + positions_value,
         "total_pnl_abs": total_pnl_abs,
         "total_pnl_pct": total_pnl_pct,
         "positions_count": sum(1 for p in positions_list if p.get("quantity", 0) > 0),
@@ -137,7 +137,7 @@ async def build_portfolio_response(db, user_id) -> dict:
     Anonimizzazione Livello 2 sempre: NON include `internal_full_name` mai.
     """
     wallet = await db.user_wallets.find_one({"user_id": user_id})
-    balance = float(wallet["balance_credits"]) if wallet else 0.0
+    balance = float(wallet["balance_eur"]) if wallet else 0.0
 
     holdings = await db.holdings.find({
         "user_id": user_id,
@@ -149,7 +149,7 @@ async def build_portfolio_response(db, user_id) -> dict:
         athlete = await db.athletes.find_one({"_id": h["athlete_id"]})
         if not athlete:
             continue
-        current_price = float(athlete.get("prezzo_corrente_crediti", 0.0))
+        current_price = float(athlete.get("prezzo_corrente_eur", 0.0))
         pnl = position_pnl(
             qty=int(h.get("quantity", 0)),
             lots=h.get("lots", []),
@@ -169,13 +169,13 @@ async def build_portfolio_response(db, user_id) -> dict:
             "nationality_iso3": athlete.get("nationality_iso3"),
             "team_fantasy_name": team.get("fantasy_name"),
             "team_color_primary": team.get("color_primary"),
-            "prezzo_iniziale_crediti": float(athlete.get("prezzo_iniziale_crediti", 0.0)),
+            "prezzo_iniziale_eur": float(athlete.get("prezzo_iniziale_eur", 0.0)),
             "status": athlete.get("status", "ACTIVE"),
             **pnl,
         })
 
     positions.sort(key=lambda p: p["current_value"], reverse=True)
-    totals = aggregate_totals(balance_credits=balance, positions=positions)
+    totals = aggregate_totals(balance_eur=balance, positions=positions)
 
     return {"totals": totals, "positions": positions}
 
@@ -183,7 +183,7 @@ async def build_portfolio_response(db, user_id) -> dict:
 async def build_wallet_response(db, user_id, *, recent_limit: int = 20) -> dict:
     """Risposta unificata GET /api/wallet: saldo + ultime N transazioni."""
     wallet = await db.user_wallets.find_one({"user_id": user_id})
-    balance = float(wallet["balance_credits"]) if wallet else 0.0
+    balance = float(wallet["balance_eur"]) if wallet else 0.0
     updated_at = wallet["updated_at"] if wallet else None
     cursor = db.wallet_transactions.find(
         {"user_id": user_id}
@@ -200,7 +200,7 @@ async def build_wallet_response(db, user_id, *, recent_limit: int = 20) -> dict:
             "created_at": t.get("created_at"),
         })
     return {
-        "balance_credits": balance,
+        "balance_eur": balance,
         "updated_at": updated_at,
         "recent_transactions": items,
         "recent_limit": recent_limit,
@@ -215,9 +215,9 @@ async def build_leaderboard(db, current_user_id, *, limit: int = 50) -> dict:
     """
     # 1. Mappa prezzo corrente per atleta (una volta sola)
     athletes_cur = await db.athletes.find(
-        {}, {"_id": 1, "prezzo_corrente_crediti": 1, "status": 1}
+        {}, {"_id": 1, "prezzo_corrente_eur": 1, "status": 1}
     ).to_list(length=10000)
-    price_by_aid: dict = {a["_id"]: float(a.get("prezzo_corrente_crediti", 0.0))
+    price_by_aid: dict = {a["_id"]: float(a.get("prezzo_corrente_eur", 0.0))
                           for a in athletes_cur if a.get("status") == "ACTIVE"}
 
     # 2. Aggrega per user: somma qty*price corrente
@@ -242,9 +242,9 @@ async def build_leaderboard(db, current_user_id, *, limit: int = 50) -> dict:
 
     # 4. Carica saldi
     wallets = await db.user_wallets.find(
-        {}, {"user_id": 1, "balance_credits": 1, "_id": 0}
+        {}, {"user_id": 1, "balance_eur": 1, "_id": 0}
     ).to_list(length=10000)
-    balance_by_user = {w["user_id"]: float(w.get("balance_credits", 0.0)) for w in wallets}
+    balance_by_user = {w["user_id"]: float(w.get("balance_eur", 0.0)) for w in wallets}
 
     # 5. Costruisce la lista
     rows: list[dict] = []
@@ -266,7 +266,7 @@ async def build_leaderboard(db, current_user_id, *, limit: int = 50) -> dict:
             "is_self": is_self,
             "total_equity": round(r["total_equity"], 4),
             "positions_value": round(r["positions_value"], 4),
-            "cash_credits": round(r["cash"], 4),
+            "cash_eur": round(r["cash"], 4),
         })
 
     # 6. Self rank (se l'utente è fuori dal top-N)
@@ -281,7 +281,7 @@ async def build_leaderboard(db, current_user_id, *, limit: int = 50) -> dict:
                     "is_self": True,
                     "total_equity": round(r["total_equity"], 4),
                     "positions_value": round(r["positions_value"], 4),
-                    "cash_credits": round(r["cash"], 4),
+                    "cash_eur": round(r["cash"], 4),
                 }
                 break
         else:

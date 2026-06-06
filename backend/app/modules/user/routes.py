@@ -22,7 +22,7 @@ async def get_me(user: CurrentUserDep, db: DBDep) -> UserWithWallet:
     wallet = await db.user_wallets.find_one({"user_id": user["_id"]})
     return UserWithWallet(
         user=UserPublic.model_validate(user),
-        wallet=WalletPublic(balance_credits=wallet["balance_credits"], updated_at=wallet["updated_at"]),
+        wallet=WalletPublic(balance_eur=wallet["balance_eur"], updated_at=wallet["updated_at"]),
     )
 
 
@@ -49,7 +49,7 @@ async def accept_terms(req: AcceptTermsRequest, user: CurrentUserDep, db: DBDep)
 @router.get("/wallet/balance", response_model=WalletPublic)
 async def get_balance(user: CurrentUserDep, db: DBDep) -> WalletPublic:
     wallet = await db.user_wallets.find_one({"user_id": user["_id"]})
-    return WalletPublic(balance_credits=wallet["balance_credits"], updated_at=wallet["updated_at"])
+    return WalletPublic(balance_eur=wallet["balance_eur"], updated_at=wallet["updated_at"])
 
 
 @router.get("/wallet/transactions", response_model=WalletTransactionList)

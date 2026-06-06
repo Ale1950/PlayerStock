@@ -19,13 +19,13 @@ def _make_client(balance=100.0, price=0.02, pool=1_000_000):
 
     async def _seed():
         await db.user_wallets.insert_one(
-            {"user_id": uid, "balance_credits": balance, "updated_at": utc_now()}
+            {"user_id": uid, "balance_eur": balance, "updated_at": utc_now()}
         )
         aid = ObjectId()
         await db.athletes.insert_one({
             "_id": aid, "sport_id": "calcio", "status": "ACTIVE", "role": "ATT",
             "display_label": "L. Test", "team_fantasy_id": ObjectId(),
-            "prezzo_corrente_crediti": price, "prezzo_iniziale_crediti": price,
+            "prezzo_corrente_eur": price, "prezzo_iniziale_eur": price,
             "float_quote": 1_000_000, "primary_pool_qty": pool,
             "circulating_qty": 1_000_000 - pool,
         })
@@ -76,7 +76,7 @@ def test_quote_endpoint():
     r = client.get(f"/api/market/athletes/{aid}/quote?qty=100")
     assert r.status_code == 200, r.text
     body = r.json()
-    assert body["prezzo_corrente_crediti"] == 0.02
+    assert body["prezzo_corrente_eur"] == 0.02
     assert body["primary_pool_qty"] == 1_000_000
     assert body["buy_cost"] == 2.0 * 1.035
     assert body["sell_proceeds"] == 2.0 * 0.965

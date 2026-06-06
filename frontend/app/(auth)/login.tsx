@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { exchangeGoogleToken } from '@/src/services/auth.service';
+import { exchangeGoogleCode } from '@/src/services/auth.service';
 import { translateError } from '@/src/services/api';
+import { useAuth } from '@/src/hooks/useAuth';
 import { colors } from '@/src/theme/colors';
 import { radius, spacing, typography } from '@/src/theme/spacing';
 
@@ -23,18 +24,20 @@ const discovery = {
 export default function Login() {
   const { t } = useTranslation();
   const router = useRouter();
+  const { refresh } = useAuth();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const redirectUri = AuthSession.makeRedirectUri({ scheme: 'frontend' });
+  if (__DEV__) console.log('[PlayerStock] OAuth redirectUri =', redirectUri);
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
       clientId: GOOGLE_CLIENT_ID,
       scopes: ['openid', 'email', 'profile'],
       redirectUri,
-      responseType: 'id_token',
-      extraParams: { nonce: 'ps-' + Math.random().toString(36).slice(2) },
+      responseType: 'code',
+      usePKCE: true,
     },
     discovery,
   );
@@ -42,14 +45,16 @@ export default function Login() {
   useEffect(() => {
     (async () => {
       if (response?.type === 'success') {
-        const idToken = response.params.id_token;
-        if (!idToken) {
+        const code = response.params.code;
+        const verifier = request?.codeVerifier;
+        if (!code || !verifier) {
           setError(t('login.error_generic'));
           return;
         }
         try {
           setBusy(true);
-          await exchangeGoogleToken(idToken, 'it');
+          await exchangeGoogleCode(code, verifier, redirectUri, 'it');
+          await refresh();  // aggiorna lo stato auth condiviso → il guard porta a home/consent
           router.replace('/(tabs)/home');
         } catch (e) {
           setError(translateError(e));
@@ -95,6 +100,13 @@ export default function Login() {
             <Text style={styles.errorText}>{error}</Text>
           </View>
         )}
+
+        {__DEV__ && (
+          <View style={styles.devBox} testID="login-redirect-uri">
+            <Text style={styles.devLabel}>DEV · Redirect URI da registrare in Google Cloud:</Text>
+            <Text selectable style={styles.devValue}>{redirectUri}</Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -115,4 +127,7 @@ const styles = StyleSheet.create({
   errorBox: { marginTop: spacing.lg, padding: spacing.md, backgroundColor: '#2D0F12', borderRadius: radius.md, borderWidth: 1, borderColor: colors.danger },
   errorTitle: { ...typography.bodyBold, color: colors.danger, marginBottom: spacing.xs },
   errorText: { ...typography.small, color: '#FFC9CC' },
+  devBox: { marginTop: spacing.xl, padding: spacing.md, backgroundColor: colors.bgElevated, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border },
+  devLabel: { ...typography.small, color: colors.textMuted, marginBottom: spacing.xs },
+  devValue: { ...typography.small, color: colors.accent, fontFamily: 'monospace' },
 });

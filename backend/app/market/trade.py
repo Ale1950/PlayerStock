@@ -15,12 +15,20 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Awaitable, Callable
 
+from app.config.pricing_constants import FLOAT_AZIONI_PER_GIOCATORE
 from app.core.errors import err_bad_request, err_not_found
+from app.market.hybrid_pricing import (
+    anchor_price,
+    apply_impact,
+    current_market_price,
+    effective_deviation,
+    market_price,
+)
 from app.market.rules import (
     assert_within_cap,
     buy_cost,
     buy_gross,
-    consume_lots_fifo,
+    consume_lots_fifo_with_cost,
     fee_buyer,
     fee_seller,
     sell_gross,
@@ -67,7 +75,12 @@ async def execute_buy(db, *, user_id, athlete_id, qty: int, now: datetime | None
 
     async def _work(session) -> dict:
         athlete = await _load_active_athlete(db, athlete_id, session)
-        price = athlete["prezzo_corrente_crediti"]
+        # Prezzo IBRIDO: quota al prezzo di mercato (àncora + deviazione decaduta).
+        equo = anchor_price(athlete)
+        prezzo_iniziale = athlete["prezzo_iniziale_eur"]
+        float_qty = athlete.get("float_quote", FLOAT_AZIONI_PER_GIOCATORE)
+        dev_now = effective_deviation(athlete, now)
+        price = market_price(equo, dev_now, prezzo_iniziale)
         pool = athlete.get("primary_pool_qty", 0)
         if qty > pool:
             raise err_bad_request(
@@ -82,7 +95,7 @@ async def execute_buy(db, *, user_id, athlete_id, qty: int, now: datetime | None
         assert_within_cap(current_qty=current_qty, add_qty=qty)
 
         wallet = await db.user_wallets.find_one({"user_id": user_id}, session=session)
-        balance = wallet["balance_credits"] if wallet else 0.0
+        balance = wallet["balance_eur"] if wallet else 0.0
         gross, fee, cost = buy_gross(qty, price), fee_buyer(qty, price), buy_cost(qty, price)
         if balance < cost:
             raise err_bad_request(
@@ -94,11 +107,19 @@ async def execute_buy(db, *, user_id, athlete_id, qty: int, now: datetime | None
         after_fee = after_gross - fee
         await db.user_wallets.update_one(
             {"user_id": user_id},
-            {"$set": {"balance_credits": after_fee, "updated_at": now}}, session=session,
+            {"$set": {"balance_eur": after_fee, "updated_at": now}}, session=session,
         )
+        new_dev = apply_impact(dev_now, "buy", qty, float_qty)
+        new_market = market_price(equo, new_dev, prezzo_iniziale)
         await db.athletes.update_one(
             {"_id": athlete_id},
-            {"$inc": {"primary_pool_qty": -qty, "circulating_qty": qty}, "$set": {"updated_at": now}},
+            {
+                "$inc": {"primary_pool_qty": -qty, "circulating_qty": qty},
+                "$set": {
+                    "updated_at": now, "prezzo_corrente_eur": new_market,
+                    "prezzo_equo_eur": equo, "deviazione": new_dev, "deviazione_ts": now,
+                },
+            },
             session=session,
         )
         await db.holdings.update_one(
@@ -127,6 +148,10 @@ async def execute_buy(db, *, user_id, athlete_id, qty: int, now: datetime | None
             "qty": qty, "price": price, "fee_buyer": fee, "fee_seller": 0.0, "ts": now,
         }, session=session)
         await _credit_house(db, fee, now, session)
+        await db.price_history.insert_one({
+            "athlete_id": athlete_id, "prezzo": new_market, "deviazione": new_dev,
+            "reason": "trade", "side": "buy", "qty": qty, "ts": now,
+        }, session=session)
 
         return {"side": "buy", "qty": qty, "price": price, "gross": gross, "fee": fee,
                 "cost": cost, "new_balance": after_fee}
@@ -141,7 +166,11 @@ async def execute_sell(db, *, user_id, athlete_id, qty: int, now: datetime | Non
 
     async def _work(session) -> dict:
         athlete = await _load_active_athlete(db, athlete_id, session)
-        price = athlete["prezzo_corrente_crediti"]
+        equo = anchor_price(athlete)
+        prezzo_iniziale = athlete["prezzo_iniziale_eur"]
+        float_qty = athlete.get("float_quote", FLOAT_AZIONI_PER_GIOCATORE)
+        dev_now = effective_deviation(athlete, now)
+        price = market_price(equo, dev_now, prezzo_iniziale)
 
         holding = await db.holdings.find_one(
             {"user_id": user_id, "athlete_id": athlete_id}, session=session
@@ -158,24 +187,33 @@ async def execute_sell(db, *, user_id, athlete_id, qty: int, now: datetime | Non
 
         gross, fee, proceeds = sell_gross(qty, price), fee_seller(qty, price), sell_proceeds(qty, price)
 
-        new_lots = consume_lots_fifo(holding["lots"], qty)
+        new_lots, cost_basis_sold = consume_lots_fifo_with_cost(holding["lots"], qty)
+        realized_pnl = gross - cost_basis_sold
         await db.holdings.update_one(
             {"user_id": user_id, "athlete_id": athlete_id},
             {"$set": {"lots": new_lots, "quantity": holding["quantity"] - qty, "updated_at": now}},
             session=session,
         )
+        new_dev = apply_impact(dev_now, "sell", qty, float_qty)
+        new_market = market_price(equo, new_dev, prezzo_iniziale)
         await db.athletes.update_one(
             {"_id": athlete_id},
-            {"$inc": {"primary_pool_qty": qty, "circulating_qty": -qty}, "$set": {"updated_at": now}},
+            {
+                "$inc": {"primary_pool_qty": qty, "circulating_qty": -qty},
+                "$set": {
+                    "updated_at": now, "prezzo_corrente_eur": new_market,
+                    "prezzo_equo_eur": equo, "deviazione": new_dev, "deviazione_ts": now,
+                },
+            },
             session=session,
         )
         wallet = await db.user_wallets.find_one({"user_id": user_id}, session=session)
-        balance = wallet["balance_credits"] if wallet else 0.0
+        balance = wallet["balance_eur"] if wallet else 0.0
         after_gross = balance + gross
         after_fee = after_gross - fee
         await db.user_wallets.update_one(
             {"user_id": user_id},
-            {"$set": {"balance_credits": after_fee, "updated_at": now}}, session=session,
+            {"$set": {"balance_eur": after_fee, "updated_at": now}}, session=session,
         )
         await db.wallet_transactions.insert_many([
             {"user_id": user_id, "type": "trade_sell", "amount": gross, "balance_after": after_gross,
@@ -186,6 +224,7 @@ async def execute_sell(db, *, user_id, athlete_id, qty: int, now: datetime | Non
         await db.orders.insert_one({
             "user_id": user_id, "athlete_id": athlete_id, "side": "sell", "type": "market",
             "qty": qty, "qty_filled": qty, "price": price, "fee": fee,
+            "cost_basis_sold": cost_basis_sold, "realized_pnl": realized_pnl,
             "status": "filled", "created_at": now,
         }, session=session)
         await db.trades.insert_one({
@@ -193,8 +232,47 @@ async def execute_sell(db, *, user_id, athlete_id, qty: int, now: datetime | Non
             "qty": qty, "price": price, "fee_buyer": 0.0, "fee_seller": fee, "ts": now,
         }, session=session)
         await _credit_house(db, fee, now, session)
+        await db.price_history.insert_one({
+            "athlete_id": athlete_id, "prezzo": new_market, "deviazione": new_dev,
+            "reason": "trade", "side": "sell", "qty": qty, "ts": now,
+        }, session=session)
 
         return {"side": "sell", "qty": qty, "price": price, "gross": gross, "fee": fee,
                 "proceeds": proceeds, "new_balance": after_fee}
 
     return await _execute_atomic(db, _work)
+
+
+async def snapshot_price(db, *, athlete_id, now: datetime | None = None) -> dict | None:
+    """Snapshot periodico del prezzo di mercato (anche SENZA trade): registra il
+    rientro verso l'àncora in price_history e aggiorna il prezzo mostrato.
+
+    Non tocca deviazione/deviazione_ts (il decadimento lazy resta coerente).
+    """
+    now = now or utc_now()
+    a = await db.athletes.find_one({"_id": athlete_id, "status": "ACTIVE"})
+    if not a:
+        return None
+    price = current_market_price(a, now)
+    await db.athletes.update_one(
+        {"_id": athlete_id},
+        {"$set": {"prezzo_corrente_eur": price, "updated_at": now}},
+    )
+    await db.price_history.insert_one({
+        "athlete_id": athlete_id, "prezzo": price, "deviazione": effective_deviation(a, now),
+        "reason": "snapshot", "ts": now,
+    })
+    return {"athlete_id": athlete_id, "prezzo": price}
+
+
+async def snapshot_all_active_prices(db, *, now: datetime | None = None) -> int:
+    """Snapshot periodico di TUTTI gli atleti attivi (job schedulato): mostra il
+    rientro verso l'àncora nella sparkline anche senza trade. Ritorna il conteggio.
+    """
+    now = now or utc_now()
+    ids = await db.athletes.find({"status": "ACTIVE"}, {"_id": 1}).to_list(length=100_000)
+    count = 0
+    for doc in ids:
+        if await snapshot_price(db, athlete_id=doc["_id"], now=now):
+            count += 1
+    return count

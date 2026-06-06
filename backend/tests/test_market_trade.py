@@ -14,11 +14,11 @@ from app.models.common import utc_now
 async def _setup(db, *, balance=100.0, price=0.02, pool=1_000_000):
     uid, aid = ObjectId(), ObjectId()
     await db.user_wallets.insert_one(
-        {"user_id": uid, "balance_credits": balance, "updated_at": utc_now()}
+        {"user_id": uid, "balance_eur": balance, "updated_at": utc_now()}
     )
     await db.athletes.insert_one({
         "_id": aid, "sport_id": "calcio", "status": "ACTIVE", "role": "ATT",
-        "prezzo_corrente_crediti": price, "prezzo_iniziale_crediti": price,
+        "prezzo_corrente_eur": price, "prezzo_iniziale_eur": price,
         "float_quote": 1_000_000, "primary_pool_qty": pool,
         "circulating_qty": 1_000_000 - pool,
     })
@@ -30,7 +30,7 @@ async def test_buy_updates_wallet_pool_holding(mock_db):
     await execute_buy(mock_db, user_id=uid, athlete_id=aid, qty=100)
 
     wallet = await mock_db.user_wallets.find_one({"user_id": uid})
-    assert wallet["balance_credits"] == pytest.approx(100.0 - 2.0 * 1.035)  # 97.93
+    assert wallet["balance_eur"] == pytest.approx(100.0 - 2.0 * 1.035)  # 97.93
 
     a = await mock_db.athletes.find_one({"_id": aid})
     assert a["primary_pool_qty"] == 999_900
@@ -81,6 +81,24 @@ async def test_sell_after_holding_updates_state(mock_db):
     a = await mock_db.athletes.find_one({"_id": aid})
     assert a["primary_pool_qty"] == 999_940
     assert a["circulating_qty"] == 60
+
+
+async def test_sell_works_when_pool_sold_out(mock_db):
+    # FINITO-DURO: pool a 0 (esaurito) → buy bloccato ma la VENDITA resta possibile (il banco ricompra)
+    uid, aid = await _setup(mock_db, pool=0)
+    await mock_db.athletes.update_one({"_id": aid}, {"$set": {"circulating_qty": 1_000_000}})
+    t0 = utc_now()
+    # l'utente possiede già quote (lotto vecchio, sbloccato)
+    await mock_db.holdings.insert_one({
+        "user_id": uid, "athlete_id": aid, "quantity": 100,
+        "lots": [{"qty": 100, "price": 0.02, "acquired_at": t0 - timedelta(days=8)}], "created_at": t0 - timedelta(days=8),
+    })
+    with pytest.raises(APIError):
+        await execute_buy(mock_db, user_id=uid, athlete_id=aid, qty=10)  # esaurito → bloccato
+    res = await execute_sell(mock_db, user_id=uid, athlete_id=aid, qty=40, now=t0)  # vendita OK
+    assert res["side"] == "sell"
+    a = await mock_db.athletes.find_one({"_id": aid})
+    assert a["primary_pool_qty"] == 40  # il banco ha ricomprato → pool risale
 
 
 async def test_fees_accrue_to_house(mock_db):

@@ -41,7 +41,7 @@ export interface AuthResponse {
   access_token: string;
   expires_in: number;
   user: StoredUser;
-  wallet: { balance_credits: number; updated_at: string };
+  wallet: { balance_eur: number; updated_at: string };
 }
 
 /**
@@ -50,6 +50,24 @@ export interface AuthResponse {
 export async function exchangeGoogleToken(idToken: string, locale: string): Promise<AuthResponse> {
   const { data } = await api.post<AuthResponse>('/auth/google/callback', {
     id_token: idToken,
+    locale,
+  });
+  await saveToken(data.access_token);
+  await saveUser(data.user);
+  return data;
+}
+
+/**
+ * Auth-code + PKCE: invia code + verifier al backend, che li scambia con Google.
+ * Usato su web (l'implicit id_token freezava) e flusso reale per mobile.
+ */
+export async function exchangeGoogleCode(
+  code: string, codeVerifier: string, redirectUri: string, locale: string,
+): Promise<AuthResponse> {
+  const { data } = await api.post<AuthResponse>('/auth/google/exchange', {
+    code,
+    code_verifier: codeVerifier,
+    redirect_uri: redirectUri,
     locale,
   });
   await saveToken(data.access_token);

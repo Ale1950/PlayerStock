@@ -16,6 +16,7 @@ from __future__ import annotations
 import datetime as dt
 from typing import Any
 
+from app.economy.credit_faucet import grant_engagement_credits
 from app.models.common import utc_now
 from app.modules.engagement.reward_client import RewardClient
 
@@ -108,10 +109,16 @@ async def claim_daily_streak(db, user_id) -> dict:
         user_id=user_id, amount=reward, source="engagement_login_streak",
         metadata={"streak_days": new_streak},
     )
+    # Faucet CREDITI (economia separata, ledger indipendente, idempotente per giorno)
+    credit = await grant_engagement_credits(
+        db, user_id=user_id, event_id=f"streak:{user_id}:{now.date().isoformat()}",
+        ep=reward, now=now,
+    )
     return {
         "claimed": True, "current_streak": new_streak, "longest_streak": longest,
         "reward_amount": reward, "reward_tx_id": accrue.get("tx_id"),
         "new_nackl_balance": accrue.get("new_balance"),
+        "credit_bonus": credit["credits"],
     }
 
 
@@ -139,6 +146,7 @@ async def submit_quiz_attempt(db, user_id, *, quiz_id: str, answers: list[int]) 
 
     accrue_tx_id = None
     new_balance = None
+    credit_bonus = 0.0
     if reward > 0:
         rc = RewardClient(db)
         accrue = await rc.accrue(
@@ -147,6 +155,11 @@ async def submit_quiz_attempt(db, user_id, *, quiz_id: str, answers: list[int]) 
         )
         accrue_tx_id = accrue.get("tx_id")
         new_balance = accrue.get("new_balance")
+        # Faucet CREDITI (event_id stabile per quiz/utente, idempotente)
+        credit = await grant_engagement_credits(
+            db, user_id=user_id, event_id=f"quiz:{user_id}:{qid}", ep=reward, now=now,
+        )
+        credit_bonus = credit["credits"]
 
     await db.quiz_attempts.insert_one({
         "user_id": user_id, "quiz_id": qid,
@@ -160,6 +173,7 @@ async def submit_quiz_attempt(db, user_id, *, quiz_id: str, answers: list[int]) 
         "score": result["score"], "perfect": result["perfect"],
         "reward_amount": reward, "reward_tx_id": accrue_tx_id,
         "new_nackl_balance": new_balance,
+        "credit_bonus": credit_bonus,
     }
 
 
@@ -185,7 +199,7 @@ async def submit_prediction(db, user_id, *, athlete_id, direction: str) -> dict:
                 "max": MAX_OPEN_PREDICTIONS_PER_USER}
 
     now = utc_now()
-    base_price = float(athlete.get("prezzo_corrente_crediti", 0.0))
+    base_price = float(athlete.get("prezzo_corrente_eur", 0.0))
     expires_at = now + dt.timedelta(hours=PREDICTION_HORIZON_HOURS)
 
     res = await db.predictions.insert_one({
@@ -220,7 +234,7 @@ async def settle_expired_predictions(db, *, limit: int = 200) -> dict:
                 {"$set": {"status": "void", "settled_at": now}},
             )
             continue
-        cur = float(athlete.get("prezzo_corrente_crediti", 0.0))
+        cur = float(athlete.get("prezzo_corrente_eur", 0.0))
         base = float(p["base_price"])
         direction = p["direction"]
         outcome = "won" if (
@@ -237,6 +251,11 @@ async def settle_expired_predictions(db, *, limit: int = 200) -> dict:
             )
             reward_amt = REWARD_PREDICTION_CORRECT
             tx_id = accrue.get("tx_id")
+            # Faucet CREDITI (event_id stabile per predizione, idempotente)
+            await grant_engagement_credits(
+                db, user_id=p["user_id"], event_id=f"prediction:{p['_id']}",
+                ep=REWARD_PREDICTION_CORRECT, now=now,
+            )
             won += 1
         await db.predictions.update_one(
             {"_id": p["_id"]},
@@ -283,6 +302,31 @@ async def get_my_predictions(db, user_id, *, status: str | None = None, limit: i
             "reward_amount": p.get("reward_amount", 0.0),
         })
     return out
+
+
+async def engagement_overview(db, user_id) -> dict:
+    """Aggrega tutte le meccaniche Engage per la schermata: streak · quiz mercato ·
+    pronostici · missioni · sfida settimanale."""
+    from bson import ObjectId
+
+    from app.modules.engagement.challenges import weekly_challenge
+    from app.modules.engagement.market_quiz import get_or_create_market_quiz
+    from app.modules.engagement.missions import evaluate_missions
+    from app.modules.engagement.news import market_news
+
+    quiz = await get_or_create_market_quiz(db)
+    attempted = await db.quiz_attempts.find_one({"user_id": user_id, "quiz_id": ObjectId(quiz["id"])}) is not None
+    return {
+        "streak": await get_streak_state(db, user_id),
+        "market_quiz": {**quiz, "already_attempted": attempted},
+        "predictions": {
+            "open": await db.predictions.count_documents({"user_id": user_id, "status": "open"}),
+            "recent": await get_my_predictions(db, user_id, limit=5),
+        },
+        "missions": await evaluate_missions(db, user_id),
+        "challenge": await weekly_challenge(db, user_id),
+        "news": await market_news(db, user_id),
+    }
 
 
 async def get_streak_state(db, user_id) -> dict:

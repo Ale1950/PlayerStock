@@ -2,14 +2,29 @@ import { colors } from '@/src/theme/colors';
 import { typography } from '@/src/theme/spacing';
 
 /**
- * Format a price in Credits (1 Credito = €1 fittizio).
- * Mostra 4 decimali sempre (es. €0.0350).
+ * Prezzo quota in € (migrazione D7). 2 decimali, it-IT (es. 86,30 → "€86,30").
+ * Il simbolo "€" è aggiunto dai chiamanti.
  */
 export function formatPrice(value: number): string {
   return new Intl.NumberFormat('it-IT', {
-    minimumFractionDigits: 4,
-    maximumFractionDigits: 4,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(value);
+}
+
+/**
+ * Valore di mercato in €M (Fase 2c) — es. €72,5M. it-IT (virgola decimale).
+ * ≥100M → 0 decimali; sotto → 1 decimale. Layer di realismo, separato dal prezzo quota.
+ */
+export function formatEuroM(valueEur: number | null | undefined): string {
+  if (valueEur == null) return '—';
+  const m = valueEur / 1e6;
+  const dec = m >= 100 ? 0 : 1;
+  const num = new Intl.NumberFormat('it-IT', {
+    minimumFractionDigits: dec,
+    maximumFractionDigits: dec,
+  }).format(m);
+  return `€${num}M`;
 }
 
 export function formatCredits(value: number): string {
@@ -20,7 +35,7 @@ export function formatCredits(value: number): string {
 }
 
 export function formatInt(value: number): string {
-  return new Intl.NumberFormat('it-IT').format(value);
+  return new Intl.NumberFormat('it-IT', { maximumFractionDigits: 0 }).format(value);
 }
 
 export function formatChange(deltaPct: number): { text: string; color: string } {

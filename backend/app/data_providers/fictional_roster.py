@@ -11,6 +11,7 @@ Football-Data per i giocatori). `generate_fictional_roster.py` lo (ri)genera.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import random
 from pathlib import Path
@@ -54,13 +55,13 @@ NAME_POOLS: dict[str, dict[str, list[str]]] = {
         ],
     },
     "ARG": {
-        "first": ["Lautaro", "Mateo", "Santiago", "Joaquin", "Nicolas", "Facundo", "Agustin",
+        "first": ["Valentin", "Mateo", "Santiago", "Joaquin", "Nicolas", "Facundo", "Agustin",
                   "Tomas", "Lucas", "Franco", "Gonzalo", "Emiliano", "Julian", "Thiago", "Bruno"],
         "last": ["Gomez", "Fernandez", "Lopez", "Diaz", "Martinez", "Sanchez", "Romero",
                  "Sosa", "Acosta", "Benitez", "Medina", "Suarez", "Herrera", "Aguirre", "Paredes"],
     },
     "BRA": {
-        "first": ["Gabriel", "Lucas", "Matheus", "Joao", "Bruno", "Rafael", "Felipe", "Vinicius",
+        "first": ["Gabriel", "Lucas", "Matheus", "Joao", "Bruno", "Rafael", "Felipe", "Leandro",
                   "Caio", "Igor", "Murilo", "Wesley", "Danilo", "Everton", "Rodrigo"],
         "last": ["Silva", "Santos", "Souza", "Oliveira", "Pereira", "Lima", "Costa", "Almeida",
                  "Ferreira", "Ribeiro", "Carvalho", "Gomes", "Barbosa", "Rocha", "Cardoso"],
@@ -109,8 +110,8 @@ NAME_POOLS: dict[str, dict[str, list[str]]] = {
     },
     "HRV": {
         "first": ["Luka", "Ivan", "Marko", "Ante", "Josip", "Mateo", "Filip", "Petar",
-                  "Domagoj", "Mario", "Nikola", "Borna", "Tin", "Roko", "Karlo"],
-        "last": ["Horvat", "Kovacevic", "Babic", "Maric", "Juric", "Novak", "Kovacic",
+                  "Fran", "Mario", "Nikola", "Borna", "Tin", "Roko", "Karlo"],
+        "last": ["Horvat", "Kovacevic", "Babic", "Maric", "Juric", "Novak", "Bozic",
                  "Vukovic", "Knezevic", "Markovic", "Petrovic", "Brkic", "Saric", "Tomic", "Blazevic"],
     },
     "SEN": {
@@ -120,18 +121,53 @@ NAME_POOLS: dict[str, dict[str, list[str]]] = {
                  "Cisse", "Mbaye", "Seck", "Fall", "Diouf", "Sy", "Niang"],
     },
     "NGA": {
-        "first": ["Emeka", "Chidi", "Tunde", "Kelechi", "Samuel", "Victor", "Daniel", "Joseph",
+        "first": ["Emeka", "Chidi", "Tunde", "Chinedu", "Samuel", "Victor", "Daniel", "Joseph",
                   "Henry", "Peter", "Kingsley", "Sunday", "Bright", "Moses", "Gideon"],
         "last": ["Okafor", "Adeyemi", "Eze", "Okeke", "Obi", "Nwachukwu", "Bello", "Olawale",
-                 "Chukwu", "Ibrahim", "Okonkwo", "Adebayo", "Onyekuru", "Babatunde", "Uche"],
+                 "Chukwu", "Ibrahim", "Okonkwo", "Adebayo", "Nwosu", "Babatunde", "Uche"],
     },
     "POL": {
         "first": ["Jakub", "Kacper", "Filip", "Michal", "Mateusz", "Bartosz", "Piotr", "Pawel",
                   "Adam", "Szymon", "Tomasz", "Marcin", "Lukasz", "Dawid", "Krzysztof"],
-        "last": ["Nowak", "Kowalski", "Wisniewski", "Wojcik", "Kowalczyk", "Kaminski", "Lewandowski",
+        "last": ["Nowak", "Kowalski", "Wisniewski", "Wojcik", "Kowalczyk", "Kaminski", "Jankowski",
                  "Zielinski", "Szymanski", "Wozniak", "Dabrowski", "Kozlowski", "Mazur", "Krawczyk", "Piotrowski"],
     },
 }
+
+
+# Token DISTINTIVI di calciatori famosi ATTUALI: rimossi dai pool per il guardrail IP.
+# Non è una blocklist esaustiva (i pro sono migliaia): copre solo i big riconoscibili.
+# Le coincidenze casuali con nomi poco noti restano ammesse (innocue) — vietato solo
+# l'eco DELIBERATO. Usato per rilevare nomi pre-esistenti da rigenerare.
+BANNED_REAL_PLAYER_TOKENS: frozenset[str] = frozenset({
+    "Lautaro", "Vinicius", "Domagoj", "Kovacic", "Kelechi", "Onyekuru", "Lewandowski",
+})
+
+
+def _stable_rng(stable_key: str) -> random.Random:
+    """RNG deterministico per-ID (riproducibile, indipendente dall'ordine di seed)."""
+    digest = hashlib.sha256(stable_key.encode("utf-8")).hexdigest()
+    return random.Random(int(digest[:16], 16))
+
+
+def regenerate_name(nationality_iso3: str, stable_key: str,
+                    used_names: set[str] | None = None) -> str:
+    """Nuovo nome realistico per-nazionalità, deterministico dalla chiave stabile.
+
+    Pesca first+last dal pool (già ripulito dai big) usando un RNG seedato sull'ID
+    del giocatore → stesso ID ⇒ stesso nome. Evita i nomi in `used_names` (unicità
+    entro squadra). Nessun token in BANNED_REAL_PLAYER_TOKENS può uscire: non sono
+    più nei pool.
+    """
+    used = used_names or set()
+    pool = NAME_POOLS[nationality_iso3]
+    rng = _stable_rng(stable_key)
+    candidate = ""
+    for _ in range(500):
+        candidate = f"{rng.choice(pool['first'])} {rng.choice(pool['last'])}"
+        if candidate not in used:
+            return candidate
+    return candidate  # fallback (pool minuscolo): accetta l'ultimo
 
 
 def _weighted_population(weights: list[tuple[str, int]]) -> list[str]:

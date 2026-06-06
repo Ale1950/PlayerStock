@@ -17,9 +17,11 @@ const api: AxiosInstance = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
+  config.headers = config.headers ?? {};
+  // DEV: bypassa l'interstiziale "warning" di ngrok su TUTTE le richieste (tunnel dev).
+  (config.headers as Record<string, string>)['ngrok-skip-browser-warning'] = 'true';
   const token = await getToken();
   if (token) {
-    config.headers = config.headers ?? {};
     (config.headers as Record<string, string>).Authorization = `Bearer ${token}`;
   }
   return config;

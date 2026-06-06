@@ -58,14 +58,14 @@ async def apply_market_flow(
         if not a:
             continue
         res = apply_tick(
-            prezzo_corrente=a["prezzo_corrente_crediti"],
-            prezzo_iniziale=a["prezzo_iniziale_crediti"],
+            prezzo_corrente=a["prezzo_corrente_eur"],
+            prezzo_iniziale=a["prezzo_iniziale_eur"],
             perf_pct=0.0,
             mercato_pct=pct,
         )
         await db.athletes.update_one(
             {"_id": athlete_id},
-            {"$set": {"prezzo_corrente_crediti": res.new_price, "updated_at": now}},
+            {"$set": {"prezzo_corrente_eur": res.new_price, "updated_at": now}},
         )
         await db.price_history.insert_one({
             "athlete_id": athlete_id, "prezzo": res.new_price, "mercato_pct": pct,

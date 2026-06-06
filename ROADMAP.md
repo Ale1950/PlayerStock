@@ -5,6 +5,23 @@ vanno validati da professionisti.
 
 ---
 
+## ▶ STATO ATTUALE (2026-06-05)
+
+**Fasi 0–6 completate** (MVP core, valuation/pricing, mercato, economia/portfolio, reward NACKL
+placeholder, engagement). In aggiunta: **Fase 3b — prezzo ibrido** (impatto trading + rientro, DECISIONS
+D3b) e **backbone dati `/api/stats/*`** + P&L realizzato (DD).
+
+**Sequenza:** tuning economico (fatto: k=1.5, faucet engagement wirato) → **design pass CHIUSO**
+(`DESIGN_SPEC.md`): chrome + Mercato + Portafoglio + Classifica + Engage + **Crediti-hub + Profilo** fatti,
+**WEB target responsive** (tabella desktop / card mobile, DR.1). + guida "Come funziona" e valore €M (Fase 2c).
+
+**Rinviate:** **Fase 7** (monetizzazione) e **Fase 8** (anti-cheat) → pre-lancio. **Fase "prezzo guidato
+dalla performance"** (stat sportive che muovono il prezzo via coefficienti Gioco 5, DR.4) → fase "dati reali"
+(richiede ritaratura economica). **Order book P2P** (matching tra utenti veri sopra il banco a due lati,
+modello azioni "finito-duro", DR.7) → layer futuro quando la liquidità lo giustifica.
+
+---
+
 ## Regole di divisione del lavoro (tutte le fasi)
 1. **Chi fa cosa**: Emergent → scaffolding, UI/UX, CRUD, fasi ampie/semplici. Claude Code →
    logica critica (pricing/valuation + test, order book, reward/wallet, anti-cheat, hardening).
@@ -13,18 +30,21 @@ vanno validati da professionisti.
 4. **Dichiarazione a inizio sessione**: lo strumento dichiara chi è e la fase corrente.
 
 ### Mapping fasi → strumento
-| Fase | Strumento |
-|---|---|
-| 0 — Setup repo + spec + spike SDK | **Claude Code** ✅ (fatta) |
-| 1 — Auth Google + modello dati + seed 400 giocatori + i18n | **Emergent** ◀ prossima |
-| 2 — Valuation + Pricing engine + test | **Claude Code** |
-| 3 — Mercato / order book | **Claude Code** |
-| 4 — Economia Crediti + Portfolio | Emergent |
-| 5 — Reward NACKL (testnet shellnet) | **Claude Code** |
-| 6 — Engagement | Emergent |
-| 7 — Abbonamento + donazioni + ads | Emergent |
-| 8 — Anti-cheat + hardening | **Claude Code** |
-| 8b — Polish UI finale | Emergent |
+| Fase | Strumento | Stato |
+|---|---|---|
+| 0 — Setup repo + spec + spike SDK | **Claude Code** | ✅ fatta |
+| 1 — Auth Google + modello dati + seed 400 giocatori + i18n | **Emergent** | ✅ fatta |
+| 2 — Valuation + Pricing engine + test | **Claude Code** | ✅ fatta |
+| 3 — Mercato (pool a due lati) | **Claude Code** | ✅ fatta |
+| 3b — Prezzo ibrido (impatto trading + rientro) | **Claude Code** | ✅ fatta (D3b) |
+| 4 — Economia Crediti + Portfolio | Emergent | ✅ fatta |
+| 5 — Reward NACKL (testnet shellnet) | **Claude Code** | ✅ fatta (placeholder) |
+| 6 — Engagement | Emergent | ✅ fatta |
+| — Tuning economico + backbone dati `/api/stats/*` | **Claude Code** | 🔄 in corso |
+| — Design pass (`DESIGN_SPEC.md`) | **Claude Code** | ✅ CHIUSO (Gruppo 3b: Crediti-hub + Profilo; + Fase 2c valore €M e backfill) |
+| 7 — Abbonamento + donazioni + ads | Emergent | ⏸ RINVIATA pre-lancio |
+| 8 — Anti-cheat + hardening | **Claude Code** | ⏸ RINVIATA pre-lancio |
+| 8b — Polish UI finale | Emergent | (confluisce nel design pass) |
 
 ---
 
@@ -55,10 +75,23 @@ Serie A (**fittizi realistici**, anonimizzazione L2 — vedi D1.1) + i18n archit
 Motore valutazione iniziale + pricing engine (calcio) + unit test su fixture. **Estrarre i valori
 esatti da `Gioco 5.xls` foglio "Serie 1"** in `pricing_constants.py`/`valuation_constants.py`.
 
+### Fase 2c — Valore di mercato €M (layer display) · Claude Code · ✅
+`market_value_eur` realistico (poche stelle €60–120M, lunga coda €0,5–5M, spread ~150–250x), generato
+**deterministico/fittizio** al seed (rosa a fasce + livello squadra come premio club), che **segue il
+prezzo** via àncora. Sola visualizzazione: "Valore di mercato" €M su Mercato/Dettaglio, separato da
+"Prezzo quota" (Crediti). **Economia di trading INTATTA** (prezzi/budget/cap/fee invariati). Dettaglio
+in DECISIONS **DV.1**.
+
 ### Fase 3 — Mercato · Claude Code
 **MVP (D3.2): pool a DUE LATI** (casa controparte al prezzo di quotazione), order book P2P/ordini
 limite **rimandati**. Emissione primaria (IPO, float intero nel pool) + fee 7% (3.5+3.5)→house +
 holding 7gg FIFO + cap 3% + `mercato%` (net flow→tick). → Cancello 2.
+
+### Fase 3b — Prezzo IBRIDO (impatto trading + rientro) · Claude Code · ✅
+Il trading muove il prezzo mantenendo la formula come **àncora**: `prezzo_mercato = àncora × (1+deviazione)`,
+deviazione da buy/sell con **rientro lazy** `e^(−λ·Δt)`. Param: k_impatto **1.5**, emivita **3h**, cap
+deviazione **±0.40**, floor 10%. Banco quota a prezzo_mercato +±3,5% fee. Supera il `mercato%` a bucket di
+Fase 3. Dettaglio in DECISIONS **D3b**. (+ tuning economico, backbone `/api/stats/*`, P&L realizzato.)
 
 ### Fase 4 — Economia Crediti + Portfolio · Emergent
 Budget iniziale 10.000, daily reward, 5 boost, sink/house edge, P&L portafoglio.
@@ -72,12 +105,13 @@ Accrual placeholder via heartbeat firmato legato all'attività, cap conservativo
 ### Fase 6 — Engagement · Emergent
 Quiz, predictions, allenamenti, leghe + chat, streak, eventi a tempo.
 
-### Fase 7 — Abbonamento + donazioni + ads · Emergent
+### Fase 7 — Abbonamento + donazioni + ads · Emergent · ⏸ RINVIATA (pre-lancio)
 IAP abbonamento mensile + free tier/trial; donazioni; rewarded ads (AdMob); gestione trasferimenti.
+**Rinviata a pre-lancio**: prima si chiudono tuning + design + verifica schermate.
 
-### Fase 8 — Anti-cheat + hardening (+ 8b polish UI) · Claude Code (8) / Emergent (8b)
+### Fase 8 — Anti-cheat + hardening (+ 8b polish UI) · Claude Code (8) / Emergent (8b) · ⏸ RINVIATA (pre-lancio)
 Heartbeat firmato (HMAC+nonce), fingerprint, anti multi-account, rate limit, audit log; poi
-rifinitura UI exchange.
+rifinitura UI exchange. **Rinviata a pre-lancio** (l'indurimento reward serve prima di qualsiasi valore reale).
 
 ### Closed beta + decisione (parallela a Fasi 3–4)
 Build EAS → TestFlight / Play Internal Testing; retention D1/D7/D30, DAU/MAU, ARPU. Se promettente:

@@ -3,10 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.config.pricing_constants import (
-    FLOAT_AZIONI_PER_GIOCATORE,
-    VALORE_BASE_GIOCATORE_CREDITI,
-)
+from app.config.pricing_constants import FLOAT_AZIONI_PER_GIOCATORE
 from app.config.valuation_constants import BASE_RUOLO, K_GLOBAL, SQUADRA_MAX, SQUADRA_MIN
 from app.valuation.engine import prezzo_iniziale, valuation
 
@@ -22,10 +19,14 @@ def test_valuation_neutral_per_role_equals_base_times_k():
 
 
 def test_valuation_neutral_average_is_base_value():
-    """Media sui ruoli del neutro ≈ valore base (10.000) → prezzo ≈ 0.01."""
+    """Media sui ruoli del neutro ≈ base intrinseca dell'engine (K_GLOBAL).
+
+    NB: engine LEGACY (Cr). Dalla migrazione € (D7) NON guida più il prezzo: l'ancora
+    è `market_value_eur_seed / FLOAT` (Opzione B). Test sul comportamento intrinseco.
+    """
     vals = [valuation(role=r, score=1.0, eta=25, minutaggio_pct=1.0, fattore_squadra=1.0)
             for r in ROLES]
-    assert sum(vals) / len(vals) == pytest.approx(VALORE_BASE_GIOCATORE_CREDITI)
+    assert sum(vals) / len(vals) == pytest.approx(K_GLOBAL)
 
 
 def test_prezzo_iniziale_is_valore_over_float():

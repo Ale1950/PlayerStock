@@ -10,8 +10,8 @@ from fastapi import APIRouter, BackgroundTasks, Query
 
 from app.config.pricing_constants import (
     FLOAT_AZIONI_PER_GIOCATORE,
-    PREZZO_BASE_AZIONE_CREDITI,
-    VALORE_BASE_GIOCATORE_CREDITI,
+    PREZZO_BASE_AZIONE_EUR,
+    VALORE_BASE_GIOCATORE_EUR,
 )
 from app.config.settings import get_settings
 from app.config.teams_fantasy_map import find_fantasy_by_real_name
@@ -144,10 +144,10 @@ async def seed_serie_a_roster(
                 "team_fantasy_id": team_doc["_id"],
                 "minutaggio_pct": 0.75,  # placeholder; Fase 2 leggerà stats reali
                 # Pricing placeholder (Fase 2 ricalcola)
-                "valore_iniziale_crediti": VALORE_BASE_GIOCATORE_CREDITI,
+                "valore_iniziale_eur": VALORE_BASE_GIOCATORE_EUR,
                 "float_quote": FLOAT_AZIONI_PER_GIOCATORE,
-                "prezzo_iniziale_crediti": PREZZO_BASE_AZIONE_CREDITI,
-                "prezzo_corrente_crediti": PREZZO_BASE_AZIONE_CREDITI,
+                "prezzo_iniziale_eur": PREZZO_BASE_AZIONE_EUR,
+                "prezzo_corrente_eur": PREZZO_BASE_AZIONE_EUR,
                 "status": "ACTIVE",
                 "data_source": "football_data_org",
                 "source_external_id": p["external_id"],

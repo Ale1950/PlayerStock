@@ -26,7 +26,7 @@ async def _seed(mock_db):
 async def test_simulate_moves_prices_and_writes_history(mock_db):
     await _seed(mock_db)
     before = {
-        d["_id"]: d["prezzo_corrente_crediti"]
+        d["_id"]: d["prezzo_corrente_eur"]
         for d in await mock_db.athletes.find({}).to_list(length=500)
     }
 
@@ -36,7 +36,7 @@ async def test_simulate_moves_prices_and_writes_history(mock_db):
     assert await mock_db.price_history.count_documents({}) == 2000
 
     after = await mock_db.athletes.find({}).to_list(length=500)
-    changed = sum(1 for d in after if d["prezzo_corrente_crediti"] != before[d["_id"]])
+    changed = sum(1 for d in after if d["prezzo_corrente_eur"] != before[d["_id"]])
     assert changed > 100  # la borsa si muove davvero
 
 
@@ -44,5 +44,5 @@ async def test_simulate_respects_floor(mock_db):
     await _seed(mock_db)
     await simulate_rounds(mock_db, n_rounds=20)
     for d in await mock_db.athletes.find({}).to_list(length=500):
-        floor = 0.10 * d["prezzo_iniziale_crediti"]
-        assert d["prezzo_corrente_crediti"] >= floor - 1e-12
+        floor = 0.10 * d["prezzo_iniziale_eur"]
+        assert d["prezzo_corrente_eur"] >= floor - 1e-12

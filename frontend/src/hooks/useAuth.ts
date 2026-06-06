@@ -1,8 +1,14 @@
 /**
- * useAuth hook: shared auth state across the app.
+ * Auth state CONDIVISO via Context (un'unica fonte per tutta l'app).
+ *
+ * Prima era un hook con stato locale per-istanza: il login salvava il token ma
+ * l'istanza nel RootNavigator non si aggiornava → isAuthenticated restava false
+ * e il guard rimbalzava al login. Ora è un Context: dopo l'exchange il login
+ * chiama refresh() e TUTTI i consumer vedono lo stato aggiornato.
  */
-import { useCallback, useEffect, useState } from 'react';
-import { clearAuth, getToken, getUser, type StoredUser } from '@/src/services/authStorage';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+
+import { clearAuth, getToken, type StoredUser } from '@/src/services/authStorage';
 import { fetchMe, logoutBackend } from '@/src/services/auth.service';
 
 interface AuthState {
@@ -11,18 +17,23 @@ interface AuthState {
   user: StoredUser | null;
 }
 
-export function useAuth() {
+interface AuthValue extends AuthState {
+  logout: () => Promise<void>;
+  refresh: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthValue | null>(null);
+
+export function AuthProvider(props: { children: React.ReactNode }) {
   const [state, setState] = useState<AuthState>({ isLoading: true, isAuthenticated: false, user: null });
 
   const bootstrap = useCallback(async () => {
     try {
       const token = await getToken();
-      const user = await getUser();
       if (!token) {
         setState({ isLoading: false, isAuthenticated: false, user: null });
         return;
       }
-      // Token present: try to fetch /users/me to validate
       try {
         const res = await fetchMe();
         const fresh: StoredUser = {
@@ -59,5 +70,12 @@ export function useAuth() {
     await bootstrap();
   }, [bootstrap]);
 
-  return { ...state, logout, refresh };
+  const value: AuthValue = { ...state, logout, refresh };
+  return React.createElement(AuthContext.Provider, { value }, props.children);
+}
+
+export function useAuth(): AuthValue {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  return ctx;
 }

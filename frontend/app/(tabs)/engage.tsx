@@ -1,183 +1,248 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useCallback, useMemo, useState } from 'react';
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { GeometricBackground } from '@/src/components/chrome/GeometricBackground';
+import { StateView } from '@/src/components/StateView';
+import { VividCard, VividText } from '@/src/components/VividCard';
+import { useResponsive } from '@/src/hooks/use-responsive';
 import { translateError } from '@/src/services/api';
 import {
-  claimStreak, getStreak, getQuizzes, submitQuiz, getPredictions,
-  type StreakState, type QuizSummary, type Prediction,
+  claimMission, claimStreak, getOverview, submitQuiz,
+  type EngagementOverview, type MissionItem,
 } from '@/src/services/engagement.service';
-import { colors } from '@/src/theme/colors';
-import { radius, spacing, typography } from '@/src/theme/spacing';
+import { useTheme } from '@/src/theme/ThemeProvider';
+import { type ThemeColors } from '@/src/theme/tokens';
+import { borderW, radius, spacing, typography } from '@/src/theme/spacing';
+
+const INK = '#05070A';
+type Key = 'streak' | 'quiz' | 'predictions' | 'challenge' | 'missions' | 'news';
+type Variant = 'cyan' | 'teal' | 'purple' | 'green' | 'amber' | 'pink';
+
+function Bar({ value, max, color }: { value: number; max: number; color: string }) {
+  const pct = Math.max(0.03, Math.min(1, max ? value / max : 0));
+  return <View style={pstyles.track}><View style={[pstyles.fill, { width: `${pct * 100}%`, backgroundColor: color }]} /></View>;
+}
 
 export default function Engage() {
-  const { t } = useTranslation();
-  const [streak, setStreak] = useState<StreakState | null>(null);
-  const [quizzes, setQuizzes] = useState<QuizSummary[]>([]);
-  const [preds, setPreds] = useState<Prediction[]>([]);
+  const { colors } = useTheme();
+  const { isDesktop } = useResponsive();
+  const s = useMemo(() => makeStyles(colors), [colors]);
+
+  const [ov, setOv] = useState<EngagementOverview | null>(null);
   const [loading, setLoading] = useState(true);
-  const [msg, setMsg] = useState<string | null>(null);
-  const [busyAction, setBusyAction] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState<Key | null>(null);
+  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [busy, setBusy] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    setMsg(null);
-    try {
-      const [s, q, p] = await Promise.all([getStreak(), getQuizzes(), getPredictions()]);
-      setStreak(s); setQuizzes(q.items); setPreds(p.items);
-    } catch (e) { setMsg(translateError(e)); }
+    setError(null);
+    try { setOv(await getOverview()); } catch (e) { setError(translateError(e)); }
     finally { setLoading(false); }
   }, []);
   useFocusEffect(useCallback(() => { setLoading(true); load(); }, [load]));
 
   const onClaimStreak = async () => {
-    setBusyAction('streak'); setMsg(null);
+    setBusy('streak');
+    try { const r = await claimStreak(); if (r.claimed) setToast(`+${r.reward_amount?.toFixed(1)} NACKL · streak ${r.current_streak}`); await load(); } finally { setBusy(null); }
+  };
+  const onSubmitQuiz = async () => {
+    if (!ov) return; setBusy('quiz');
     try {
-      const r = await claimStreak();
-      setMsg(r.claimed
-        ? t('engage.streak_claimed_msg', { reward: r.reward_amount?.toFixed(2) ?? '?', streak: r.current_streak })
-        : t('engage.streak_already_claimed'));
-      await load();
-    } catch (e) { setMsg(translateError(e)); }
-    finally { setBusyAction(null); }
+      const ans = ov.market_quiz.questions.map((q) => answers[q.id] ?? 0);
+      const r = await submitQuiz(ov.market_quiz.id, ans);
+      setToast(`Quiz ${r.correct}/${r.total} · +${r.reward_amount.toFixed(1)} NACKL + €`); setOpen(null); await load();
+    } catch (e) { setToast(translateError(e)); } finally { setBusy(null); }
+  };
+  const onClaimMission = async (m: MissionItem) => {
+    setBusy(m.id);
+    try { const r = await claimMission(m.id); if (r.claimed) setToast(`Missione: +€${r.credits} + ${r.nackl} NACKL`); await load(); }
+    catch (e) { setToast(translateError(e)); } finally { setBusy(null); }
   };
 
-  const onSubmitQuiz = async (quiz: QuizSummary) => {
-    if (!quiz.questions.length) return;
-    setBusyAction(quiz.id);
-    try {
-      // Strategia MVP: random tap su prima opzione (UI completa = Fase 7); per ora "submit demo"
-      const answers = quiz.questions.map(() => 0);
-      const r = await submitQuiz(quiz.id, answers);
-      setMsg(t('engage.quiz_done_msg', { correct: r.correct, total: r.total, reward: r.reward_amount.toFixed(2) }));
-      await load();
-    } catch (e) { setMsg(translateError(e)); }
-    finally { setBusyAction(null); }
-  };
+  // 6 colori DISTINTI; disposti così che card adiacenti (orizz. E vert.) siano sempre diverse:
+  //   riga1 cyan|purple · riga2 green|amber · riga3 pink|teal
+  const launchers: { key: Key; variant: Variant; icon: keyof typeof Ionicons.glyphMap; title: string; teaser: string }[] = ov ? [
+    { key: 'streak', variant: 'cyan', icon: 'flame', title: 'Streak', teaser: `${ov.streak.current_streak} giorni 🔥${ov.streak.can_claim_today ? ' · riscatta' : ''}` },
+    { key: 'quiz', variant: 'purple', icon: 'help-circle', title: 'Quiz Mercato', teaser: ov.market_quiz.already_attempted ? '✓ completato oggi' : `${ov.market_quiz.questions.length} domande` },
+    { key: 'predictions', variant: 'green', icon: 'trending-up', title: 'Pronostici', teaser: `${ov.predictions.open} aperti` },
+    { key: 'challenge', variant: 'amber', icon: 'trophy', title: 'Sfida', teaser: ov.challenge.my_rank ? `Tu #${ov.challenge.my_rank} / ${ov.challenge.total}` : '—' },
+    { key: 'missions', variant: 'pink', icon: 'flag', title: 'Missioni', teaser: `${ov.missions.filter((m) => m.completed).length}/${ov.missions.length} completate` },
+    { key: 'news', variant: 'teal', icon: 'newspaper', title: 'News', teaser: `${ov.news.items.length} eventi di mercato` },
+  ] : [];
 
-  if (loading) return (
-    <SafeAreaView style={styles.safe}><View style={styles.loading}><ActivityIndicator color={colors.accent} size="large"/></View></SafeAreaView>
-  );
+  const toneColor = (t: string) => t === 'green' ? colors.green : t === 'red' ? colors.red : t === 'amber' ? colors.amber : colors.cyan;
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>{t('engage.title')}</Text>
-        <Text style={styles.sub}>{t('engage.subtitle')}</Text>
+    <View style={s.safe}>
+      <GeometricBackground />
+      <ScrollView contentContainerStyle={s.container}>
+        <Text style={s.title}>Engage</Text>
+        <Text style={s.subtitle}>Premi su DUE economie: <Text style={{ color: colors.amber }}>€</Text> (gioco) e <Text style={{ color: colors.cyan }}>NACKL</Text> (placeholder) — distinte. Tocca un'attività per aprirla.</Text>
+        {!!toast && <View style={s.toast}><Text style={s.toastTxt}>{toast}</Text></View>}
 
-        {!!msg && (<View style={styles.banner} testID="engage-banner"><Text style={styles.bannerText}>{msg}</Text></View>)}
-
-        {/* Streak card */}
-        <View style={styles.card} testID="engage-streak-card">
-          <View style={styles.cardHeader}>
-            <Ionicons name="flame" size={24} color={colors.warning} />
-            <Text style={styles.cardTitle}>{t('engage.streak_title')}</Text>
-          </View>
-          <View style={styles.streakRow}>
-            <View><Text style={styles.streakBig}>{streak?.current_streak ?? 0}</Text><Text style={styles.streakLabel}>{t('engage.streak_days')}</Text></View>
-            <View><Text style={styles.streakMid}>{streak?.longest_streak ?? 0}</Text><Text style={styles.streakLabel}>{t('engage.streak_longest')}</Text></View>
-            <View><Text style={styles.streakMid}>{(streak?.next_reward_estimate ?? 1).toFixed(2)}</Text><Text style={styles.streakLabel}>{t('engage.streak_next_reward')}</Text></View>
-          </View>
-          <Pressable
-            testID="engage-streak-claim"
-            disabled={!streak?.can_claim_today || busyAction === 'streak'}
-            onPress={onClaimStreak}
-            style={({ pressed }) => [styles.btn, (!streak?.can_claim_today || busyAction === 'streak') && { opacity: 0.5 }, pressed && { opacity: 0.8 }]}
-          >
-            {busyAction === 'streak'
-              ? <ActivityIndicator color="#fff"/>
-              : <Text style={styles.btnText}>{streak?.can_claim_today ? t('engage.streak_claim_btn') : t('engage.streak_already_claimed')}</Text>}
-          </Pressable>
-        </View>
-
-        {/* Quiz card */}
-        <View style={styles.card} testID="engage-quizzes-card">
-          <View style={styles.cardHeader}>
-            <Ionicons name="help-circle" size={24} color={colors.accent} />
-            <Text style={styles.cardTitle}>{t('engage.quiz_title')}</Text>
-          </View>
-          {quizzes.length === 0 ? (
-            <Text style={styles.empty}>{t('engage.no_quiz')}</Text>
-          ) : quizzes.map((q) => (
-            <View key={q.id} style={styles.quizItem} testID={`engage-quiz-${q.id}`}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.quizTitle}>{q.title}</Text>
-                <Text style={styles.quizMeta}>{q.questions.length} {t('engage.quiz_questions')}</Text>
-              </View>
-              <Pressable
-                testID={`engage-quiz-submit-${q.id}`}
-                onPress={() => onSubmitQuiz(q)}
-                disabled={busyAction === q.id}
-                style={({ pressed }) => [styles.btnSmall, busyAction === q.id && { opacity: 0.5 }, pressed && { opacity: 0.8 }]}
-              >
-                <Text style={styles.btnSmallText}>{busyAction === q.id ? '...' : t('engage.quiz_play')}</Text>
+        {loading || error || !ov ? (
+          <StateView loading={loading} error={error} empty={!loading && !error && !ov} emptyLabel="—" icon="flame-outline" />
+        ) : (
+          <View style={[s.grid, isDesktop && s.gridDesktop]}>
+            {launchers.map((l) => (
+              <Pressable key={l.key} testID={`launcher-${l.key}`} onPress={() => { setOpen(l.key); setAnswers({}); }} style={[s.cellBase, isDesktop ? s.cellDesktop : s.cellMobile]}>
+                <VividCard variant={l.variant} style={s.launcher}>
+                  <View style={s.launcherRow}>
+                    <Ionicons name={l.icon} size={26} color={INK} />
+                    <Ionicons name="chevron-forward" size={20} color={INK} style={{ opacity: 0.7 }} />
+                  </View>
+                  <VividText size="title">{l.title}</VividText>
+                  <VividText size="body">{l.teaser}</VividText>
+                </VividCard>
               </Pressable>
-            </View>
-          ))}
-          <Text style={styles.noteSmall}>{t('engage.quiz_note_phase7')}</Text>
-        </View>
-
-        {/* Predictions card */}
-        <View style={styles.card} testID="engage-predictions-card">
-          <View style={styles.cardHeader}>
-            <Ionicons name="trending-up" size={24} color={colors.up} />
-            <Text style={styles.cardTitle}>{t('engage.predictions_title')}</Text>
+            ))}
           </View>
-          {preds.length === 0 ? (
-            <Text style={styles.empty}>{t('engage.no_predictions')}</Text>
-          ) : preds.map((p) => {
-            const won = p.outcome === 'won';
-            const lost = p.outcome === 'lost';
-            const c = won ? colors.up : lost ? colors.down : colors.textSecondary;
-            return (
-              <View key={p.id} style={styles.predItem} testID={`engage-pred-${p.id}`}>
-                <Ionicons name={p.direction === 'up' ? 'arrow-up-circle' : 'arrow-down-circle'} size={20} color={c} />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.predTitle}>{p.direction === 'up' ? t('engage.pred_up') : t('engage.pred_down')} · {p.base_price.toFixed(4)}</Text>
-                  <Text style={styles.predMeta}>{p.status} {p.reward_amount > 0 ? `· +${p.reward_amount.toFixed(2)} NACKL` : ''}</Text>
-                </View>
-              </View>
-            );
-          })}
-          <Text style={styles.noteSmall}>{t('engage.predictions_note')}</Text>
-        </View>
-
-        <Text style={styles.disclaimer}>{t('engage.reward_note')}</Text>
+        )}
       </ScrollView>
-    </SafeAreaView>
+
+      {/* PANNELLO DEDICATO (modale desktop · schermo mobile) */}
+      <Modal visible={open != null} transparent animationType="fade" onRequestClose={() => setOpen(null)}>
+        <Pressable style={s.backdrop} onPress={() => setOpen(null)}>
+          <Pressable style={[s.panel, isDesktop ? s.panelDesktop : s.panelMobile]} onPress={(e) => e.stopPropagation?.()}>
+            <View style={s.panelHead}>
+              <Text style={s.panelTitle}>{launchers.find((l) => l.key === open)?.title}</Text>
+              <Pressable onPress={() => setOpen(null)} hitSlop={8}><Ionicons name="close" size={24} color={colors.muted} /></Pressable>
+            </View>
+            <ScrollView contentContainerStyle={{ gap: spacing.md, paddingBottom: spacing.md }}>
+              {ov && open === 'streak' && (
+                <>
+                  <Text style={s.big}>{ov.streak.current_streak} giorni 🔥</Text>
+                  <Text style={s.pMeta}>Record {ov.streak.longest_streak} · prossimo +{ov.streak.next_reward_estimate?.toFixed(1)} NACKL</Text>
+                  <Pressable disabled={!ov.streak.can_claim_today || busy === 'streak'} onPress={onClaimStreak} style={[s.cta, !ov.streak.can_claim_today && s.ctaOff]}>
+                    <Text style={s.ctaTxt}>{ov.streak.can_claim_today ? 'RISCATTA OGGI' : 'GIÀ RISCATTATO'}</Text>
+                  </Pressable>
+                </>
+              )}
+              {ov && open === 'quiz' && (ov.market_quiz.already_attempted ? (
+                <Text style={s.pMeta}>✓ Completato oggi — torna domani per un nuovo quiz dai dati di mercato.</Text>
+              ) : (
+                <>
+                  {ov.market_quiz.questions.map((q) => (
+                    <View key={q.id}>
+                      <Text style={s.qTxt}>{q.text}</Text>
+                      <View style={s.opts}>
+                        {q.options.map((o, oi) => (
+                          <Pressable key={oi} onPress={() => setAnswers((a) => ({ ...a, [q.id]: oi }))} style={[s.opt, answers[q.id] === oi && { backgroundColor: colors.cyan, borderColor: colors.cyan }]}>
+                            <Text style={[s.optTxt, answers[q.id] === oi && { color: colors.onAccent }]}>{o}</Text>
+                          </Pressable>
+                        ))}
+                      </View>
+                    </View>
+                  ))}
+                  <Pressable disabled={busy === 'quiz'} onPress={onSubmitQuiz} style={s.cta}><Text style={s.ctaTxt}>INVIA · +€ + NACKL</Text></Pressable>
+                </>
+              ))}
+              {ov && open === 'predictions' && (
+                <>
+                  <Text style={s.pMeta}>{ov.predictions.open} pronostici aperti · su↑/giù↓ a 24h, chiusi sul prezzo reale.</Text>
+                  {ov.predictions.recent.map((p) => (
+                    <View key={p.id} style={s.listRow}>
+                      <Text style={s.listTxt}>{p.direction === 'up' ? '▲ su' : '▼ giù'}</Text>
+                      <Text style={[s.listTag, { color: p.status === 'won' ? colors.green : p.status === 'lost' ? colors.red : colors.muted }]}>
+                        {p.status === 'won' ? '✓ vinto' : p.status === 'lost' ? '✗ perso' : '… in corso'}{p.reward_amount ? ` · +${p.reward_amount} NACKL` : ''}
+                      </Text>
+                    </View>
+                  ))}
+                  <Text style={s.pMeta}>Apri un nuovo pronostico dal Dettaglio di un giocatore.</Text>
+                </>
+              )}
+              {ov && open === 'challenge' && (
+                <>
+                  <Text style={s.pMeta}>{ov.challenge.metric} · {ov.challenge.week_key} · tu #{ov.challenge.my_rank ?? '—'} / {ov.challenge.total}</Text>
+                  {ov.challenge.standings.map((st) => (
+                    <View key={st.rank} style={[s.listRow, st.is_self && { borderColor: colors.cyan, borderWidth: borderW }]}>
+                      <Text style={s.listTxt}>{['🥇', '🥈', '🥉'][st.rank - 1] ?? `#${st.rank}`} {st.pseudonym}{st.is_self ? ' (TU)' : ''}</Text>
+                      <Text style={[s.listTag, { color: st.return_pct >= 0 ? colors.green : colors.red }]}>
+                        {st.return_pct >= 0 ? '+' : ''}{st.return_pct.toFixed(1)}%{st.prize_proposed ? ` · ${st.prize_proposed.credits}cr+${st.prize_proposed.nackl}N` : ''}
+                      </Text>
+                    </View>
+                  ))}
+                </>
+              )}
+              {ov && open === 'news' && (
+                <>
+                  <Text style={s.pMeta}>Eventi di mercato dai dati interni · informativo (nessun premio).</Text>
+                  {ov.news.items.length === 0 && <Text style={s.pMeta}>Nessun evento di rilievo al momento.</Text>}
+                  {ov.news.items.map((n, i) => (
+                    <View key={i} style={s.listRow}>
+                      <View style={{ flex: 1, minWidth: 0 }}>
+                        <Text style={[s.qTxt, { color: toneColor(n.tone) }]} numberOfLines={2}>{n.title}</Text>
+                        <Text style={s.pMeta}>{n.detail}</Text>
+                      </View>
+                    </View>
+                  ))}
+                </>
+              )}
+              {ov && open === 'missions' && ov.missions.map((m) => (
+                <View key={m.id} style={s.mission}>
+                  <View style={s.missionTop}>
+                    <Text style={s.qTxt}>{m.title}</Text>
+                    <Text style={[s.listTag, { color: m.completed ? colors.green : colors.muted }]}>{m.claimed ? '✓ riscattata' : m.completed ? 'completata' : 'in corso'}</Text>
+                  </View>
+                  <Text style={s.pMeta}>{m.description}</Text>
+                  <Bar value={Math.min(m.progress, m.target)} max={m.target} color={m.completed ? colors.green : colors.cyan} />
+                  <Text style={s.pMeta}>{Math.round(Math.min(m.progress, m.target)).toLocaleString('it-IT')} / {m.target.toLocaleString('it-IT')} · premio €{m.reward_proposed.credits} + {m.reward_proposed.nackl} NACKL</Text>
+                  {m.completed && !m.claimed && (
+                    <Pressable disabled={busy === m.id} onPress={() => onClaimMission(m)} style={[s.cta, { alignSelf: 'flex-start' }]}><Text style={s.ctaTxt}>RISCATTA</Text></Pressable>
+                  )}
+                </View>
+              ))}
+            </ScrollView>
+          </Pressable>
+        </Pressable>
+      </Modal>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const pstyles = StyleSheet.create({
+  track: { height: 8, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.10)', marginTop: spacing.xs, overflow: 'hidden' },
+  fill: { height: 8, borderRadius: 999 },
+});
+
+const makeStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  container: { padding: spacing.lg, paddingBottom: spacing.xxl + 60 },
-  loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  title: { ...typography.h1, color: colors.textPrimary },
-  sub: { ...typography.body, color: colors.textSecondary, marginTop: 4 },
-  banner: { padding: spacing.md, backgroundColor: colors.accent + '22', borderRadius: radius.md, borderWidth: 1, borderColor: colors.accent, marginTop: spacing.md },
-  bannerText: { ...typography.body, color: colors.accent },
-  card: { padding: spacing.lg, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, marginTop: spacing.md, gap: spacing.md },
-  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  cardTitle: { ...typography.h3, color: colors.textPrimary },
-  streakRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: spacing.sm },
-  streakBig: { ...typography.h1, color: colors.warning, fontVariant: ['tabular-nums'] },
-  streakMid: { ...typography.h2, color: colors.textPrimary, fontVariant: ['tabular-nums'] },
-  streakLabel: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
-  btn: { backgroundColor: colors.accent, paddingVertical: 14, borderRadius: radius.md, alignItems: 'center', minHeight: 48, justifyContent: 'center' },
-  btnText: { ...typography.bodyBold, color: '#fff' },
-  btnSmall: { backgroundColor: colors.accent, paddingHorizontal: spacing.md, paddingVertical: 8, borderRadius: radius.md },
-  btnSmallText: { ...typography.small, color: '#fff', fontWeight: '600' },
-  quizItem: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border },
-  quizTitle: { ...typography.bodyBold, color: colors.textPrimary },
-  quizMeta: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
-  empty: { ...typography.body, color: colors.textSecondary, paddingVertical: spacing.sm },
-  predItem: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border },
-  predTitle: { ...typography.bodyBold, color: colors.textPrimary },
-  predMeta: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
-  noteSmall: { ...typography.caption, color: colors.textMuted, fontStyle: 'italic' },
-  disclaimer: { ...typography.caption, color: colors.textMuted, marginTop: spacing.lg, textAlign: 'center' },
+  container: { padding: spacing.lg, paddingBottom: spacing.xxl + 60, gap: spacing.md, maxWidth: 1000, width: '100%', alignSelf: 'center' },
+  title: { ...typography.pageTitle, color: colors.text },
+  subtitle: { ...typography.small, color: colors.muted, marginTop: -spacing.sm },
+  toast: { backgroundColor: colors.surfaceAlt, borderRadius: radius.md, borderWidth: borderW, borderColor: colors.cyan, padding: spacing.sm },
+  toastTxt: { ...typography.small, color: colors.text },
+  grid: {},
+  gridDesktop: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+  cellBase: { marginBottom: 24 },     // gap VERTICALE reale tra le righe (rowGap non rende su RNW)
+  cellDesktop: { width: '48.5%' },
+  cellMobile: { width: '100%' },
+  launcher: { height: 122, justifyContent: 'flex-start', gap: 4 },
+  launcherRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  note: { ...typography.caption, color: colors.muted, textAlign: 'center', marginTop: spacing.md },
+  // panel
+  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)', justifyContent: 'center', alignItems: 'center', padding: spacing.lg },
+  panel: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: borderW, borderColor: colors.border, padding: spacing.lg },
+  panelDesktop: { width: '100%', maxWidth: 560, maxHeight: '85%' },
+  panelMobile: { width: '100%', maxHeight: '88%' },
+  panelHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md },
+  panelTitle: { ...typography.h2, color: colors.text },
+  big: { ...typography.mono, fontSize: 30, fontWeight: '700', color: colors.cyan },
+  pMeta: { ...typography.small, color: colors.muted },
+  qTxt: { ...typography.bodyBold, color: colors.text },
+  opts: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 4 },
+  opt: { backgroundColor: colors.bg, borderWidth: borderW, borderColor: colors.border, borderRadius: radius.pill, paddingHorizontal: 12, paddingVertical: 6 },
+  optTxt: { ...typography.small, color: colors.text },
+  cta: { backgroundColor: colors.cyan, borderRadius: radius.md, paddingHorizontal: spacing.md, paddingVertical: 10, alignItems: 'center', marginTop: spacing.xs },
+  ctaOff: { opacity: 0.45 },
+  ctaTxt: { ...typography.monoLabel, color: colors.onAccent },
+  listRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: colors.bg, borderRadius: radius.md, borderWidth: borderW, borderColor: colors.border, padding: spacing.sm },
+  listTxt: { ...typography.body, color: colors.text },
+  listTag: { ...typography.monoLabel },
+  mission: { backgroundColor: colors.bg, borderRadius: radius.md, borderWidth: borderW, borderColor: colors.border, padding: spacing.md, gap: 4 },
+  missionTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
 });

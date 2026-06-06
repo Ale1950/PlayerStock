@@ -18,7 +18,13 @@ interna.
 1. **TRADING (interno, virtuale) → "Crediti".** Valuta per comprare/vendere quote. Punteggio
    di gioco **senza valore monetario, senza cash-out**. NON è crypto/NACKL.
 2. **REWARD per l'uso dell'app → NACKL (mining reale, Acki Nacki).** Accumulato usando l'app;
-   **NON** compra quote; validato su **testnet (shellnet)** in Fase 5.
+   **NON** compra quote; validato su **testnet (shellnet)** in Fase 5. **Placeholder interno etichettato**
+   finché Q1/Q5 aperti (on-chain reale rinviato).
+
+**NESSUN ponte NACKL→Crediti.** Il guadagno parallelo in **Crediti** ha sorgente **ENGAGEMENT**
+(non NACKL) e vive su **ledger separato** dal NACKL. L'azione di engagement accredita entrambi
+(NACKL + Crediti) su path indipendenti e idempotenti. **Faucet engagement→Crediti a scaglioni
+(×3/×1,5/×0,75/×0,2) APPLICATO** (wirato su streak/quiz/pronostici; valori in §8 e DECISIONS D6f).
 
 Contenuti **solo Serie A**; architettura **pronta per 4 sport** (calcio/tennis/basket/F1) via config.
 
@@ -47,11 +53,14 @@ reale in MVP; seed/chiavi di spesa wallet nell'app; terminologia crypto nei test
 | Float quote per giocatore | **1.000.000** |
 | Valore base giocatore | **10.000 Crediti** (= €10.000 fittizi, 1:1 non convertibile) |
 | Prezzo base azione | **0.01 Credito** (= 10.000 / 1.000.000) |
+| Valore di mercato (€M) | **Layer di display** (Fase 2c, DECISIONS DV.1): valore fittizio/deterministico stile Transfermarkt (stelle €60–120M, coda €0,5–5M) che **segue il prezzo** via àncora. NON è l'unità di trading: si compra/vende sempre in **Crediti**. Economia intatta. |
 | Cap utente per giocatore | **3%** del float (= **30.000 quote** max) |
-| Budget iniziale nuovo utente | **10.000 Crediti** |
+| Budget iniziale nuovo utente | **10.000 Crediti** (mantenuto; **da rivedere** post guadagni/sink — DECISIONS DT.2) |
 | Holding minimo pre-rivendita | **7 giorni** |
 | Fee marketplace totale | **7%** = **3.5% buyer + 3.5% seller** (split 50/50) |
 | Floor minimo prezzo | **10%** del prezzo iniziale |
+| Prezzo di mercato | **IBRIDO** (Fase 3b): àncora-formula × (1 + deviazione da trading, rientro lazy) — vedi §6 |
+| Impatto trading | `k_impatto=1.5` · emivita deviazione **3h** (λ=ln2/3h) · cap deviazione **±0.40** |
 | Trasferimento giocatore | Rimborso automatico a tutti i possessori al **prezzo medio del giorno precedente** alla cessione ufficiale |
 | Display UI prezzi | **4 decimali** (es. €0.0350) |
 | Auth | **SOLO Google OAuth** |
@@ -157,17 +166,29 @@ nuovo_prezzo = vecchio_prezzo × (1 + performance% + mercato% + engagement%)
 clamp ai range per ruolo, **floor al 10%** del prezzo iniziale; tick post-evento + real-time +
 consolidamento giornaliero.
 
-- **Performance %** (settimanale): somma driver oggettivi clampata al range ruolo.
-- **Mercato %** (real-time): pressione domanda/offerta da **order flow reale**.
-- **Engagement %**: bonus attività utente.
+- **Performance %** (settimanale): somma driver oggettivi clampata al range ruolo → muove l'**àncora**.
+- **Engagement %**: bonus attività utente (sull'àncora).
 
-**Exchange a quantità reali:**
-- **Emissione primaria**: pool primario al prezzo iniziale (tipo IPO).
-- **Mercato secondario P2P**: order book reale limit/market — si compra **solo** ciò che è
-  offerto, si vende **solo** ciò che si possiede.
+### Prezzo IBRIDO (Fase 3b) — àncora + deviazione da trading
+Il `mercato%` a bucket (net-flow) è **superato** dal modello ibrido (DECISIONS D3b):
+```
+prezzo_equo (àncora) = ValoreIniziale / float        # si muove col rendimento (perf%/eng%)
+deviazione           += k×(q/float) su buy, −= su sell      # impatto del trading (k=1.5)
+deviazione_ora        = deviazione_ultima × e^(−λ·Δt)       # rientro lazy (emivita 3h), alla lettura
+prezzo_mercato        = clamp(prezzo_equo × (1+deviazione_ora), floor 10%, tetto=equo×(1+0.40))
+```
+Il banco quota a **prezzo_mercato**, poi applica ±3,5% fee. Stato per atleta: `prezzo_equo_crediti`,
+`deviazione`, `deviazione_ts` (update atomico con l'ordine); `price_history` riceve trade + snapshot
+periodici (rientro visibile in sparkline). Moduli `app/market/hybrid_pricing.py` + `trade.py`.
+
+**Exchange a quantità reali (MVP = pool a DUE LATI, DECISIONS D3.2):**
+- **Emissione primaria**: float intero nel pool al prezzo iniziale (tipo IPO).
+- **Mercato vs la CASA**: la casa è sempre controparte al prezzo di mercato (buy ×(1+3,5%), sell ×(1−3,5%)).
+  **Order book P2P / ordini limite RIMANDATI** (liquidità garantita, niente vendite bloccate con pochi utenti).
+- Scarsità preservata: `float = primary_pool_qty + circulating_qty = 1.000.000` (il pool può esaurirsi).
 - **Holding minimo 7 giorni** (anti-flip); **cap utente 3%**.
-- UI: lista quotazioni (prezzo, %, sparkline); dettaglio titolo (grafico); finestra buy/sell con
-  book (bid/ask + quantità reali), saldo Crediti, anteprima fee.
+- UI: lista quotazioni (prezzo, %, sparkline); dettaglio titolo (grafico + buy/sell cablato); saldo Crediti,
+  anteprima fee.
 
 ### Driver oggettivi CALCIO (valori esatti da `Gioco 5.xls` in Fase 2)
 - **Minuti** (>60'/45-60'/≤45'): DIF +0.28/-0.25/-0.50 · CC +0.38/-0.15/-0.38 · ATT +0.45/0.00/-0.10 · POR +0.18/-0.25/-0.50 (%).
@@ -181,9 +202,10 @@ consolidamento giornaliero.
 - **Range max giornaliero (clamp)**: DIF +4.13/-2.54 · CC +3.10/-2.12 · ATT +2.87/-2.81 · POR +4.24/-3.70 (%).
 - Tennis/Basket/F1: stessa struttura, pesi a config (`# TODO: pesi forniti dal fondatore`).
 
-### Driver di mercato (order flow REALE)
-- Acquisti 1-5 / 6-20 / >20 = **+1.2 / +2.0 / +2.5 %**.
-- Vendite 1-5 / 6-20 / >20 = **-1.2 / -2.0 / -2.5 %**.
+### Driver di mercato (order flow REALE) — ⚠️ SUPERATO dal modello ibrido (Fase 3b)
+Storico (bucket net-flow, Fase 3): Acquisti 1-5/6-20/>20 = +1.2/+2.0/+2.5 % · Vendite = -1.2/-2.0/-2.5 %.
+**Ora l'impatto del trading è continuo via deviazione + rientro lazy** (vedi "Prezzo IBRIDO" sopra), non più
+a scaglioni di net-flow.
 
 ### Driver engagement
 - Allenamenti 2 / 3-4 / 5+ sett = **+0.25 / +0.40 / +0.48 %**.
@@ -211,10 +233,16 @@ via `.env` (`REWARD_PROVIDER=internal|testnet`).
 
 ## 8. Economia Crediti
 
-Budget iniziale nuovo utente = **10.000 Crediti**. Guadagno in-app (daily reward, quiz,
-predictions, streak, allenamenti) — separati dal NACKL. **5 boost giornalieri** (daily login,
-reset via scheduler). Marketplace fee **7%** sul secondario (sink). Sink/house edge
-configurabile. Floor minimo + bonus riattivazione anti-churn.
+Budget iniziale nuovo utente = **10.000 Crediti** (mantenuto; **da rivedere** dopo aver disegnato
+guadagni/sink — DECISIONS DT.2). **Sink** principale = fee marketplace **7%** sul secondario.
+
+**Guadagno in-app in Crediti = sorgente ENGAGEMENT** (quiz/streak/pronostici), **separato dal NACKL**
+(ledger indipendenti, nessun ponte). **Faucet engagement→Crediti a scaglioni APPLICATO**
+(`app/economy/credit_faucet.py`, idempotente per `event_id`; wirato accanto all'accredito NACKL):
+- **base 0,25 cr/EP** · soglie EP **[50, 200, 500]** · moltiplicatori **×3/×1,5/×0,75/×0,2** · **cap 5 cr/gg/utente**.
+- 1 EP = magnitudine reward engagement (quiz 0,5/corretta · streak 1→2,2/gg · pronostico 2,5).
+Simulato (`tools/economy_report.py`): a 90gg iniezione crediti < sink fee → niente inflazione netta
+(~138 cr/utente, 1,4% budget). Floor minimo + bonus riattivazione anti-churn.
 
 ---
 
@@ -239,5 +267,30 @@ comando documentato** (`pytest`).
 ## 13. Schermate mobile
 
 Onboarding/auth (Google); Home quotazioni (prezzo, %, sparkline); Dettaglio titolo (grafico +
-buy/sell + book); Portfolio (P&L); Wallet Crediti; Reward NACKL (saldo + connessione wallet
-testnet via QR); Engagement; Leghe; Abbonamento; Admin.
+buy/sell cablato vs la casa); Portfolio (P&L); Wallet Crediti; Reward NACKL (saldo placeholder +
+connessione wallet testnet via QR); Engagement; Leghe; Abbonamento; Admin.
+
+---
+
+## 14. Aggregati / Backbone dati (`/api/stats/*`)
+
+Calcolo **INTERNO** (giocatori fittizi → niente dati web sui giocatori). Modulo `app/modules/stats/`:
+- `GET /api/stats/market` — market cap totale, volume 24h/7d, n° attivi, top gainers/losers, più scambiati,
+  distribuzione prezzi per ruolo.
+- `GET /api/stats/athletes/{id}` — market cap, var 24h/7d, max/min, volume, **n° possessori**, scostamento
+  prezzo vs equo, scomposizione valore (score/ruolo/età/minuti/squadra).
+- `GET /api/stats/me` — equity, **P&L realizzato (FIFO) / non realizzato**, allocazione ruolo/squadra,
+  best/worst, fee totali, flusso crediti.
+
+Volume dagli `orders`, possessori dagli `holdings` (già tracciati). P&L realizzato registrato su ogni
+vendita (`cost_basis_sold` + `realized_pnl`). Vedi DECISIONS DD.
+
+---
+
+## 15. Design system
+
+Direzione e token in **`DESIGN_SPEC.md`** (sorgente di verità del design). Sintesi: dark nativo neon,
+**primario cyan/teal** (sostituisce l'oro), secondario viola, intensità **mista** (sobrio sui dati /
+vivido reward-engage), tema scuro+chiaro con toggle, texture geometrica sottile; tipografia Space Grotesk
+(titoli) / JetBrains Mono (dati) / Inter (corpo) / Fraunces (accento serif). NACKL sempre etichettato
+placeholder. Vedi DECISIONS DG.

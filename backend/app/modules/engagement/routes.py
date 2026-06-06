@@ -17,13 +17,43 @@ from fastapi import APIRouter, Body, Query
 
 from app.core.deps import AdminDep, CurrentUserDep, DBDep
 from app.core.errors import err_bad_request
+from app.modules.engagement.challenges import settle_weekly_challenge, weekly_challenge
+from app.modules.engagement.missions import claim_mission, evaluate_missions
 from app.modules.engagement.service import (
-    claim_daily_streak, get_my_predictions, get_streak_state,
+    claim_daily_streak, engagement_overview, get_my_predictions, get_streak_state,
     list_active_quizzes, settle_expired_predictions,
     submit_prediction, submit_quiz_attempt,
 )
 
 router = APIRouter(prefix="/engagement", tags=["engagement"])
+
+
+@router.get("/overview")
+async def get_overview(user: CurrentUserDep, db: DBDep):
+    return await engagement_overview(db, user["_id"])
+
+
+@router.get("/missions")
+async def get_missions(user: CurrentUserDep, db: DBDep):
+    return {"items": await evaluate_missions(db, user["_id"])}
+
+
+@router.post("/missions/{mission_id}/claim")
+async def post_claim_mission(mission_id: str, user: CurrentUserDep, db: DBDep):
+    out = await claim_mission(db, user["_id"], mission_id)
+    if not out.get("claimed") and (out.get("error") or out.get("incomplete")):
+        raise err_bad_request("mission.not_claimable", "Missione non riscattabile", extra=out)
+    return out
+
+
+@router.get("/challenge")
+async def get_challenge(user: CurrentUserDep, db: DBDep):
+    return await weekly_challenge(db, user["_id"])
+
+
+@router.post("/admin/settle-challenge")
+async def post_settle_challenge(_: AdminDep, db: DBDep, week_key: Annotated[str, Body(embed=True)]):
+    return await settle_weekly_challenge(db, week_key)
 
 
 @router.post("/streak/claim")

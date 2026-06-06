@@ -9,7 +9,7 @@ from fastapi import APIRouter
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token as google_id_token
 
-from app.config.pricing_constants import BUDGET_INIZIALE_UTENTE_CREDITI
+from app.config.pricing_constants import BUDGET_INIZIALE_UTENTE_EUR
 from app.config.settings import get_settings
 from app.core.deps import CurrentUserDep, DBDep, SettingsDep
 from app.core.errors import err_bad_request, err_unauthorized
@@ -18,6 +18,7 @@ from app.models.common import utc_now
 from app.models.user import (
     AcceptTermsRequest,
     AuthResponse,
+    GoogleCodeExchangeRequest,
     GoogleSignInRequest,
     UpdateLocaleRequest,
     UserPublic,
@@ -44,18 +45,40 @@ def _verify_google_id_token(token: str, client_id: str) -> dict:
         raise err_unauthorized(code="auth.google_invalid_token", msg="Token Google non valido")
 
 
-@router.post("/google/callback", response_model=AuthResponse)
-async def google_callback(req: GoogleSignInRequest, db: DBDep, settings: SettingsDep) -> AuthResponse:
-    """Exchange a Google id_token for an app JWT. Creates user + wallet on first sign-in."""
-    if not settings.GOOGLE_OAUTH_CLIENT_ID:
-        raise err_bad_request("auth.google_not_configured", "Google OAuth non configurato sul server")
+async def _exchange_code_for_id_token(*, code: str, code_verifier: str, redirect_uri: str, settings) -> str:
+    """Auth-code + PKCE: scambia il code con Google e ritorna l'id_token."""
+    import httpx
 
-    info = _verify_google_id_token(req.id_token, settings.GOOGLE_OAUTH_CLIENT_ID)
+    data = {
+        "code": code,
+        "client_id": settings.GOOGLE_OAUTH_CLIENT_ID,
+        "client_secret": settings.GOOGLE_OAUTH_CLIENT_SECRET,
+        "redirect_uri": redirect_uri,
+        "grant_type": "authorization_code",
+        "code_verifier": code_verifier,
+    }
+    try:
+        async with httpx.AsyncClient(timeout=20) as client:
+            resp = await client.post("https://oauth2.googleapis.com/token", data=data)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("Google token exchange network error: %s", e)
+        raise err_unauthorized(code="auth.google_exchange_failed", msg="Scambio token Google fallito")
+    if resp.status_code != 200:
+        logger.warning("Google token exchange failed %s: %s", resp.status_code, resp.text[:300])
+        raise err_unauthorized(code="auth.google_exchange_failed", msg="Scambio token Google fallito")
+    id_tok = resp.json().get("id_token")
+    if not id_tok:
+        raise err_unauthorized(code="auth.google_exchange_failed", msg="id_token assente nella risposta Google")
+    return id_tok
+
+
+async def _provision_user_and_issue(db, settings, info: dict, req_locale: str | None) -> AuthResponse:
+    """Crea/aggiorna utente + wallet dall'id_token verificato ed emette il JWT app."""
     google_sub = info["sub"]
     email = info.get("email")
     name = info.get("name") or (email.split("@")[0] if email else "User")
     picture = info.get("picture")
-    locale = (req.locale or info.get("locale") or "it").lower()[:2]
+    locale = (req_locale or info.get("locale") or "it").lower()[:2]
 
     now = utc_now()
     existing = await db.users.find_one({"google_sub": google_sub})
@@ -69,11 +92,11 @@ async def google_callback(req: GoogleSignInRequest, db: DBDep, settings: Setting
         wallet = await db.user_wallets.find_one({"user_id": user_id})
         if not wallet:
             # Defensive: bootstrap wallet if missing
-            wallet = {"user_id": user_id, "balance_credits": BUDGET_INIZIALE_UTENTE_CREDITI, "updated_at": now}
+            wallet = {"user_id": user_id, "balance_eur": BUDGET_INIZIALE_UTENTE_EUR, "updated_at": now}
             await db.user_wallets.insert_one(wallet)
             await db.wallet_transactions.insert_one({
                 "user_id": user_id, "type": "welcome_bonus",
-                "amount": BUDGET_INIZIALE_UTENTE_CREDITI, "balance_after": BUDGET_INIZIALE_UTENTE_CREDITI,
+                "amount": BUDGET_INIZIALE_UTENTE_EUR, "balance_after": BUDGET_INIZIALE_UTENTE_EUR,
                 "description_it": "Bonus di benvenuto",
                 "created_at": now,
             })
@@ -90,11 +113,11 @@ async def google_callback(req: GoogleSignInRequest, db: DBDep, settings: Setting
         result = await db.users.insert_one(user_doc)
         user_id = result.inserted_id
         # Bootstrap wallet with welcome bonus
-        wallet_doc = {"user_id": user_id, "balance_credits": BUDGET_INIZIALE_UTENTE_CREDITI, "updated_at": now}
+        wallet_doc = {"user_id": user_id, "balance_eur": BUDGET_INIZIALE_UTENTE_EUR, "updated_at": now}
         await db.user_wallets.insert_one(wallet_doc)
         await db.wallet_transactions.insert_one({
             "user_id": user_id, "type": "welcome_bonus",
-            "amount": BUDGET_INIZIALE_UTENTE_CREDITI, "balance_after": BUDGET_INIZIALE_UTENTE_CREDITI,
+            "amount": BUDGET_INIZIALE_UTENTE_EUR, "balance_after": BUDGET_INIZIALE_UTENTE_EUR,
             "description_it": "Bonus di benvenuto",
             "created_at": now,
         })
@@ -109,8 +132,30 @@ async def google_callback(req: GoogleSignInRequest, db: DBDep, settings: Setting
         access_token=access_token,
         expires_in=settings.JWT_EXPIRES_MIN * 60,
         user=UserPublic.model_validate(user),
-        wallet=WalletPublic(balance_credits=wallet["balance_credits"], updated_at=wallet["updated_at"]),
+        wallet=WalletPublic(balance_eur=wallet["balance_eur"], updated_at=wallet["updated_at"]),
     )
+
+
+@router.post("/google/callback", response_model=AuthResponse)
+async def google_callback(req: GoogleSignInRequest, db: DBDep, settings: SettingsDep) -> AuthResponse:
+    """Flusso id_token diretto (mobile nativo / GSI). Verifica l'id_token ed emette il JWT."""
+    if not settings.GOOGLE_OAUTH_CLIENT_ID:
+        raise err_bad_request("auth.google_not_configured", "Google OAuth non configurato sul server")
+    info = _verify_google_id_token(req.id_token, settings.GOOGLE_OAUTH_CLIENT_ID)
+    return await _provision_user_and_issue(db, settings, info, req.locale)
+
+
+@router.post("/google/exchange", response_model=AuthResponse)
+async def google_exchange(req: GoogleCodeExchangeRequest, db: DBDep, settings: SettingsDep) -> AuthResponse:
+    """Flusso auth-code + PKCE (web/mobile): scambia il code lato backend, verifica, emette il JWT."""
+    if not (settings.GOOGLE_OAUTH_CLIENT_ID and settings.GOOGLE_OAUTH_CLIENT_SECRET):
+        raise err_bad_request("auth.google_not_configured", "Google OAuth non configurato sul server")
+    id_tok = await _exchange_code_for_id_token(
+        code=req.code, code_verifier=req.code_verifier,
+        redirect_uri=req.redirect_uri, settings=settings,
+    )
+    info = _verify_google_id_token(id_tok, settings.GOOGLE_OAUTH_CLIENT_ID)
+    return await _provision_user_and_issue(db, settings, info, req.locale)
 
 
 @router.post("/refresh")

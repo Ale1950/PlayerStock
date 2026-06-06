@@ -134,8 +134,8 @@ class TestPositionPnL:
 # ───────── aggregate_totals ─────────
 class TestAggregateTotals:
     def test_empty_portfolio(self):
-        out = aggregate_totals(balance_credits=10_000.0, positions=[])
-        assert out["cash_credits"] == 10_000.0
+        out = aggregate_totals(balance_eur=10_000.0, positions=[])
+        assert out["cash_eur"] == 10_000.0
         assert out["positions_value"] == 0.0
         assert out["positions_cost_basis"] == 0.0
         assert out["total_equity"] == 10_000.0
@@ -148,7 +148,7 @@ class TestAggregateTotals:
             {"current_value": 50.0, "cost_basis": 60.0, "quantity": 25},    # -10
             {"current_value": 30.0, "cost_basis": 30.0, "quantity": 10},    # 0
         ]
-        out = aggregate_totals(balance_credits=500.0, positions=positions)
+        out = aggregate_totals(balance_eur=500.0, positions=positions)
         assert out["positions_value"] == pytest.approx(180.0)
         assert out["positions_cost_basis"] == pytest.approx(170.0)
         assert out["total_equity"] == pytest.approx(680.0)  # 500 cash + 180 titoli
@@ -161,11 +161,11 @@ class TestAggregateTotals:
             {"current_value": 0.0, "cost_basis": 0.0, "quantity": 0},
             {"current_value": 50.0, "cost_basis": 40.0, "quantity": 10},
         ]
-        out = aggregate_totals(balance_credits=100.0, positions=positions)
+        out = aggregate_totals(balance_eur=100.0, positions=positions)
         assert out["positions_count"] == 1
 
     def test_only_cash(self):
-        out = aggregate_totals(balance_credits=10_000.0, positions=[])
+        out = aggregate_totals(balance_eur=10_000.0, positions=[])
         # all'inizio del gioco: solo cash, no titoli
         assert out["total_equity"] == 10_000.0
 

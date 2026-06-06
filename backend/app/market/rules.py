@@ -53,6 +53,26 @@ def consume_lots_fifo(lots: list[dict], qty: int) -> list[dict]:
     return remaining
 
 
+def consume_lots_fifo_with_cost(lots: list[dict], qty: int) -> tuple[list[dict], float]:
+    """Come consume_lots_fifo ma ritorna anche il COSTO BASE delle quote vendute
+    (Σ qty_consumata × price del lotto), per il P&L realizzato."""
+    remaining: list[dict] = []
+    to_consume = qty
+    cost = 0.0
+    for lot in sorted(lots, key=lambda x: _naive_utc(x["acquired_at"])):
+        if to_consume <= 0:
+            remaining.append(lot)
+            continue
+        take = min(lot["qty"], to_consume)
+        cost += take * (lot.get("price", 0.0) or 0.0)
+        if lot["qty"] > take:
+            remaining.append({**lot, "qty": lot["qty"] - take})
+        to_consume -= take
+    if to_consume > 0:
+        raise ValueError("qty richiesta superiore alle quote possedute")
+    return remaining, cost
+
+
 # ───── fee / costi (gross = qty × prezzo di quotazione) ─────
 def buy_gross(qty: int, price: float) -> float:
     return qty * price

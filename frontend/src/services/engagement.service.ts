@@ -56,3 +56,31 @@ export async function submitPrediction(athleteId: string, direction: 'up' | 'dow
   const { data } = await api.post('/engagement/predictions', { athlete_id: athleteId, direction });
   return data;
 }
+
+// ───── Gruppo 3a: missioni · sfide · quiz mercato · overview ─────
+export interface MissionItem {
+  id: string; title: string; description: string;
+  progress: number; target: number; completed: boolean; claimed: boolean;
+  reward_proposed: { credits: number; nackl: number };
+}
+export interface ChallengeStanding { rank: number; pseudonym: string; return_pct: number; is_self: boolean; prize_proposed: { credits: number; nackl: number } | null; }
+export interface WeeklyChallenge { week_key: string; ends_at: string; metric: string; standings: ChallengeStanding[]; my_rank: number | null; total: number; }
+export interface MarketQuiz { id: string; title: string; questions: QuizQuestion[]; already_attempted: boolean; }
+export interface NewsItem { type: string; tone: string; title: string; detail: string; }
+export interface EngagementOverview {
+  streak: StreakState;
+  market_quiz: MarketQuiz;
+  predictions: { open: number; recent: Prediction[] };
+  missions: MissionItem[];
+  challenge: WeeklyChallenge;
+  news: { items: NewsItem[] };
+}
+
+export async function getOverview() {
+  const { data } = await api.get<EngagementOverview>('/engagement/overview');
+  return data;
+}
+export async function claimMission(missionId: string) {
+  const { data } = await api.post<{ claimed: boolean; credits?: number; nackl?: number }>(`/engagement/missions/${missionId}/claim`);
+  return data;
+}

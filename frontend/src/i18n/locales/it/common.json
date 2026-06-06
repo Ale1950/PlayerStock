@@ -5,15 +5,15 @@
     "loading": "Caricamento..."
   },
   "disclaimer": {
-    "short": "Gioco di simulazione. Statistiche pubbliche; squadre di fantasia.",
-    "long": "PlayerStock è un gioco di simulazione. I riferimenti agli atleti utilizzano iniziali e dati di cronaca pubblicamente disponibili. I nomi delle squadre sono di fantasia e non rappresentano affiliazioni ufficiali con alcun club professionistico."
+    "short": "Simulazione · valuta virtuale (€ simbolici) · nessun valore reale · nessun prelievo.",
+    "long": "PlayerStock è un gioco di simulazione. Il saldo e i prezzi sono in € VIRTUALI: non hanno alcun valore monetario reale, non sono convertibili e non è previsto alcun prelievo. Giocatori e squadre sono di fantasia e non rappresentano affiliazioni ufficiali con alcun club o atleta professionista."
   },
   "welcome": {
     "title": "Benvenuto su PlayerStock",
     "subtitle": "Compra quote dei tuoi atleti preferiti. Cresci nei livelli. Diventa il miglior trader sportivo.",
     "bullet1": "1.000.000 di quote per ogni atleta",
     "bullet2": "Mercato secondario P2P con prezzi live",
-    "bullet3": "10.000 Crediti di benvenuto",
+    "bullet3": "€1.000.000 di fondo iniziale (virtuale)",
     "cta": "Inizia con Google",
     "terms": "Continuando accetti i Termini e la Privacy Policy."
   },
@@ -36,7 +36,7 @@
     "home": "Mercato",
     "portfolio": "Portafoglio",
     "leaderboard": "Classifica",
-    "wallet": "Crediti",
+    "wallet": "€",
     "reward": "Reward",
     "profile": "Profilo",
     "engage": "Engage"
@@ -51,7 +51,10 @@
     "filter_cc": "CC",
     "filter_att": "ATT",
     "empty": "Nessun giocatore trovato",
-    "loadMore": "Carica altri"
+    "loadMore": "Carica altri",
+    "col_market_value": "Val. mercato",
+    "value_market": "Valore di mercato",
+    "price_quote": "Prezzo quota (€)"
   },
   "player": {
     "back": "Indietro",
@@ -66,7 +69,19 @@
     "price_initial": "Prezzo iniziale",
     "float": "Quote totali",
     "buy_disabled_phase1": "Acquisto/vendita disponibili dopo l'attivazione del mercato.",
-    "phase2_note": "Il pricing dinamico verrà attivato in Fase 2."
+    "phase2_note": "Il pricing dinamico verrà attivato in Fase 2.",
+    "trade_title": "Compra / Vendi",
+    "quantity": "Quantità",
+    "buy": "Compra",
+    "sell": "Vendi",
+    "est_cost": "Costo stimato (incl. fee 3,5%)",
+    "est_proceeds": "Ricavo stimato (al netto fee 3,5%)",
+    "balance": "Saldo",
+    "owned": "Possiedi",
+    "pool_available": "Disponibili nel pool",
+    "buy_success": "Acquisto eseguito",
+    "sell_success": "Vendita eseguita",
+    "trend": "Andamento prezzo"
   },
   "portfolio": {
     "title": "Portafoglio",
@@ -88,7 +103,7 @@
     "empty": "Nessun trader in classifica per ora"
   },
   "wallet": {
-    "title": "Crediti",
+    "title": "€",
     "balance": "Saldo disponibile",
     "movements": "Movimenti",
     "no_movements": "Nessun movimento ancora.",
@@ -106,7 +121,7 @@
     "title": "Reward NACKL",
     "soon_title": "Disponibile in Fase 5",
     "soon_subtitle": "Qui potrai connettere il tuo wallet Acki Nacki di test e iniziare a guadagnare NACKL usando l'app.",
-    "info_separated": "I Reward NACKL sono separati dai Crediti di gioco e non vengono usati per comprare quote.",
+    "info_separated": "I Reward NACKL sono separati dai € di gioco e non vengono usati per comprare quote.",
     "balance_title": "Saldo NACKL",
     "placeholder_badge": "Segnaposto MVP",
     "placeholder_note": "Saldo dimostrativo: il NACKL reale verrà minato on-chain e mostrato qui.",
@@ -123,6 +138,41 @@
     "connect_ok": "Wallet collegato",
     "connect_err": "Chiave non valida: serve la mining public key"
   },
+  "credits_hub": {
+    "credits_section": "€",
+    "balance": "Saldo disponibile",
+    "daily_activity": "Guadagno da attività oggi",
+    "daily_cap_hint": "Tetto giornaliero {{cap}} € al giorno — mantiene sana l'economia.",
+    "daily_cap_reached": "Tetto giornaliero raggiunto",
+    "earn_credits": "Guadagna €",
+    "movements": "Movimenti",
+    "no_movements": "Nessun movimento ancora.",
+    "col_desc": "Movimento",
+    "col_date": "Data",
+    "col_amount": "Importo",
+    "nackl_section": "Reward · NACKL",
+    "nackl_preview_badge": "ANTEPRIMA · NON REALE",
+    "nackl_balance": "Saldo NACKL",
+    "nackl_separated": "Economia separata: il NACKL non si mischia con i € e non serve per comprare quote.",
+    "nackl_status": "Stato",
+    "nackl_network": "Rete",
+    "nackl_accrual": "Accrual",
+    "achievements": "Traguardi",
+    "achievements_sub": "Riconoscimenti celebrativi — nessun premio.",
+    "ach_welcome": "Benvenuto",
+    "ach_welcome_d": "Account creato",
+    "ach_first_activity": "Prime attività",
+    "ach_first_activity_d": "Primi € da Engage",
+    "ach_nackl_active": "NACKL attivo",
+    "ach_nackl_active_d": "Anteprima reward in crescita",
+    "ach_daily_cap": "Tetto pieno",
+    "ach_daily_cap_d": "Massimo giornaliero raggiunto"
+  },
+  "guide": {
+    "title": "Come funziona",
+    "example_label": "Esempio:",
+    "open": "Come funziona"
+  },
   "profile": {
     "title": "Profilo",
     "language": "Lingua",
@@ -136,10 +186,21 @@
     "logout_confirm_yes": "Sì",
     "logout_confirm_no": "Annulla",
     "member_since": "Membro dal",
-    "version": "Versione"
+    "version": "Versione",
+    "settings": "Impostazioni",
+    "theme": "Tema",
+    "theme_dark": "Tema scuro",
+    "theme_light": "Tema chiaro",
+    "lang_active": "IT attiva · altre lingue in arrivo",
+    "stats_title": "Le tue statistiche",
+    "stat_return": "Rendimento",
+    "stat_roi": "ROI vs mercato",
+    "stat_winrate": "Win-rate",
+    "view_leaderboard": "Vedi classifica",
+    "stats_empty": "Inizia a fare trading per vedere le tue statistiche."
   },
   "common": {
-    "currency_unit": "Crediti",
+    "currency_unit": "€",
     "currency_symbol": "C",
     "cancel": "Annulla",
     "confirm": "Conferma",
@@ -157,11 +218,19 @@
     "resource.not_found": "Risorsa non trovata.",
     "data.no_token": "Token Football-Data.org non configurato.",
     "data.fetch_failed": "Errore nello scaricamento dei dati.",
-    "terms.required": "Devi accettare entrambi: T&C e Privacy."
+    "terms.required": "Devi accettare entrambi: T&C e Privacy.",
+    "market.insufficient_funds": "Saldo € insufficiente.",
+    "market.cap_exceeded": "Superato il cap del 3% (30.000 quote) per questo atleta.",
+    "market.pool_insufficient": "Quote esaurite nel pool (sold out).",
+    "market.holding_locked": "Quote ancora in holding minimo (7 giorni).",
+    "market.not_enough_shares": "Non possiedi abbastanza quote.",
+    "market.invalid_qty": "Quantità non valida.",
+    "athlete.not_found": "Atleta non trovato.",
+    "athlete.invalid_id": "ID atleta non valido."
   },
   "engage": {
     "title": "Engage & Earn",
-    "subtitle": "Guadagna NACKL completando attività. NACKL è separato dai Crediti.",
+    "subtitle": "Guadagna NACKL completando attività. NACKL è separato dai €.",
     "streak_title": "Streak quotidiano",
     "streak_days": "consecutivi",
     "streak_longest": "record",
@@ -180,6 +249,6 @@
     "pred_up": "Salirà",
     "pred_down": "Scenderà",
     "no_predictions": "Nessuna predizione. Vai al Mercato per crearne una.",
-    "reward_note": "I NACKL guadagnati qui sono separati dai Crediti del trading e non possono essere usati per comprare azioni."
+    "reward_note": "I NACKL guadagnati qui sono separati dai € del trading e non possono essere usati per comprare azioni."
   }
 }

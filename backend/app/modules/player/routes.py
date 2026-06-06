@@ -14,8 +14,26 @@ from app.models.athlete import (
     SportPublic,
     TeamFantasyPublic,
 )
+from app.market.hybrid_pricing import current_market_price
+from app.models.common import utc_now
+from app.valuation.market_value import market_value_eur_from_price
+from app.valuation.synthetic_stats import compact_weekly_stats
 
 router = APIRouter(tags=["players"])
+
+
+def _attach(doc: dict, team: dict) -> dict:
+    """Denormalizza squadra (colori) + statistiche sportive compatte sul doc atleta."""
+    doc["team_fantasy_name"] = team.get("fantasy_name")
+    doc["team_color_primary"] = team.get("color_primary")
+    doc["team_color_secondary"] = team.get("color_secondary")
+    doc["weekly_stats"] = compact_weekly_stats(doc)
+    # Migrazione € (D7): prezzo live (ancora + deviazione decaduta) e valore = prezzo × FLOAT.
+    price = current_market_price(doc, utc_now())
+    doc["prezzo_corrente_eur"] = price
+    doc["market_value_eur"] = market_value_eur_from_price(
+        price, int(doc.get("float_quote") or 1_000_000))
+    return doc
 
 
 def _athlete_doc_to_public(doc: dict) -> AthletePublic:
@@ -71,7 +89,7 @@ async def list_players(
     # Aggregate to denormalize team fantasy fields for fast UI
     pipeline = [
         {"$match": filt},
-        {"$sort": {"prezzo_corrente_crediti": -1, "display_label": 1}},
+        {"$sort": {"prezzo_corrente_eur": -1, "display_label": 1}},
         {"$skip": skip},
         {"$limit": page_size},
         {"$lookup": {
@@ -92,9 +110,7 @@ async def list_players(
     items: list[AthletePublic] = []
     for doc in raw_items:
         team = doc.pop("team", None) or {}
-        doc["team_fantasy_name"] = team.get("fantasy_name")
-        doc["team_color_primary"] = team.get("color_primary")
-        items.append(AthletePublic.model_validate(doc))
+        items.append(AthletePublic.model_validate(_attach(doc, team)))
     return AthleteListResponse(items=items, total=total, page=page, page_size=page_size)
 
 
@@ -120,6 +136,4 @@ async def get_player(player_id: str, db: DBDep):
         raise err_not_found("player.not_found", "Giocatore non trovato")
     doc = docs[0]
     team = doc.pop("team", None) or {}
-    doc["team_fantasy_name"] = team.get("fantasy_name")
-    doc["team_color_primary"] = team.get("color_primary")
-    return AthletePublic.model_validate(doc)
+    return AthletePublic.model_validate(_attach(doc, team))

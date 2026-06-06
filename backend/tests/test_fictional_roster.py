@@ -128,10 +128,10 @@ def test_athlete_public_never_exposes_internal_full_name():
         "role": "ATT",
         "age": 25,
         "team_fantasy_id": ObjectId(),
-        "valore_iniziale_crediti": 10000.0,
+        "valore_iniziale_eur": 10000.0,
         "float_quote": 1_000_000,
-        "prezzo_iniziale_crediti": 0.01,
-        "prezzo_corrente_crediti": 0.01,
+        "prezzo_iniziale_eur": 0.01,
+        "prezzo_corrente_eur": 0.01,
         "status": "ACTIVE",
     }
     dumped = AthletePublic.model_validate(doc).model_dump()

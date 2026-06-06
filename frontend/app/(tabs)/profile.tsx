@@ -1,20 +1,41 @@
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { GeometricBackground } from '@/src/components/chrome/GeometricBackground';
+import { LanguageSelector } from '@/src/components/chrome/LanguageSelector';
+import { ThemeToggle } from '@/src/components/chrome/ThemeToggle';
+import { StateView } from '@/src/components/StateView';
 import { useAuth } from '@/src/hooks/useAuth';
 import { deleteAccount } from '@/src/services/auth.service';
-import { colors } from '@/src/theme/colors';
-import { radius, spacing, typography } from '@/src/theme/spacing';
-import { formatDate } from '@/src/utils/formatters';
+import { getLeaderboardAnalytics, type LeaderItem } from '@/src/services/stats.service';
+import { useTheme } from '@/src/theme/ThemeProvider';
+import { type ThemeColors } from '@/src/theme/tokens';
+import { borderW, radius, spacing, typography } from '@/src/theme/spacing';
+
+const pct = (v: number | null | undefined) => (v == null ? '—' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`);
 
 export default function Profile() {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
+  const { colors, isDark } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const [stat, setStat] = useState<LeaderItem | null>(null);
+  const [statLoading, setStatLoading] = useState(true);
+  const [statErr, setStatErr] = useState<string | null>(null);
+
+  useFocusEffect(useCallback(() => {
+    let active = true;
+    setStatLoading(true); setStatErr(null);
+    getLeaderboardAnalytics('all', 100)
+      .then((d) => { if (active) setStat(d.items.find((i) => i.is_self) ?? null); })
+      .catch(() => { if (active) setStatErr('—'); })
+      .finally(() => { if (active) setStatLoading(false); });
+    return () => { active = false; };
+  }, []));
 
   const onLogout = () => {
     Alert.alert(t('profile.logout_confirm_title'), '', [
@@ -50,7 +71,8 @@ export default function Profile() {
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <View style={styles.safe}>
+      <GeometricBackground />
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>{t('profile.title')}</Text>
 
@@ -63,10 +85,54 @@ export default function Profile() {
           </View>
         </View>
 
+        {/* Riepilogo statistiche personali */}
+        <View style={styles.statsCard} testID="profile-stats">
+          <View style={styles.statsHead}>
+            <Text style={styles.statsTitle}>{t('profile.stats_title')}</Text>
+            <Pressable testID="profile-leaderboard-link" onPress={() => router.push('/(tabs)/leaderboard')}
+              style={({ pressed }) => [styles.statLink, pressed && { opacity: 0.7 }]}>
+              <Text style={styles.statLinkText}>{t('profile.view_leaderboard')}</Text>
+              <Text style={styles.statLinkChevron}>›</Text>
+            </Pressable>
+          </View>
+          {statLoading || statErr || !stat ? (
+            <StateView loading={statLoading} error={statErr}
+              empty={!statLoading && !statErr && !stat} emptyLabel={t('profile.stats_empty')} icon="stats-chart-outline" />
+          ) : (
+            <View style={styles.statRow}>
+              <View style={styles.statItem}>
+                <Text style={[styles.statVal, { color: stat.return_pct >= 0 ? colors.green : colors.red }]}>{pct(stat.return_pct)}</Text>
+                <Text style={styles.statKey}>{t('profile.stat_return')}</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={[styles.statVal, { color: stat.roi_vs_market_pct >= 0 ? colors.green : colors.red }]}>{pct(stat.roi_vs_market_pct)}</Text>
+                <Text style={styles.statKey}>{t('profile.stat_roi')}</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={[styles.statVal, { color: colors.text }]}>{stat.win_rate == null ? '—' : `${(stat.win_rate * 100).toFixed(0)}%`}</Text>
+                <Text style={styles.statKey}>{t('profile.stat_winrate')}</Text>
+              </View>
+            </View>
+          )}
+        </View>
+
+        {/* Impostazioni */}
+        <Text style={styles.groupLabel}>{t('profile.settings')}</Text>
         <View style={styles.row}>
           <Text style={styles.rowLabel}>{t('profile.language')}</Text>
-          <Text style={styles.rowValue}>🇮🇹 Italiano</Text>
+          <LanguageSelector />
         </View>
+        <Text style={styles.settingHint}>{t('profile.lang_active')}</Text>
+
+        <View style={styles.row}>
+          <Text style={styles.rowLabel}>{isDark ? t('profile.theme_dark') : t('profile.theme_light')}</Text>
+          <ThemeToggle />
+        </View>
+
+        <Pressable testID="profile-how-it-works" onPress={() => router.push('/how-it-works')} style={({ pressed }) => [styles.linkRow, pressed && { opacity: 0.85 }]}>
+          <Text style={styles.linkRowText}>{t('guide.open')}</Text>
+          <Text style={styles.linkRowChevron}>›</Text>
+        </Pressable>
 
         <Pressable testID="profile-logout" onPress={onLogout} style={({ pressed }) => [styles.button, pressed && { opacity: 0.85 }]}>
           <Text style={styles.buttonText}>{t('profile.logout')}</Text>
@@ -76,42 +142,63 @@ export default function Profile() {
           <Text style={styles.buttonDangerText}>{t('profile.delete_account')}</Text>
         </Pressable>
 
-        <Text style={styles.version}>PlayerStock v0.1.0 — Fase 1 (Emergent)</Text>
+        <Text style={styles.version}>PlayerStock v0.1.0 — Fase Design</Text>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   container: { padding: spacing.lg, paddingBottom: spacing.xxl + 60 },
-  title: { ...typography.h1, color: colors.textPrimary, marginBottom: spacing.lg },
+  title: { ...typography.pageTitle, color: colors.text, marginBottom: spacing.lg },
   card: {
     flexDirection: 'row', alignItems: 'center', gap: spacing.md,
-    padding: spacing.lg, backgroundColor: colors.card,
-    borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border,
+    padding: spacing.lg, backgroundColor: colors.surface,
+    borderRadius: radius.card, borderWidth: borderW, borderColor: colors.border,
   },
-  avatar: { width: 56, height: 56, borderRadius: 28, backgroundColor: colors.accent, justifyContent: 'center', alignItems: 'center' },
-  avatarText: { color: '#FFF', fontWeight: '700', fontSize: 22 },
-  name: { ...typography.h3, color: colors.textPrimary },
-  email: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
-  adminBadge: { ...typography.caption, color: colors.warning, marginTop: 4 },
+  avatar: { width: 56, height: 56, borderRadius: 28, backgroundColor: colors.cyan, justifyContent: 'center', alignItems: 'center' },
+  avatarText: { color: colors.onAccent, fontWeight: '700', fontSize: 22, fontFamily: typography.bodyBold.fontFamily },
+  name: { ...typography.h3, color: colors.text },
+  email: { ...typography.small, color: colors.muted, marginTop: 2 },
+  adminBadge: { ...typography.caption, color: colors.gold, marginTop: 4 },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     paddingVertical: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.border,
     marginTop: spacing.lg },
-  rowLabel: { ...typography.body, color: colors.textSecondary },
-  rowValue: { ...typography.body, color: colors.textPrimary },
+  rowLabel: { ...typography.body, color: colors.muted },
   button: {
-    marginTop: spacing.xl, backgroundColor: colors.card,
+    marginTop: spacing.xl, backgroundColor: colors.surface,
     paddingVertical: 14, borderRadius: radius.md, alignItems: 'center',
-    borderWidth: 1, borderColor: colors.border,
+    borderWidth: borderW, borderColor: colors.border,
   },
-  buttonText: { ...typography.bodyBold, color: colors.textPrimary },
+  buttonText: { ...typography.bodyBold, color: colors.text },
+  linkRow: {
+    marginTop: spacing.xl, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    backgroundColor: colors.surface, paddingVertical: 14, paddingHorizontal: spacing.lg,
+    borderRadius: radius.md, borderWidth: borderW, borderColor: colors.border,
+  },
+  linkRowText: { ...typography.bodyBold, color: colors.text },
+  linkRowChevron: { ...typography.h3, color: colors.muted },
+  statsCard: {
+    marginTop: spacing.lg, padding: spacing.lg, backgroundColor: colors.surface,
+    borderRadius: radius.card, borderWidth: borderW, borderColor: colors.border,
+  },
+  statsHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md },
+  statsTitle: { ...typography.h3, color: colors.text },
+  statLink: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+  statLinkText: { ...typography.monoLabel, color: colors.cyan },
+  statLinkChevron: { ...typography.h3, color: colors.cyan },
+  statRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  statItem: { alignItems: 'center', flex: 1 },
+  statVal: { ...typography.h2, fontVariant: ['tabular-nums'] },
+  statKey: { ...typography.small, color: colors.muted, marginTop: 2, textAlign: 'center' },
+  groupLabel: { ...typography.caption, color: colors.muted, marginTop: spacing.xl },
+  settingHint: { ...typography.small, color: colors.muted, marginTop: spacing.xs },
   buttonDanger: {
     marginTop: spacing.md, backgroundColor: 'transparent',
     paddingVertical: 14, borderRadius: radius.md, alignItems: 'center',
-    borderWidth: 1, borderColor: colors.danger,
+    borderWidth: borderW, borderColor: colors.red,
   },
-  buttonDangerText: { ...typography.bodyBold, color: colors.danger },
-  version: { ...typography.caption, color: colors.textMuted, textAlign: 'center', marginTop: spacing.xl },
+  buttonDangerText: { ...typography.bodyBold, color: colors.red },
+  version: { ...typography.caption, color: colors.muted, textAlign: 'center', marginTop: spacing.xl },
 });

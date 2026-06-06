@@ -10,7 +10,7 @@ export interface Position {
   nationality_iso3: string;
   team_fantasy_name: string | null;
   team_color_primary: string | null;
-  prezzo_iniziale_crediti: number;
+  prezzo_iniziale_eur: number;
   status: 'ACTIVE' | 'TRANSFERRED' | 'RETIRED';
   quantity: number;
   avg_cost: number;
@@ -22,7 +22,7 @@ export interface Position {
 }
 
 export interface PortfolioTotals {
-  cash_credits: number;
+  cash_eur: number;
   positions_value: number;
   positions_cost_basis: number;
   total_equity: number;
@@ -42,7 +42,7 @@ export interface LeaderboardItem {
   is_self: boolean;
   total_equity: number;
   positions_value: number;
-  cash_credits: number;
+  cash_eur: number;
 }
 
 export interface LeaderboardResponse {

@@ -36,12 +36,18 @@ class AthletePublic(BaseModel):
     team_fantasy_id: PyObjectId
     team_fantasy_name: str | None = None  # denormalizzato per UI veloce
     team_color_primary: str | None = None
+    team_color_secondary: str | None = None
+    weekly_stats: dict | None = None  # forma compatta (gol/assist/parate/presenze)
 
-    # Pricing (placeholder Fase 1, valori reali in Fase 2)
-    valore_iniziale_crediti: float
+    # Pricing in € (migrazione D7): prezzo quota = market_value_eur / FLOAT (ancora €M
+    # Opzione B). value = prezzo × FLOAT, una sola fonte di verità.
+    valore_iniziale_eur: float
     float_quote: int
-    prezzo_iniziale_crediti: float
-    prezzo_corrente_crediti: float
+    primary_pool_qty: int | None = None  # quote residue nel pool del banco (disponibili)
+    prezzo_iniziale_eur: float
+    prezzo_corrente_eur: float
+    # Valore di mercato € corrente = prezzo_corrente_eur × FLOAT (segue il prezzo, live).
+    market_value_eur: float | None = None
     status: Literal["ACTIVE", "TRANSFERRED", "RETIRED"]
 
     model_config = {"populate_by_name": True}

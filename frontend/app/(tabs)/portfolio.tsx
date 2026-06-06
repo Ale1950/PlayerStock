@@ -1,218 +1,240 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator, FlatList, Pressable, RefreshControl,
-  StyleSheet, Text, View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { Sparkline } from '@/src/components/Sparkline';
+import { GeometricBackground } from '@/src/components/chrome/GeometricBackground';
+import { PriceChart } from '@/src/components/PriceChart';
+import { StateView } from '@/src/components/StateView';
+import { TeamBadge } from '@/src/components/TeamBadge';
+import { useResponsive } from '@/src/hooks/use-responsive';
 import { translateError } from '@/src/services/api';
-import {
-  getPortfolio, getPriceHistory, type Position, type PortfolioResponse,
-} from '@/src/services/portfolio.service';
-import { colors } from '@/src/theme/colors';
-import { radius, spacing, typography } from '@/src/theme/spacing';
+import { getPortfolio, type PortfolioResponse, type Position } from '@/src/services/portfolio.service';
+import { getPortfolioAnalytics, type Indices, type Period, type PortfolioAnalytics, type PositionAnalytics } from '@/src/services/stats.service';
+import { useTheme } from '@/src/theme/ThemeProvider';
+import { type ThemeColors } from '@/src/theme/tokens';
+import { borderW, radius, spacing, typography } from '@/src/theme/spacing';
 import { formatCredits, formatPrice } from '@/src/utils/formatters';
+
+const PERIODS: { key: Period; label: string }[] = [
+  { key: '1S', label: '1S' }, { key: '1M', label: '1M' }, { key: '3M', label: '3M' }, { key: 'all', label: 'TUTTO' },
+];
+const signColor = (c: ThemeColors, n: number | null | undefined) => (n ?? 0) >= 0 ? c.green : c.red;
 
 export default function Portfolio() {
   const { t } = useTranslation();
   const router = useRouter();
+  const { colors } = useTheme();
+  const { isDesktop } = useResponsive();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   const [data, setData] = useState<PortfolioResponse | null>(null);
-  const [sparklines, setSparklines] = useState<Record<string, number[]>>({});
+  const [an, setAn] = useState<PortfolioAnalytics | null>(null);
+  const [period, setPeriod] = useState<Period>('1M');
+  const [expanded, setExpanded] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (p: Period) => {
     setError(null);
     try {
-      const p = await getPortfolio();
-      setData(p);
-      // sparkline in parallelo per le prime 10 posizioni
-      const tasks = p.positions.slice(0, 10).map(async (pos) => {
-        try {
-          const h = await getPriceHistory(pos.athlete_id, 30);
-          return [pos.athlete_id, h.points.map((x) => x.price)] as const;
-        } catch { return [pos.athlete_id, []] as const; }
-      });
-      const results = await Promise.all(tasks);
-      const map: Record<string, number[]> = {};
-      results.forEach(([id, arr]) => { map[id] = arr; });
-      setSparklines(map);
+      const [pf, a] = await Promise.all([getPortfolio(), getPortfolioAnalytics(p)]);
+      setData(pf); setAn(a);
     } catch (e) { setError(translateError(e)); }
-    finally { setLoading(false); setRefreshing(false); }
+    finally { setLoading(false); }
   }, []);
 
-  useFocusEffect(useCallback(() => { setLoading(true); load(); }, [load]));
+  useFocusEffect(useCallback(() => { setLoading(true); load(period); }, [load, period]));
+  const onPeriod = (p: Period) => { setPeriod(p); setLoading(true); load(p); };
+
+  const anById = useMemo(() => {
+    const m: Record<string, PositionAnalytics> = {};
+    an?.positions.forEach((p) => { m[p.athlete_id] = p; });
+    return m;
+  }, [an]);
+
+  const totals = data?.totals;
+  const equityVals = an?.equity.points.map((p) => p.equity) ?? [];
+  const bestUserVals = an?.best_user?.equity.points.map((p) => p.equity) ?? [];
+  const bestPlayerSeries = an?.market_best_player?.series.map((p) => p.price) ?? [];
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={styles.header}>
+    <View style={styles.safe}>
+      <GeometricBackground />
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>{t('portfolio.title')}</Text>
-      </View>
 
-      {loading && !data ? (
-        <View style={styles.loading}><ActivityIndicator color={colors.accent} size="large" /></View>
-      ) : (
-        <FlatList
-          testID="portfolio-positions-list"
-          data={data?.positions ?? []}
-          keyExtractor={(p) => p.athlete_id}
-          contentContainerStyle={styles.listContent}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); load(); }} tintColor={colors.accent} />
-          }
-          ListHeaderComponent={data ? <TotalsCard totals={data.totals} /> : null}
-          ListEmptyComponent={
-            <View style={styles.empty} testID="portfolio-empty">
-              <Ionicons name="briefcase-outline" size={56} color={colors.textMuted} />
-              <Text style={styles.emptyTitle}>{t('portfolio.empty_title')}</Text>
-              <Text style={styles.emptySub}>{t('portfolio.empty_subtitle')}</Text>
+        {/* HERO patrimonio */}
+        {totals && (
+          <View style={styles.hero}>
+            <Text style={styles.heroLabel}>{t('portfolio.total_equity')}</Text>
+            <Text style={styles.heroValue}>{formatCredits(totals.total_equity)} <Text style={styles.heroUnit}>{t('common.currency_unit')}</Text></Text>
+            <View style={styles.heroRow}>
+              <Break label={t('portfolio.cash')} value={formatCredits(totals.cash_eur)} c={colors} styles={styles} />
+              <View style={styles.divider} />
+              <Break label={t('portfolio.positions_value')} value={formatCredits(totals.positions_value)} c={colors} styles={styles} />
+              <View style={styles.divider} />
+              <Break label={t('portfolio.pnl')} value={`${totals.total_pnl_abs >= 0 ? '+' : ''}${formatCredits(totals.total_pnl_abs)}`}
+                tint={signColor(colors, totals.total_pnl_abs)} c={colors} styles={styles} />
             </View>
-          }
-          renderItem={({ item }) => (
-            <PositionRow
-              position={item}
-              spark={sparklines[item.athlete_id]}
-              onPress={() => router.push(`/player/${item.athlete_id}`)}
-            />
-          )}
-        />
-      )}
+          </View>
+        )}
 
-      {!!error && (
-        <View style={styles.errorBar} testID="portfolio-error">
-          <Text style={styles.errorText}>{error}</Text>
+        {/* PERIODO + grafico equity */}
+        <View style={styles.periodRow}>
+          {PERIODS.map((p) => (
+            <Pressable key={p.key} onPress={() => onPeriod(p.key)} testID={`period-${p.key}`}
+              style={[styles.periodBtn, period === p.key && { backgroundColor: colors.cyan, borderColor: colors.cyan }]}>
+              <Text style={[styles.periodText, { color: period === p.key ? colors.onAccent : colors.muted }]}>{p.label}</Text>
+            </Pressable>
+          ))}
+        </View>
+
+        <View style={styles.card}>
+          <View style={styles.cardHead}>
+            <Text style={styles.cardLabel}>{t('portfolio.total_equity')} · {an?.granularity === 'week' ? 'sett.' : 'giorni'}</Text>
+            {an?.best_user && (
+              <Text style={styles.compareTag}>vs <Text style={{ color: colors.cyan }}>{an.best_user.pseudonym}</Text> (tratteggio)</Text>
+            )}
+          </View>
+          {equityVals.length >= 2
+            ? <PriceChart prices={equityVals} overlay={bestUserVals.length >= 2 ? bestUserVals : undefined} width={isDesktop ? 760 : 300} height={140} testID="equity-chart" />
+            : <Text style={styles.nd}>{t('home.empty')} — storico insufficiente</Text>}
+        </View>
+
+        {/* INDICI di portafoglio */}
+        {an && (
+          <View style={styles.card}>
+            <Text style={styles.cardLabel}>INDICI PORTAFOGLIO ({period})</Text>
+            <IndexGrid ix={an.portfolio_indices} c={colors} styles={styles} isDesktop={isDesktop} />
+            {an.best_user && (
+              <Text style={styles.compareLine}>
+                Tu {an.portfolio_indices.return_pct >= 0 ? '+' : ''}{an.portfolio_indices.return_pct.toFixed(1)}%
+                {'  ·  '}miglior utente <Text style={{ color: colors.cyan }}>{an.best_user.pseudonym}</Text> {an.best_user.return_pct >= 0 ? '+' : ''}{an.best_user.return_pct.toFixed(1)}%
+              </Text>
+            )}
+          </View>
+        )}
+
+        {/* POSIZIONI */}
+        <Text style={styles.section}>POSIZIONI</Text>
+        {loading || error || !data?.positions.length ? (
+          <StateView loading={loading} error={error} empty={!loading && !error && !data?.positions.length}
+            emptyLabel={t('portfolio.empty_title')} icon="briefcase-outline" />
+        ) : (
+          data.positions.map((pos) => (
+            <PositionItem key={pos.athlete_id} pos={pos} a={anById[pos.athlete_id]} bestPlayer={bestPlayerSeries}
+              bestPlayerLabel={an?.market_best_player?.display_label ?? null}
+              expanded={expanded === pos.athlete_id} onToggle={() => setExpanded(expanded === pos.athlete_id ? null : pos.athlete_id)}
+              onOpen={() => router.push(`/player/${pos.athlete_id}`)} c={colors} styles={styles} isDesktop={isDesktop} />
+          ))
+        )}
+      </ScrollView>
+    </View>
+  );
+}
+
+function Break({ label, value, tint, c, styles }: { label: string; value: string; tint?: string; c: ThemeColors; styles: any }) {
+  return (
+    <View style={styles.break}>
+      <Text style={styles.breakLabel}>{label}</Text>
+      <Text style={[styles.breakValue, tint ? { color: tint } : null]}>{value}</Text>
+    </View>
+  );
+}
+
+function IndexGrid({ ix, c, styles, isDesktop }: { ix: Indices; c: ThemeColors; styles: any; isDesktop: boolean }) {
+  const items = [
+    { l: 'RENDIMENTO', v: `${ix.return_pct >= 0 ? '+' : ''}${ix.return_pct.toFixed(1)}%`, t: ix.return_pct >= 0 ? c.green : c.red },
+    { l: 'VOLATILITÀ', v: `${ix.volatility.toFixed(1)}%`, t: c.amber },
+    { l: 'MAX DD', v: `${ix.max_drawdown.toFixed(1)}%`, t: c.red },
+    { l: 'BETA', v: ix.beta.toFixed(2), t: c.cyan },
+    { l: 'SHARPE', v: ix.sharpe.toFixed(2), t: c.purple },
+  ];
+  return (
+    <View style={styles.ixGrid}>
+      {items.map((it) => (
+        <View key={it.l} style={[styles.ixCell, isDesktop && { flexBasis: '18%' }]}>
+          <Text style={[styles.ixVal, { color: it.t }]}>{it.v}</Text>
+          <Text style={styles.ixLabel}>{it.l}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+function PositionItem({ pos, a, bestPlayer, bestPlayerLabel, expanded, onToggle, onOpen, c, styles, isDesktop }: {
+  pos: Position; a?: PositionAnalytics; bestPlayer: number[]; bestPlayerLabel: string | null;
+  expanded: boolean; onToggle: () => void; onOpen: () => void; c: ThemeColors; styles: any; isDesktop: boolean;
+}) {
+  const up = (pos.pnl_abs ?? 0) >= 0;
+  const series = a?.series.map((p) => p.price) ?? [];
+  const dW = a?.delta_week_pct;
+  return (
+    <View style={styles.posCard}>
+      <Pressable onPress={onToggle} style={styles.posHead}>
+        <TeamBadge primary={pos.team_color_primary} name={pos.team_fantasy_name} size={36} />
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text style={styles.posName} numberOfLines={1}>{pos.display_label}</Text>
+          <Text style={styles.posMeta} numberOfLines={1}>{pos.quantity.toLocaleString('it-IT')} q · €{formatPrice(pos.current_price)}{dW != null ? ` · 1S ${dW >= 0 ? '+' : ''}${dW.toFixed(1)}%` : ''}</Text>
+        </View>
+        <View style={{ alignItems: 'flex-end' }}>
+          <Text style={styles.posValue}>€{formatCredits(pos.current_value)}</Text>
+          <Text style={[styles.posPnl, { color: up ? c.green : c.red }]}>{up ? '+' : ''}{pos.pnl_pct != null ? pos.pnl_pct.toFixed(1) + '%' : '—'}</Text>
+        </View>
+        <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={18} color={c.muted} />
+      </Pressable>
+
+      {expanded && (
+        <View style={styles.posBody}>
+          {series.length >= 2
+            ? <PriceChart prices={series} overlay={bestPlayer.length >= 2 ? bestPlayer : undefined} width={isDesktop ? 720 : 290} height={110} />
+            : <Text style={styles.nd}>storico insufficiente</Text>}
+          {bestPlayerLabel && <Text style={styles.overlayTag}>— — confronto col migliore: <Text style={{ color: c.cyan }}>{bestPlayerLabel}</Text></Text>}
+          {a && <IndexGrid ix={a.indices} c={c} styles={styles} isDesktop={isDesktop} />}
+          <Pressable onPress={onOpen} style={styles.openBtn}><Text style={styles.openTxt}>APRI DETTAGLIO →</Text></Pressable>
         </View>
       )}
-    </SafeAreaView>
-  );
-}
-
-function TotalsCard({ totals }: { totals: PortfolioResponse['totals'] }) {
-  const { t } = useTranslation();
-  const isUp = (totals.total_pnl_abs ?? 0) >= 0;
-  const pnlColor = isUp ? colors.up : colors.down;
-  return (
-    <View style={styles.totalsCard} testID="portfolio-totals-card">
-      <Text style={styles.totalsLabel}>{t('portfolio.total_equity')}</Text>
-      <Text style={styles.totalsValue} testID="portfolio-total-equity">
-        {formatCredits(totals.total_equity)} <Text style={styles.totalsUnit}>{t('common.currency_unit')}</Text>
-      </Text>
-      <View style={styles.totalsBreakdown}>
-        <BreakdownCell label={t('portfolio.cash')} value={formatCredits(totals.cash_credits)} />
-        <View style={styles.divider} />
-        <BreakdownCell label={t('portfolio.positions_value')} value={formatCredits(totals.positions_value)} />
-        <View style={styles.divider} />
-        <BreakdownCell
-          label={t('portfolio.pnl')}
-          value={`${isUp ? '+' : ''}${formatCredits(totals.total_pnl_abs)}`}
-          valueColor={pnlColor}
-          extra={totals.total_pnl_pct != null ? `${isUp ? '+' : ''}${totals.total_pnl_pct.toFixed(2)}%` : '—'}
-          extraColor={pnlColor}
-        />
-      </View>
     </View>
   );
 }
 
-function BreakdownCell({ label, value, valueColor, extra, extraColor }: {
-  label: string; value: string; valueColor?: string; extra?: string; extraColor?: string;
-}) {
-  return (
-    <View style={styles.breakdownCell}>
-      <Text style={styles.breakdownLabel}>{label}</Text>
-      <Text style={[styles.breakdownValue, valueColor ? { color: valueColor } : null]}>{value}</Text>
-      {!!extra && <Text style={[styles.breakdownExtra, extraColor ? { color: extraColor } : null]}>{extra}</Text>}
-    </View>
-  );
-}
-
-function PositionRow({ position, spark, onPress }: { position: Position; spark?: number[]; onPress: () => void }) {
-  const isUp = (position.pnl_abs ?? 0) >= 0;
-  const initials = (position.display_initial[0] || '?').toUpperCase();
-  return (
-    <Pressable
-      onPress={onPress}
-      testID={`portfolio-position-${position.athlete_id}`}
-      style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-    >
-      <View style={[styles.avatar, { backgroundColor: position.team_color_primary ?? colors.borderStrong }]}>
-        <Text style={styles.avatarText}>{initials}</Text>
-      </View>
-      <View style={styles.rowMain}>
-        <Text style={styles.rowName} numberOfLines={1}>{position.display_label}</Text>
-        <Text style={styles.rowMeta} numberOfLines={1}>
-          {position.role} · {position.nationality_iso3} · {position.team_fantasy_name}
-        </Text>
-        <Text style={styles.rowQty}>
-          {position.quantity.toLocaleString('it-IT')} q × €{formatPrice(position.current_price)} = €{formatPrice(position.current_value)}
-        </Text>
-      </View>
-      <View style={styles.rowRight}>
-        {spark && spark.length > 1 && <Sparkline prices={spark} positive={isUp} testID={`spark-${position.athlete_id}`} />}
-        <Text style={[styles.pnlText, { color: isUp ? colors.up : colors.down }]} testID={`pnl-pct-${position.athlete_id}`}>
-          {isUp ? '+' : ''}{position.pnl_pct != null ? position.pnl_pct.toFixed(2) + '%' : '—'}
-        </Text>
-        <Text style={[styles.pnlAbs, { color: isUp ? colors.up : colors.down }]}>
-          {isUp ? '+' : ''}€{formatPrice(position.pnl_abs)}
-        </Text>
-      </View>
-    </Pressable>
-  );
-}
-
-const styles = StyleSheet.create({
+const makeStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  header: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.sm },
-  title: { ...typography.h1, color: colors.textPrimary },
-  listContent: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl + 60 },
-  loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-
-  totalsCard: {
-    padding: spacing.lg, backgroundColor: colors.card,
-    borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border,
-    marginBottom: spacing.md, marginTop: spacing.sm,
-  },
-  totalsLabel: { ...typography.caption, color: colors.textSecondary },
-  totalsValue: { ...typography.h1, color: colors.textPrimary, marginTop: spacing.xs, fontVariant: ['tabular-nums'] },
-  totalsUnit: { ...typography.h3, color: colors.textSecondary, fontWeight: '500' },
-  totalsBreakdown: {
-    flexDirection: 'row', marginTop: spacing.md,
-    borderTopWidth: 1, borderTopColor: colors.border, paddingTop: spacing.md,
-    alignItems: 'flex-start',
-  },
-  breakdownCell: { flex: 1, alignItems: 'flex-start' },
-  breakdownLabel: { ...typography.caption, color: colors.textMuted },
-  breakdownValue: { ...typography.bodyBold, color: colors.textPrimary, marginTop: 2, fontVariant: ['tabular-nums'] },
-  breakdownExtra: { ...typography.small, marginTop: 2, fontVariant: ['tabular-nums'] },
+  container: { padding: spacing.lg, paddingBottom: spacing.xxl + 60, gap: spacing.md, maxWidth: 900, width: '100%', alignSelf: 'center' },
+  title: { ...typography.pageTitle, color: colors.text },
+  hero: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: borderW, borderColor: colors.border, padding: spacing.lg },
+  heroLabel: { ...typography.caption, color: colors.muted },
+  heroValue: { ...typography.mono, fontSize: 32, fontWeight: '700', color: colors.text, marginTop: 4 },
+  heroUnit: { ...typography.h3, color: colors.muted },
+  heroRow: { flexDirection: 'row', marginTop: spacing.md, borderTopWidth: 1, borderTopColor: colors.border, paddingTop: spacing.md },
+  break: { flex: 1 },
+  breakLabel: { ...typography.caption, color: colors.muted },
+  breakValue: { ...typography.bodyBold, color: colors.text, marginTop: 2, fontVariant: ['tabular-nums'] },
   divider: { width: 1, backgroundColor: colors.border, marginHorizontal: spacing.sm },
-
-  row: {
-    flexDirection: 'row', paddingVertical: spacing.md,
-    borderBottomWidth: 1, borderBottomColor: colors.border, gap: spacing.md,
-  },
-  rowPressed: { opacity: 0.7, backgroundColor: colors.cardHover },
-  avatar: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
-  avatarText: { color: '#FFF', fontWeight: '700', fontSize: 16 },
-  rowMain: { flex: 1, minWidth: 0 },
-  rowName: { ...typography.bodyBold, color: colors.textPrimary },
-  rowMeta: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
-  rowQty: { ...typography.small, color: colors.textMuted, marginTop: 4, fontVariant: ['tabular-nums'] },
-  rowRight: { alignItems: 'flex-end', minWidth: 90, gap: 2 },
-  pnlText: { ...typography.bodyBold, fontVariant: ['tabular-nums'] },
-  pnlAbs: { ...typography.small, fontVariant: ['tabular-nums'] },
-
-  empty: { padding: spacing.xl, alignItems: 'center', gap: spacing.sm },
-  emptyTitle: { ...typography.h2, color: colors.textPrimary, marginTop: spacing.md },
-  emptySub: { ...typography.body, color: colors.textSecondary, textAlign: 'center' },
-  errorBar: {
-    position: 'absolute', bottom: 80, left: spacing.lg, right: spacing.lg,
-    backgroundColor: '#2D0F12', padding: spacing.md, borderRadius: radius.md,
-    borderWidth: 1, borderColor: colors.danger,
-  },
-  errorText: { ...typography.small, color: '#FFC9CC' },
+  periodRow: { flexDirection: 'row', gap: spacing.sm },
+  periodBtn: { paddingHorizontal: spacing.md, height: 30, justifyContent: 'center', borderRadius: radius.pill, borderWidth: borderW, borderColor: colors.border, backgroundColor: colors.surfaceAlt },
+  periodText: { ...typography.monoLabel },
+  card: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: borderW, borderColor: colors.border, padding: spacing.md, alignItems: 'center', gap: spacing.sm },
+  cardHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', alignSelf: 'stretch' },
+  cardLabel: { ...typography.caption, color: colors.muted, alignSelf: 'flex-start' },
+  compareTag: { ...typography.small, color: colors.muted },
+  nd: { ...typography.small, color: colors.muted, paddingVertical: spacing.lg },
+  ixGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, alignSelf: 'stretch' },
+  ixCell: { flexGrow: 1, flexBasis: '30%', backgroundColor: colors.bg, borderRadius: radius.md, borderWidth: borderW, borderColor: colors.border, padding: spacing.sm, alignItems: 'center' },
+  ixVal: { ...typography.mono, fontSize: 16, fontWeight: '700' },
+  ixLabel: { ...typography.caption, color: colors.muted, marginTop: 2 },
+  compareLine: { ...typography.small, color: colors.text, alignSelf: 'flex-start', marginTop: 4 },
+  section: { ...typography.caption, color: colors.muted, marginTop: spacing.sm },
+  posCard: { backgroundColor: colors.surface, borderRadius: radius.card, borderWidth: borderW, borderColor: colors.border, overflow: 'hidden' },
+  posHead: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md },
+  posName: { ...typography.bodyBold, color: colors.text },
+  posMeta: { ...typography.small, color: colors.muted, marginTop: 2 },
+  posValue: { ...typography.mono, color: colors.text, fontWeight: '700' },
+  posPnl: { ...typography.monoLabel, marginTop: 1 },
+  posBody: { padding: spacing.md, borderTopWidth: 1, borderTopColor: colors.border, gap: spacing.sm, alignItems: 'center' },
+  overlayTag: { ...typography.small, color: colors.muted, alignSelf: 'flex-start' },
+  openBtn: { alignSelf: 'flex-start', marginTop: 2 },
+  openTxt: { ...typography.monoLabel, color: colors.cyan },
 });
