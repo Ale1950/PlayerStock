@@ -21,7 +21,7 @@ export function StatusTicker({ items }: { items?: TickerItem[] }) {
 
   const data: TickerItem[] = items ?? [
     { label: 'MERCATO', value: 'APERTO', tone: 'green' },
-    { label: 'VALUTA', value: 'CREDITI', tone: 'gold' },
+    { label: 'VALUTA', value: '€ (VIRTUALE)', tone: 'gold' },
     { label: 'NACKL', value: 'PLACEHOLDER', tone: 'muted' },
   ];
 

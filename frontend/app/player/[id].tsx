@@ -137,7 +137,7 @@ export default function PlayerDetail() {
 
             {/* prezzo + var */}
             <View style={styles.priceHead}>
-              <Text style={{ fontSize: 11, letterSpacing: 1, color: colors.textSecondary, marginBottom: 2 }} testID="price-quote-label">PREZZO QUOTA (CREDITI)</Text>
+              <Text style={{ fontSize: 11, letterSpacing: 1, color: colors.textSecondary, marginBottom: 2 }} testID="price-quote-label">PREZZO QUOTA (€)</Text>
               <Text style={styles.priceBig} testID="price-quote">€{formatPrice(player.prezzo_corrente_eur)}</Text>
               {var24 != null && (
                 <Text style={[styles.priceVar, { color: up24 ? colors.green : colors.red }]}>
