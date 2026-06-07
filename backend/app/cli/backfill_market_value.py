@@ -18,6 +18,7 @@ import logging
 
 from app.core.db import close_db, get_db, init_db
 from app.models.common import utc_now
+from app.pricing.feed import expected_perf_pct
 from app.valuation.market_value import assign_team_market_values, price_from_market_value
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -52,6 +53,8 @@ async def backfill_market_values(db) -> int:
                     "prezzo_equo_eur": prezzo,
                     "prezzo_corrente_eur": prezzo,
                     "deviazione": 0.0, "deviazione_ts": now,
+                    # atteso FISSO per il prezzo-su-sorpresa (D10/B): media del round
+                    "expected_perf_pct": expected_perf_pct(p),
                     "updated_at": now,
                 }},
             )

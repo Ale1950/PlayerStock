@@ -62,3 +62,13 @@ def performance_pct(role: str, perf: MatchPerformance, *, gain: float = 1.0) -> 
     Il clamp RANGE_CLAMP è applicato DOPO il gain → resta sempre rispettato.
     """
     return clamp_perf(role, raw_performance_pct(role, perf) * gain)
+
+
+def surprise_pct(role: str, raw_actual: float, expected: float, *, gain: float = 1.0) -> float:
+    """Movimento di prezzo su SORPRESA = (punteggio reale − atteso) × gain, poi clamp.
+
+    Il PUNTEGGIO (raw_performance_pct, coeff. Gioco 5) NON cambia: si sottrae solo la
+    media attesa (già "prezzata" dalla qualità) → chi rende come da attese ≈ fermo,
+    chi supera/delude sale/scende. Clamp RANGE_CLAMP invariato.
+    """
+    return clamp_perf(role, (raw_actual - expected) * gain)

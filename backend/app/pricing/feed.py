@@ -16,7 +16,7 @@ import hashlib
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from app.pricing.performance import MatchPerformance
+from app.pricing.performance import MatchPerformance, raw_performance_pct
 
 _GOL_PROB = {"ATT": 0.45, "CC": 0.22, "DIF": 0.10, "POR": 0.0}
 _ASSIST_PROB = {"ATT": 0.30, "CC": 0.30, "DIF": 0.15, "POR": 0.02}
@@ -88,6 +88,26 @@ class SyntheticPerformanceProvider(PerformanceFeedProvider):
         stats = {"presenze": 1, "minuti": minuti, "gol": gol, "assist": assist,
                  "parate": parate, "ammonizioni": amm, "voto": voto}
         return RoundResult(perf=perf, stats=stats)
+
+
+# Range di indici DEDICATO al campionamento dell'atteso: disgiunto dai round live
+# (1,2,3…) e dal seed, così l'atteso è una stima INDIPENDENTE e non distorta della media.
+_EXPECTED_SAMPLE_BASE = 900_000
+_EXPECTED_SAMPLE_K = 300
+
+
+def expected_perf_pct(athlete: dict, *, k: int = _EXPECTED_SAMPLE_K,
+                      provider: PerformanceFeedProvider | None = None) -> float:
+    """Atteso (FISSO) = media del punteggio raw del round per quel giocatore, campionata
+    con lo STESSO generatore live (stesse probabilità + coeff. Gioco 5, INCLUSO l'effetto
+    -squadra gol-subiti). E[sorpresa] ≈ 0 per costruzione (atteso = media reale)."""
+    feed = provider or SyntheticPerformanceProvider()
+    role = athlete["role"]
+    total = 0.0
+    for i in range(k):
+        rr = feed.round_performance(athlete, _EXPECTED_SAMPLE_BASE + i)
+        total += raw_performance_pct(role, rr.perf)
+    return total / k
 
 
 def get_performance_feed(settings=None) -> PerformanceFeedProvider:

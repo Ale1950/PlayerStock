@@ -17,7 +17,7 @@ from app.market.hybrid_pricing import anchor_price, effective_deviation, market_
 from app.models.common import utc_now
 from app.pricing.engine import apply_tick
 from app.pricing.feed import PerformanceFeedProvider, RoundResult
-from app.pricing.performance import performance_pct
+from app.pricing.performance import raw_performance_pct, surprise_pct
 
 _SEASON_FIELDS = ("presenze", "minuti", "gol", "assist", "ammonizioni", "parate")
 
@@ -67,7 +67,11 @@ async def run_round(db, *, feed: PerformanceFeedProvider, gain: float = 1.0,
     for a in athletes:
         role = a["role"]
         rr = feed.round_performance(a, rnd)
-        pct = performance_pct(role, rr.perf, gain=gain)
+        # prezzo su SORPRESA = (punteggio reale − atteso) × gain, clamp. Atteso FISSO dal
+        # seed; fallback 0 solo difensivo (in pratica sempre presente dopo il seed).
+        raw = raw_performance_pct(role, rr.perf)
+        expected = float(a.get("expected_perf_pct") or 0.0)
+        pct = surprise_pct(role, raw, expected, gain=gain)
 
         equo = anchor_price(a)
         ini = float(a["prezzo_iniziale_eur"])
