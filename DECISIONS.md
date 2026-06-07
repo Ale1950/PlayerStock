@@ -228,7 +228,7 @@ Sostituisce il `mercato%` a net-flow/bucket (D3.3) come driver dell'impatto trad
 `deviazione`, `deviazione_ts` — aggiornati nella **stessa transazione atomica** dell'ordine. `price_history`
 riceve il punto post-trade + **snapshot periodici** (30 min, scheduler) per mostrare il rientro nella
 sparkline. Moduli: `app/market/hybrid_pricing.py` (puro) + `app/market/trade.py`. Test
-`tests/test_hybrid_pricing.py`; smoke `smoke_fase3b.py`.
+`tests/test_hybrid_pricing.py`.
 
 ### D3b.2 — Parametri (tarati via simulazione, vedi DT)
 - **k_impatto = 1.5** → un ordine al cap utente (30.000 = 3% del float) muove la deviazione di **+4,5%**
@@ -282,7 +282,7 @@ per `event_id` su `engagement_credit_grants`/`wallet_transactions`; NON tocca `n
 - `submit_quiz_attempt` → `event_id = f"quiz:{user_id}:{quiz_id}"`, EP = reward quiz (solo se >0).
 - `settle_expired_predictions` → `event_id = f"prediction:{prediction_id}"`, EP = 2,5 (solo se vinta).
 La risposta dei gestori espone `credit_bonus`. TDD wiring: `tests/test_engagement_faucet_wiring.py`
-(idempotenza per `event_id`, NACKL intatto). Smoke: `smoke_engagement_faucet.py`.
+(idempotenza per `event_id`, NACKL intatto).
 
 ---
 
@@ -298,7 +298,7 @@ gainers/losers, più scambiati, distribuzione prezzi per ruolo), `/api/stats/ath
 var 24h/7d, max/min, volume, **n° possessori**, scostamento prezzo vs equo, scomposizione valore
 score/ruolo/età/minuti/squadra), `/api/stats/me` (equity, P&L realizzato/non, allocazione ruolo/squadra,
 best/worst, fee totali, flusso crediti). Volume dagli `orders`, possessori dagli `holdings` (già tracciati).
-Test `tests/test_stats.py`; smoke `smoke_stats.py`.
+Test `tests/test_stats.py`.
 
 ### DD.3 — P&L realizzato FIFO tracciato
 `execute_sell` registra `cost_basis_sold` + `realized_pnl` (FIFO sui lotti) sull'ordine di vendita.
