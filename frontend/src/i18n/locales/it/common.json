@@ -139,7 +139,7 @@
     "connect_err": "Chiave non valida: serve la mining public key"
   },
   "credits_hub": {
-    "credits_section": "€",
+    "credits_section": "Conto €",
     "balance": "Saldo disponibile",
     "daily_activity": "Guadagno da attività oggi",
     "daily_cap_hint": "Tetto giornaliero {{cap}} € al giorno — mantiene sana l'economia.",
@@ -153,7 +153,8 @@
     "nackl_section": "Reward · NACKL",
     "nackl_preview_badge": "ANTEPRIMA · NON REALE",
     "nackl_balance": "Saldo NACKL",
-    "nackl_separated": "Economia separata: il NACKL non si mischia con i € e non serve per comprare quote.",
+    "nackl_source": "Si ottiene SOLO dal mining (mentre l'app resta attiva), MAI dalle attività di gioco.",
+    "nackl_separated": "Anteprima non reale · economia separata dai €: non si mischia e non compra quote.",
     "nackl_status": "Stato",
     "nackl_network": "Rete",
     "nackl_accrual": "Accrual",
@@ -196,6 +197,9 @@
     "stat_return": "Rendimento",
     "stat_roi": "ROI vs mercato",
     "stat_winrate": "Win-rate",
+    "stat_equity": "Patrimonio",
+    "stat_unrealized": "P&L aperto",
+    "stat_realized": "P&L realizzato",
     "view_leaderboard": "Vedi classifica",
     "stats_empty": "Inizia a fare trading per vedere le tue statistiche."
   },

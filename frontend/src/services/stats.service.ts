@@ -108,3 +108,18 @@ export async function getLeaderboardAnalytics(period: Period, limit = 30): Promi
   const { data } = await api.get<LeaderboardAnalytics>('/stats/leaderboard-analytics', { params: { period, limit } });
   return data;
 }
+
+// Riepilogo personale (assoluto) per il Profilo — dati esistenti, nessun calcolo nuovo.
+export interface MyStats {
+  equity: number;
+  cash_eur: number;
+  positions_value: number;
+  unrealized_pnl: number;
+  realized_pnl: number;
+  total_fees: number;
+}
+
+export async function getMyStats(): Promise<MyStats> {
+  const { data } = await api.get<MyStats>('/stats/me');
+  return data;
+}

@@ -173,23 +173,24 @@ Componenti di supporto: `TeamBadge` (stemma colori reali squadra + iniziali), `f
   **News → feed eventi** (top mover con spiegazione sportiva sintetica · esauriti · news personalizzate sulle tue
   posizioni; informativo, nessun premio). Pannello **sobrio** (surface, leggibile). **Premi DISTINTI** (valori
   APPROVATI): *Crediti* (gioco) vs *NACKL* (placeholder) — ledger separati. `StateView`.
-- **Crediti-hub** (`(tabs)/wallet.tsx`, voce nav "Crediti") — **3 blocchi, tematizzato (chiaro/scuro)**:
-  1. **Crediti** (SOBRIO): saldo grande (amber); card "guadagno da attività oggi" con **barra progresso x/5**
-     (tetto faucet giornaliero, derivato dai movimenti `engagement_reward` di oggi — solo display) + link
-     "Guadagna Crediti" → Engage; **Movimenti** in `ResponsiveTable` (tabella desktop / card mobile) con `StateView`.
+- **Hub €** (`(tabs)/wallet.tsx`, voce nav "€") — **3 blocchi, tematizzato (chiaro/scuro)**. Post-migrazione € (D7):
+  1. **€** (SOBRIO): saldo grande in € (amber); card "guadagno da attività oggi" con **barra progresso x/€500**
+     (tetto faucet giornaliero ×100, derivato dai movimenti `engagement_reward` di oggi — solo display) + link
+     "Guadagna €" → Engage; **Movimenti** in `ResponsiveTable` (tabella desktop / card mobile) con `StateView`.
   2. **Reward · NACKL** (VIVIDO, nettamente distinto): `VividCard` viola con pill **"ANTEPRIMA · NON REALE"**
-     (`is_placeholder`), saldo NACKL, stato/rete/accrual, nota "economia separata: non si mischia coi Crediti,
+     (`is_placeholder`), saldo NACKL, stato/rete/accrual, nota "economia separata: non si mischia coi €,
      non compra quote"; sotto, card SOBRIA wallet-connect (SOLO mining **public** key) + "QR in arrivo".
   3. **Traguardi** (DISPLAY-ONLY): badge celebrativi derivati dai dati (benvenuto / prime attività / NACKL attivo /
      tetto pieno), **nessun premio** (etichetta esplicita).
 - **Profilo** (`(tabs)/profile.tsx`, sobrio, additivo): intestazione account Google (soprannome+email); **"Le tue
-  statistiche"** (rendimento / ROI vs mercato / win-rate da `/stats/leaderboard-analytics` self) + link Classifica;
+  statistiche"** (Patrimonio € / P&L aperto / P&L realizzato da **`/api/stats/me`**) + link Classifica;
   **Impostazioni** (lingua IT attiva + "altre in arrivo", tema sole/luna); link **"Come funziona"**; Esci; versione.
 
 ---
 
 ## 7. Bottom-nav (accorpamento — GIÀ implementato, approvato)
 
-7 voci troppe per mobile → **5 voci**: `Mercato · Portafoglio · Classifica · Engage · Crediti(hub)`.
-Reward e Profilo dentro rotte nascoste (`href:null`): Reward confluito nel **blocco NACKL** dell'hub Crediti;
-Profilo dall'icona header. **Design pass CHIUSO** dopo Gruppo 3b (+ Fase 2c valore €M e relativo backfill).
+7 voci troppe per mobile → **5 voci**: `Mercato · Portafoglio · Classifica · Engage · € (hub)`.
+Reward e Profilo dentro rotte nascoste (`href:null`): Reward confluito nel **blocco NACKL** dell'hub €;
+Profilo dall'icona header. **Design pass CHIUSO** — Gruppo 3b (Hub € + Profilo) in € (D7), + Fase 2c valore €M
+e relativo backfill, + storico prezzi sintetico per sparkline/var%. Validato su Atlas (desktop+mobile, chiaro+scuro).

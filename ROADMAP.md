@@ -12,7 +12,7 @@ placeholder, engagement). In aggiunta: **Fase 3b — prezzo ibrido** (impatto tr
 D3b) e **backbone dati `/api/stats/*`** + P&L realizzato (DD).
 
 **Sequenza:** tuning economico (fatto: k=1.5, faucet engagement wirato) → **design pass CHIUSO**
-(`DESIGN_SPEC.md`): chrome + Mercato + Portafoglio + Classifica + Engage + **Crediti-hub + Profilo** fatti,
+(`DESIGN_SPEC.md`): chrome + Mercato + Portafoglio + Classifica + Engage + **Hub € + Profilo** fatti (in € · D7),
 **WEB target responsive** (tabella desktop / card mobile, DR.1). + guida "Come funziona" e valore €M (Fase 2c).
 
 **Rinviate:** **Fase 7** (monetizzazione) e **Fase 8** (anti-cheat) → pre-lancio. **Fase "prezzo guidato
@@ -41,7 +41,7 @@ modello azioni "finito-duro", DR.7) → layer futuro quando la liquidità lo giu
 | 5 — Reward NACKL (testnet shellnet) | **Claude Code** | ✅ fatta (placeholder) |
 | 6 — Engagement | Emergent | ✅ fatta |
 | — Tuning economico + backbone dati `/api/stats/*` | **Claude Code** | 🔄 in corso |
-| — Design pass (`DESIGN_SPEC.md`) | **Claude Code** | ✅ CHIUSO (Gruppo 3b: Crediti-hub + Profilo; + Fase 2c valore €M e backfill) |
+| — Design pass (`DESIGN_SPEC.md`) | **Claude Code** | ✅ CHIUSO (Gruppo 3b in €: Hub € + Profilo /stats/me; + Fase 2c valore €M, backfill, storico sparkline; migrazione € D7) |
 | 7 — Abbonamento + donazioni + ads | Emergent | ⏸ RINVIATA pre-lancio |
 | 8 — Anti-cheat + hardening | **Claude Code** | ⏸ RINVIATA pre-lancio |
 | 8b — Polish UI finale | Emergent | (confluisce nel design pass) |

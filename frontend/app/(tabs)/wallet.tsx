@@ -130,7 +130,7 @@ export default function CreditsHub() {
           <View style={styles.rowBetween}>
             <Text style={styles.capLabel}>{t('credits_hub.daily_activity')}</Text>
             <Text style={[styles.capCount, { color: capReached ? colors.green : colors.amber }]}>
-              {formatCredits(Math.min(todayActivity, DAILY_CAP))}/{DAILY_CAP}
+              €{formatCredits(Math.min(todayActivity, DAILY_CAP))} / €{DAILY_CAP}
             </Text>
           </View>
           <View style={styles.track}>
@@ -169,6 +169,7 @@ export default function CreditsHub() {
           <View testID="nackl-card">
             <VividText size="small">{t('credits_hub.nackl_balance')}</VividText>
             <VividText size="title">{(reward?.amount ?? 0).toFixed(2)} NACKL</VividText>
+            <VividText size="small">{t('credits_hub.nackl_source')}</VividText>
             <VividText size="small">
               {t('credits_hub.nackl_status')}: {reward?.status ?? provider?.mining_status ?? '—'} · {t('credits_hub.nackl_network')}: {reward?.network ?? provider?.network ?? '—'}
             </VividText>

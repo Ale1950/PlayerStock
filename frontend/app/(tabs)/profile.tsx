@@ -9,12 +9,13 @@ import { ThemeToggle } from '@/src/components/chrome/ThemeToggle';
 import { StateView } from '@/src/components/StateView';
 import { useAuth } from '@/src/hooks/useAuth';
 import { deleteAccount } from '@/src/services/auth.service';
-import { getLeaderboardAnalytics, type LeaderItem } from '@/src/services/stats.service';
+import { getMyStats, type MyStats } from '@/src/services/stats.service';
 import { useTheme } from '@/src/theme/ThemeProvider';
 import { type ThemeColors } from '@/src/theme/tokens';
 import { borderW, radius, spacing, typography } from '@/src/theme/spacing';
+import { formatCredits } from '@/src/utils/formatters';
 
-const pct = (v: number | null | undefined) => (v == null ? '—' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`);
+const eur = (v: number | null | undefined) => (v == null ? '—' : `${v >= 0 ? '+' : ''}€${formatCredits(v)}`);
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -23,15 +24,15 @@ export default function Profile() {
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const [busy, setBusy] = useState(false);
-  const [stat, setStat] = useState<LeaderItem | null>(null);
+  const [stat, setStat] = useState<MyStats | null>(null);
   const [statLoading, setStatLoading] = useState(true);
   const [statErr, setStatErr] = useState<string | null>(null);
 
   useFocusEffect(useCallback(() => {
     let active = true;
     setStatLoading(true); setStatErr(null);
-    getLeaderboardAnalytics('all', 100)
-      .then((d) => { if (active) setStat(d.items.find((i) => i.is_self) ?? null); })
+    getMyStats()
+      .then((d) => { if (active) setStat(d); })
       .catch(() => { if (active) setStatErr('—'); })
       .finally(() => { if (active) setStatLoading(false); });
     return () => { active = false; };
@@ -101,16 +102,16 @@ export default function Profile() {
           ) : (
             <View style={styles.statRow}>
               <View style={styles.statItem}>
-                <Text style={[styles.statVal, { color: stat.return_pct >= 0 ? colors.green : colors.red }]}>{pct(stat.return_pct)}</Text>
-                <Text style={styles.statKey}>{t('profile.stat_return')}</Text>
+                <Text style={[styles.statVal, { color: colors.amber }]} numberOfLines={1}>€{formatCredits(stat.equity)}</Text>
+                <Text style={styles.statKey}>{t('profile.stat_equity')}</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={[styles.statVal, { color: stat.roi_vs_market_pct >= 0 ? colors.green : colors.red }]}>{pct(stat.roi_vs_market_pct)}</Text>
-                <Text style={styles.statKey}>{t('profile.stat_roi')}</Text>
+                <Text style={[styles.statVal, { color: stat.unrealized_pnl >= 0 ? colors.green : colors.red }]} numberOfLines={1}>{eur(stat.unrealized_pnl)}</Text>
+                <Text style={styles.statKey}>{t('profile.stat_unrealized')}</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={[styles.statVal, { color: colors.text }]}>{stat.win_rate == null ? '—' : `${(stat.win_rate * 100).toFixed(0)}%`}</Text>
-                <Text style={styles.statKey}>{t('profile.stat_winrate')}</Text>
+                <Text style={[styles.statVal, { color: stat.realized_pnl >= 0 ? colors.green : colors.red }]} numberOfLines={1}>{eur(stat.realized_pnl)}</Text>
+                <Text style={styles.statKey}>{t('profile.stat_realized')}</Text>
               </View>
             </View>
           )}
