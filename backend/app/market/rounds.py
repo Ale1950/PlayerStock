@@ -39,10 +39,13 @@ def describe_round(role: str, rr: RoundResult) -> str:
         return f"{s['parate']} parate"
     if s["assist"] >= 1:
         return f"{s['assist']} assist"
-    if role in ("POR", "DIF") and p.gol_subiti == 0:
-        return "porta inviolata"
-    if p.gol_subiti >= 2:
-        return f"{p.gol_subiti} gol subiti"
+    # "gol subiti" / "porta inviolata" = effetto-squadra, MA come motivo headline ha senso
+    # solo per chi difende (POR/DIF). Per ATT/CC non si titola sui gol subiti (vedi D10).
+    if role in ("POR", "DIF"):
+        if p.gol_subiti == 0:
+            return "porta inviolata"
+        if p.gol_subiti >= 2:
+            return f"{p.gol_subiti} gol subiti"
     if s["ammonizioni"] >= 2:
         return "doppio giallo"
     return "prestazione regolare"
