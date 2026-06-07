@@ -208,10 +208,7 @@ async def athlete_market_stats(db, athlete_id, *, now: datetime | None = None) -
         "deviazione": float(a.get("deviazione", 0.0)),
         "scostamento_vs_equo_pct": pct_change(equo, cur),
         "value_decomposition": decompose_value(a),
-        "weekly_stats": synthetic_weekly_stats(
-            role=a["role"], external_id=str(a.get("source_external_id") or a["_id"]),
-            score=float(a.get("score_performance", 1.0)), minutaggio=float(a.get("minutaggio_pct", 0.7)),
-        ),
+        "weekly_stats": synthetic_weekly_stats(a),
     }
 
 

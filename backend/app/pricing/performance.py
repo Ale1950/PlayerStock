@@ -55,6 +55,10 @@ def clamp_perf(role: str, value: float) -> float:
     return max(rng["down"], min(rng["up"], value))
 
 
-def performance_pct(role: str, perf: MatchPerformance) -> float:
-    """Performance% settimanale finale = somma driver clampata al range ruolo."""
-    return clamp_perf(role, raw_performance_pct(role, perf))
+def performance_pct(role: str, perf: MatchPerformance, *, gain: float = 1.0) -> float:
+    """Performance% del round = somma driver × gain, poi clampata al range ruolo.
+
+    `gain` (default 1.0 → golden invariato) amplifica i movimenti in modalità veloce.
+    Il clamp RANGE_CLAMP è applicato DOPO il gain → resta sempre rispettato.
+    """
+    return clamp_perf(role, raw_performance_pct(role, perf) * gain)

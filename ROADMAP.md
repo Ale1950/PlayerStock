@@ -106,6 +106,24 @@ Budget iniziale 10.000, daily reward, 5 boost, sink/house edge, P&L portafoglio.
 Reward viva (saldo/connect/"mining in arrivo"). **WebView miner rimandato** (dipende da Q1+Q5).
 Accrual placeholder via heartbeat firmato legato all'attività, cap conservativo (D5.2–D5.4).
 
+### Mining NACKL — PIANO (D9, NON implementato)
+Mining = **unica fonte NACKL**, **time-based** (app attiva e in primo piano), **opt-in** (policy AN + wallet).
+- Test fattibili con **wallet di TEST self-attivato** (protocollo standard AN), **senza il team AN**.
+- **Contatto AN/Eugene RIMANDATO** a dopo il **parere legale**.
+- Da verificare al wiring: se **`bee-sdk` richiede `app_dapp_id`** per minare (**Q1**).
+- **Guardrail**: nell'app solo chiave **PUBBLICA** (mai privata/di spesa); mining **separato** dall'economia € (non compra quote).
+- **Backend**: partirà dal repo **Listen & Mine** (`listen-and-mine`) in una **cartella dedicata** PlayerStock (più avanti).
+- Boost e acquisto boost **da definire**. Dettaglio in DECISIONS **D9** (vincolo **D8**).
+
+### Prezzo guidato dalla performance (D10) — ✅ motore + feed a innesto
+Le prestazioni (sintetiche, mondo fittizio) muovono il **prezzo equo**: round → `performance_pct`
+(coeff. Gioco 5 × `PERF_PRICE_GAIN`, clamp `RANGE_CLAMP`) → ancora; trading = sentiment (separato).
+- **Cadenza configurabile** (`ROUND_INTERVAL_MIN`): default ATTIVO **veloce 30min** (dev), realistico/prod **settimanale**. Gain default veloce **2.5×**, realistico **1.0**.
+- **Feed a INNESTO** (`PERFORMANCE_FEED`): oggi solo `synthetic`; 'real' adapter futuro **senza toccare il motore**.
+- Unica fonte: eventi round → muovono prezzo **e** sommano in `season_stats` mostrate (+ `round_events` per News). Seed `seed_previous_season` (10 round).
+- **Dinamiche FUTURE (sintetiche, da fare)**: calendario (settimana + 2), infortuni con gravità (anche da allenamento), più competizioni (campionato+coppe), forma/fatica.
+- **Dati reali = RIMANDATI a dopo il parere legale** (architettura pronta; nessuna mappa/integrazione reale ora). Posizione legale + 3 domande (dati / immagine / classificazione prodotto a €) in DECISIONS **D10**.
+
 ### Fase 6 — Engagement · Emergent
 Quiz, predictions, allenamenti, leghe + chat, streak, eventi a tempo.
 

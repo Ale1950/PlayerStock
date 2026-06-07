@@ -23,61 +23,24 @@ from app.market.hybrid_pricing import anchor_price, effective_deviation, market_
 from app.market.trade import execute_buy, execute_sell
 from app.models.common import utc_now
 from app.pricing.engine import apply_tick
+from app.pricing.feed import SyntheticPerformanceProvider
 from app.pricing.performance import MatchPerformance, performance_pct
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("simulate_cli")
 
-_GOL_PROB = {"ATT": 0.45, "CC": 0.22, "DIF": 0.10, "POR": 0.0}
-_ASSIST_PROB = {"ATT": 0.30, "CC": 0.30, "DIF": 0.15, "POR": 0.02}
-
-
 def _unit(key: str) -> float:
     return int.from_bytes(hashlib.sha256(key.encode("utf-8")).digest()[:8], "big") / 2**64
 
 
+# FONTE UNICA: il generatore vive nel feed a innesto (D10). Qui solo un wrapper di
+# compatibilità per la CLI/simulazione (ritorna il `MatchPerformance` per il pricing).
+_FEED = SyntheticPerformanceProvider()
+
+
 def synthetic_round_performance(athlete: dict, round_idx: int) -> MatchPerformance:
-    """Genera una giornata sintetica deterministica per l'atleta."""
-    role = athlete["role"]
-    score = float(athlete.get("score_performance", 1.0))
-    minutaggio = float(athlete.get("minutaggio_pct", 0.7))
-    base = f"sim:{athlete['_id']}:{round_idx}:"
-
-    def u(tag: str) -> float:
-        return _unit(base + tag)
-
-    # gioca?
-    if u("plays") > minutaggio + 0.10:
-        return MatchPerformance(minuti=int(u("bench") * 25))  # spezzone/panchina
-
-    minuti = 90 if u("full") < 0.7 else 60 + int(u("part") * 29)
-
-    gol_p = _GOL_PROB[role] * score
-    assist_p = _ASSIST_PROB[role] * score
-    gol_fatti = (1 if u("g1") < gol_p else 0) + (1 if u("g2") < gol_p * 0.25 else 0)
-    assist = 1 if u("a") < assist_p else 0
-    ammonizioni = (1 if u("y1") < 0.16 else 0) + (1 if u("y2") < 0.02 else 0)
-    espulso = u("red") < 0.01
-    gol_subiti = 0 if u("cs") < 0.4 else (1 if u("c1") < 0.7 else 2)
-
-    rigori_parati = 1 if role == "POR" and u("rp") < 0.06 else 0
-    rigori_segnati = 1 if role in ("ATT", "CC") and u("ps") < 0.05 else 0
-
-    voto = None
-    if role == "POR":
-        voto = round(7.5 - gol_subiti * 0.7 + rigori_parati * 0.6 + u("v") * 0.8, 1)
-
-    return MatchPerformance(
-        minuti=minuti,
-        gol_fatti=gol_fatti,
-        gol_subiti=gol_subiti,
-        ammonizioni=ammonizioni,
-        espulso=espulso,
-        assist=assist,
-        rigori_segnati=rigori_segnati,
-        rigori_parati=rigori_parati,
-        voto=voto,
-    )
+    """Giornata sintetica deterministica per l'atleta (delega al feed unificato)."""
+    return _FEED.round_performance(athlete, round_idx).perf
 
 
 async def simulate_rounds(db, n_rounds: int, *, sport_id: str = "calcio") -> dict:

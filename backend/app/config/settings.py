@@ -56,6 +56,16 @@ class Settings:
     # Game economy constants (mirrored from pricing_constants for quick access)
     BUDGET_INIZIALE_UTENTE: float = 10_000.0
 
+    # ── Prezzo guidato dalla performance (D10) — round forward che muovono il prezzo equo ──
+    # Sorgente prestazioni a INNESTO: 'synthetic' (unica impl). Futuro: 'real' (post-legale).
+    PERFORMANCE_FEED: str = os.getenv("PERFORMANCE_FEED", "synthetic")
+    ROUND_ENABLED: bool = os.getenv("ROUND_ENABLED", "true").lower() in ("1", "true", "yes")
+    # Default ATTIVO = VELOCE (mercato vivo in sviluppo). Realistico/prod: 10080 (settimanale).
+    ROUND_INTERVAL_MIN: int = int(os.getenv("ROUND_INTERVAL_MIN", "30"))
+    # Guadagno applicato alla performance% prima del clamp. Realistico: 1.0 (golden invariato).
+    # Modalità veloce: ~2-3× per movimenti ben visibili. RANGE_CLAMP resta sempre rispettato.
+    PERF_PRICE_GAIN: float = float(os.getenv("PERF_PRICE_GAIN", "2.5"))
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:

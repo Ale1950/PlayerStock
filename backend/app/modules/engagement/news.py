@@ -12,27 +12,26 @@ from bson import ObjectId
 
 from app.models.common import utc_now
 from app.modules.stats.service import market_overview
-from app.valuation.synthetic_stats import synthetic_weekly_stats
+from app.valuation.synthetic_stats import last_round_of
 
 
 async def _explain(db, athlete_id_str: str) -> str:
-    """Perché il prezzo si è mosso: evento sportivo sintetico dell'ultima settimana."""
+    """Perché il prezzo si è mosso: l'EVENTO REALE dell'ultimo round (unica fonte)."""
     try:
         a = await db.athletes.find_one({"_id": ObjectId(athlete_id_str)})
     except Exception:
         a = None
     if not a:
         return "movimento di mercato"
-    lw = synthetic_weekly_stats(
-        role=a["role"], external_id=str(a.get("source_external_id") or a["_id"]),
-        score=float(a.get("score_performance", 1.0)), minutaggio=float(a.get("minutaggio_pct", 0.7)),
-    )["last_week"]
+    if a.get("last_round_reason"):          # ragione calcolata dal round runner
+        return str(a["last_round_reason"])
+    lw = last_round_of(a)
     if a["role"] == "POR" and (lw.get("parate") or 0) >= 2:
-        return f"{lw['parate']} parate in settimana"
+        return f"{lw['parate']} parate nel round"
     if (lw.get("gol") or 0) > 0:
-        return f"{lw['gol']} gol in settimana"
+        return f"{lw['gol']} gol nel round"
     if (lw.get("assist") or 0) > 0:
-        return f"{lw['assist']} assist in settimana"
+        return f"{lw['assist']} assist nel round"
     return "flusso di mercato"
 
 

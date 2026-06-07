@@ -505,6 +505,62 @@ Nacki (Q1/Q5), separato dai € e **non compra quote**.
 
 ---
 
+## D9 — Piano MINING NACKL (NON implementare ora) (2026-06-07, Claude Code)
+Estende [[D8]]. Definisce COME il NACKL verrà generato quando si farà il wiring reale.
+
+- **Modello**: il **mining è l'UNICA fonte** di NACKL, **time-based** = in funzione del tempo in cui
+  l'app resta **attiva e in primo piano**. **Opt-in** (richiede policy Acki Nacki + wallet collegato).
+- **Test senza il team AN**: fattibili con un **wallet di TEST self-attivato** seguendo il protocollo
+  standard Acki Nacki — non serve coinvolgere il team AN per i primi test.
+- **Contatto AN / Eugene: RIMANDATO** a dopo il **parere legale** (nessun contatto prima).
+- **Da verificare al wiring (Q1)**: se `bee-sdk` richiede un **`app_dapp_id`** per minare.
+- **Guardrail (sicurezza)**: nell'app vive **SOLO la chiave PUBBLICA** (mining), MAI la privata/di
+  spesa; il mining è un **sottosistema separato dall'economia €** (non si mischia, non compra quote).
+- **Backend**: partirà dal repo **Listen & Mine** (`listen-and-mine`) in una **cartella dedicata**
+  del progetto PlayerStock — più avanti.
+- **Stato**: scaffold INERTE/placeholder (vedi Fase 5); boost e acquisto boost **da definire**.
+
+---
+
+## D10 — Prezzo guidato dalla performance + feed a innesto (2026-06-07, Claude Code)
+*(NB: richiesta come "D9" ma D9 è già il piano mining → registrata come D10.)*
+
+Le **prestazioni muovono il prezzo**: buona prestazione → su, scarsa → giù. È il motore di
+vivacità del mercato. Mondo **fittizio** → prestazioni **sintetiche**.
+
+- **Meccanica**: ogni *round* il feed genera gli eventi del giocatore → `performance_pct`
+  (coeff. **Gioco 5.xls** `DRIVERS` × `PERF_PRICE_GAIN`, poi clamp `RANGE_CLAMP`) → sposta
+  **`prezzo_equo_eur` (ancora)** via `apply_tick` (floor 10%); il prezzo di mercato ricompone la
+  **deviazione di trading** decaduta. **Performance = fondamentale · trading = sentiment: separati.**
+- **Feed a INNESTO** (`app/pricing/feed.py`): `PerformanceFeedProvider` con unica impl
+  `SyntheticPerformanceProvider`. Switch via `PERFORMANCE_FEED`. In futuro, **SE autorizzato**, si
+  innesta un adattatore 'real' **senza toccare il motore prezzo**. Nessuna mappa fittizi↔reali ora.
+- **Unica fonte di verità**: gli stessi eventi (a) muovono il prezzo e (b) si sommano in
+  `season_stats` (mostrate) + `round_events` (citati da News). `synthetic_stats` ora LEGGE l'accumulo.
+- **Cadenza CONFIGURABILE** (`ROUND_INTERVAL_MIN`, scheduler): default ATTIVO = **VELOCE (30 min)**
+  per mercato vivo in dev; **realistico/prod = settimanale** (10080). `ROUND_ENABLED` on/off.
+- **Magnitudine** (`PERF_PRICE_GAIN`): default veloce **2.5×** (movimenti visibili); realistico
+  **1.0** (golden invariato). Estremi clampati per ruolo (ATT +2,87/−2,81 · POR +4,24/−3,70 ecc.).
+- **Seed**: `seed_previous_season` (10 round) → stat e prezzi partono "con storia". Convive col
+  backfill (passato); i round forward guidano il movimento live (`price_history` reason `round`).
+- **Non inietta valuta** → nessun impatto su inflazione/faucet/economia €.
+
+### DINAMICHE FUTURE (sintetiche — arricchimento del prezzo-performance, da implementare)
+Calendario partite (settimana corrente + 2 successive), **infortuni con livello di gravità**
+(anche "da allenamento"), **più competizioni** (campionato + coppe), **forma/fatica**. Tutto
+SINTETICO, mondo fittizio.
+
+### DATI REALI = RIMANDATO (parere legale)
+Architettura pronta (feed a innesto), ma **nessuna mappa/integrazione reale** finché il legale non dà
+il via. **Posizione legale**: un nome fittizio mappato **1:1 a un giocatore reale + dati reali** è la
+posizione **PIÙ DEBOLE** (possibile aggiramento dei diritti). Opzioni pulite: **(A)** fittizio +
+sintetico, oppure **(B)** giocatori reali **propriamente licenziati** (nomi veri). I provider
+(Opta/Sportradar) licenziano **solo i DATI**: NON i diritti nome/immagine, NÉ la classificazione del
+prodotto (gioco a € su persone reali). **3 domande per il legale**: (1) dati, (2) immagine giocatori,
+(3) classificazione del prodotto a €.
+
+---
+
 ## ❓ DOMANDE APERTE (da risolvere col fondatore / terzi)
 
 | # | Domanda | Per chi | Blocca fase |
