@@ -39,6 +39,7 @@ async def backfill_market_values(db) -> int:
             "key": str(p["_id"]),
             "score": float(p.get("score_performance", 1.0)),
             "fattore_squadra": float(p.get("fattore_squadra", 1.0)),
+            "role": p.get("role"),  # tilt di ruolo sul seed (Opzione B)
         } for p in players]
         values = assign_team_market_values(rows)
         for p in players:

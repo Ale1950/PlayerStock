@@ -16,6 +16,7 @@ import pytest
 
 from app.valuation.market_value import (
     MARKET_VALUE_CONFIG,
+    ROLE_MULT,
     assign_team_market_values,
     level_from_fattore_squadra,
     market_value_eur_from_price,
@@ -154,8 +155,64 @@ def test_price_value_roundtrip():
 
 def test_config_single_calibration_point():
     """Tutti i parametri di taratura in un solo posto, facili da cambiare."""
-    for k in ("fascia_counts", "fascia_range_eur", "club_mult", "tail_gamma", "global_clamp_eur"):
+    for k in ("fascia_counts", "fascia_range_eur", "club_mult", "tail_gamma",
+              "global_clamp_eur", "role_mult_raw", "role_roster_counts"):
         assert k in MARKET_VALUE_CONFIG
+
+
+# ───────────────────── TILT di RUOLO ─────────────────────
+def test_role_mult_weighted_mean_is_one():
+    """Media pesata sui ruoli della rosa-tipo = 1 → cap totale invariante."""
+    counts = MARKET_VALUE_CONFIG["role_roster_counts"]
+    tot = sum(counts.values())
+    wmean = sum(counts[r] * ROLE_MULT[r] for r in ROLE_MULT) / tot
+    assert wmean == pytest.approx(1.0)
+
+
+def test_role_mult_ratios_preserved():
+    """I rapporti normalizzati == i rapporti raw (top GK ~0.5× top ATT)."""
+    assert ROLE_MULT["ATT"] / ROLE_MULT["POR"] == pytest.approx(1.00 / 0.50)
+    assert ROLE_MULT["CC"] / ROLE_MULT["ATT"] == pytest.approx(0.75 / 1.00)
+    assert ROLE_MULT["DIF"] / ROLE_MULT["ATT"] == pytest.approx(0.60 / 1.00)
+    assert ROLE_MULT["ATT"] > ROLE_MULT["CC"] > ROLE_MULT["DIF"] > ROLE_MULT["POR"]
+
+
+def test_tilt_orders_roles_at_equal_talent():
+    """A parità di talento+club: ATT > CC > DIF > POR."""
+    val = {}
+    for role in ("ATT", "CC", "DIF", "POR"):
+        # squadra mono-ruolo: il top di ogni rosa è confrontabile (stesso rank/club)
+        team = [{"key": f"{role}{i}", "score": 2.0 - i * 0.05,
+                 "fattore_squadra": 1.25, "role": role} for i in range(20)]
+        val[role] = max(assign_team_market_values(team).values())
+    assert val["ATT"] > val["CC"] > val["DIF"] > val["POR"]
+    assert val["ATT"] / val["POR"] == pytest.approx(ROLE_MULT["ATT"] / ROLE_MULT["POR"], rel=1e-6)
+
+
+def test_tilt_preserves_within_role_heavy_tail():
+    """Dentro lo stesso ruolo la coda pesante resta (score alto → valore alto)."""
+    team = [{"key": f"a{i}", "score": 2.0 - i * 0.07, "fattore_squadra": 1.0, "role": "ATT"}
+            for i in range(20)]
+    v = assign_team_market_values(team)
+    ordered = [v[f"a{i}"] for i in range(20)]
+    assert ordered == sorted(ordered, reverse=True)        # monotòno decrescente col rank
+    assert ordered[0] / ordered[-1] > 5                    # coda pesante preservata
+
+
+def test_tilt_respects_global_clamp():
+    team = [{"key": f"x{i}", "score": 2.5 - i * 0.02, "fattore_squadra": 1.25, "role": "ATT"}
+            for i in range(20)]
+    gmin, gmax = MARKET_VALUE_CONFIG["global_clamp_eur"]
+    for val in assign_team_market_values(team).values():
+        assert gmin <= val <= gmax
+
+
+def test_no_role_defaults_to_no_tilt():
+    """Senza 'role' il tilt è 1.0 (retro-compat)."""
+    team = [{"key": f"n{i}", "score": 1.5 - i * 0.05, "fattore_squadra": 1.0} for i in range(20)]
+    # non deve sollevare e deve restare nel clamp
+    for v in assign_team_market_values(team).values():
+        assert v > 0
 
 
 # ───────────────────── REGRESSIONE: ancora € + economia intatta ─────────────────────

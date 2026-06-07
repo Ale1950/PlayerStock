@@ -39,9 +39,28 @@ MARKET_VALUE_CONFIG: dict = {
     "club_mult": {"grande": 1.00, "media": 0.80, "piccola": 0.62},
     # esponente coda: shaping della posizione entro fascia (1.0 = lineare)
     "tail_gamma": 1.0,
+    # TILT di RUOLO (rapporti reali: top GK ~0,5× top ATT). Normalizzati a runtime così
+    # che la media pesata sul roster-tipo = 1 → cap totale invariante. A parità di talento
+    # gli ATT valgono più dei POR; la coda entro-ruolo + il premio-club restano intatti.
+    "role_mult_raw": {"ATT": 1.00, "CC": 0.75, "DIF": 0.60, "POR": 0.50},
+    # composizione rosa-tipo (per la normalizzazione del tilt) = ROLE_COMPOSITION seed
+    "role_roster_counts": {"POR": 2, "DIF": 6, "CC": 6, "ATT": 6},
     # clamp globale di sicurezza
     "global_clamp_eur": (500_000.0, 115_000_000.0),
 }
+
+
+def _normalized_role_mult() -> dict[str, float]:
+    """Multiplier di ruolo normalizzati: media pesata sulla rosa-tipo = 1 (cap invariante)."""
+    raw = MARKET_VALUE_CONFIG["role_mult_raw"]
+    counts = MARKET_VALUE_CONFIG["role_roster_counts"]
+    tot = sum(counts.values())
+    wmean = sum(counts[r] * raw[r] for r in raw) / tot
+    return {r: raw[r] / wmean for r in raw}
+
+
+# {ATT 1.325, CC 0.993, DIF 0.795, POR 0.662} per la rosa-tipo 2/6/6/6
+ROLE_MULT: dict[str, float] = _normalized_role_mult()
 
 
 def level_from_fattore_squadra(fattore: float) -> str:
@@ -73,8 +92,9 @@ def _fascia_sequence(n: int) -> list[str]:
 def assign_team_market_values(players: list[dict]) -> dict[str, float]:
     """Assegna market_value_eur (seed) ai giocatori di UNA squadra.
 
-    players: lista di dict con 'key', 'score', 'fattore_squadra'.
-    Ritorna {key: valore_eur}. Deterministico (tie-break su key).
+    players: lista di dict con 'key', 'score', 'fattore_squadra' e (opz.) 'role'.
+    Ritorna {key: valore_eur}. Deterministico (tie-break su key). Il tilt di ruolo
+    (`ROLE_MULT`) si applica DOPO il premio-club (default 1.0 se role assente).
     """
     cfg = MARKET_VALUE_CONFIG
     ranges = cfg["fascia_range_eur"]
@@ -99,7 +119,8 @@ def assign_team_market_values(players: list[dict]) -> dict[str, float]:
             pos = 1.0 - (idx + 0.5) / m            # alto della fascia → ~1, basso → ~0
             base = lo + (hi - lo) * (pos ** gamma)
             level = level_from_fattore_squadra(float(p["fattore_squadra"]))
-            val = base * club_mult[level]
+            role_mult = ROLE_MULT.get(p.get("role"), 1.0)  # tilt di ruolo (1.0 se assente)
+            val = base * club_mult[level] * role_mult
             out[str(p["key"])] = max(gmin, min(gmax, val))
     return out
 
