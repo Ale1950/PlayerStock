@@ -1,12 +1,11 @@
-"""Faucet CREDITI da engagement — economia SEPARATA dal NACKL.
+"""Faucet € da engagement — UNICA ricompensa delle attività di gioco.
 
-L'azione di engagement (quiz/streak/pronostico) accredita:
-  • NACKL placeholder  → percorso esistente (RewardClient → InternalRewardProvider)
-  • CREDITI (questo)   → qui, su LEDGER INDIPENDENTE (`engagement_credit_grants` +
-                         `wallet_transactions`), idempotente per `event_id`.
+L'azione di engagement (quiz/streak/pronostico/missioni/sfide) accredita SOLO € qui,
+su LEDGER INDIPENDENTE (`engagement_credit_grants` + `wallet_transactions`), idempotente
+per `event_id`.
 
-I due path NON si toccano: niente split-brain (problema noto di Fase 6). Il NACKL
-resta sul suo ledger (`nackl_ledger`/`reward_balances`), i Crediti sul wallet.
+VINCOLO PERMANENTE: il gioco NON assegna mai NACKL. I NACKL derivano unicamente dal
+mining/heartbeat (time-based, `app/reward/`), sottosistema separato — qui non si tocca.
 
 Curva a SCAGLIONI MARGINALI (forma decisa dall'utente):
   tier1 x3 · tier2 x1.5 · tier3 x0.75 · tier4 x0.2

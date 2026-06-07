@@ -60,10 +60,11 @@ async def test_claim_mission_idempotent_separate_ledgers(mock_db):
     await mock_db.user_wallets.insert_one({"user_id": uid, "balance_eur": 100.0, "updated_at": utc_now()})
     await _holding(mock_db, uid, "ATT")
     r1 = await claim_mission(mock_db, uid, "first_buy")
-    assert r1["claimed"] is True and r1["credits"] > 0 and r1["nackl"] > 0
-    # NACKL sul SUO ledger
+    assert r1["claimed"] is True and r1["credits"] > 0
+    assert "nackl" not in r1  # il gioco non assegna NACKL
+    # NACKL NON accreditato dall'engagement (solo mining): resta a 0
     bal = await InternalRewardProvider().balance(mock_db, uid)
-    assert bal["amount"] == pytest.approx(r1["nackl"])
+    assert bal["amount"] == pytest.approx(0.0)
     # idempotente
     r2 = await claim_mission(mock_db, uid, "first_buy")
     assert r2["claimed"] is False and r2.get("already") is True

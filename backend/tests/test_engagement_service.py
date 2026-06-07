@@ -93,13 +93,3 @@ class TestSecurityInvariants:
 
     def test_max_open_predictions_limit_sane(self):
         assert 1 <= MAX_OPEN_PREDICTIONS_PER_USER <= 10
-
-    def test_reward_source_must_be_engagement(self):
-        # se cambiamo il prefisso, vogliamo accorgercene
-        from app.modules.engagement.reward_client import RewardClient
-
-        async def fake_db_noop(*a, **k): pass
-        rc = RewardClient(db=None)
-        with pytest.raises(ValueError, match="engagement_"):
-            import asyncio
-            asyncio.run(rc.accrue(user_id=None, amount=1.0, source="wrong_prefix"))

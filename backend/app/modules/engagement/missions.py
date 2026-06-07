@@ -1,10 +1,9 @@
 """Missioni / obiettivi (Engage, Gruppo 3a) — progressione + premio alla completazione.
 
-Premi su LEDGER SEPARATI: Crediti via `grant_fixed_credits` (dentro il cap del faucet),
-NACKL via `RewardClient` (placeholder). Idempotenti per (utente, missione).
+Premio SOLO in € via `grant_fixed_credits` (dentro il cap del faucet). NESSUN NACKL:
+il gioco non assegna NACKL (solo mining). Idempotenti per (utente, missione).
 
-VALORI premio = **APPROVATI** (definitivi, DECISIONS DE.3). Modesti e cappati dal faucet
-(5 cr/gg condiviso) → non scompaginano l'economia tarata.
+VALORI premio cappati dal faucet (€500/gg condiviso) → non scompaginano l'economia tarata.
 """
 from __future__ import annotations
 
@@ -12,21 +11,19 @@ import datetime as dt
 
 from app.economy.credit_faucet import grant_fixed_credits
 from app.models.common import utc_now
-from app.modules.engagement.reward_client import RewardClient
 
-# id → (titolo, descrizione, target, reward {credits=€, nackl})
-# Migrazione € (D7): reward credits (=€) ×100; target patrimonio ri-scalato; NACKL invariato.
+# id → (titolo, descrizione, target, reward {credits=€}). SOLO €: il gioco non dà NACKL.
 MISSIONS: list[dict] = [
     {"id": "first_buy", "title": "Primo acquisto", "desc": "Compra il tuo 1° giocatore", "target": 1,
-     "reward": {"credits": 500, "nackl": 5}},
+     "reward": {"credits": 500}},
     {"id": "diversify_roles", "title": "Diversifica", "desc": "Possiedi giocatori di 3 ruoli diversi", "target": 3,
-     "reward": {"credits": 800, "nackl": 10}},
+     "reward": {"credits": 800}},
     {"id": "hold_7d", "title": "Mani ferme", "desc": "Tieni una posizione per 7 giorni", "target": 1,
-     "reward": {"credits": 800, "nackl": 10}},
+     "reward": {"credits": 800}},
     {"id": "reach_15k", "title": "Patrimonio 1,5M", "desc": "Raggiungi €1.500.000 di patrimonio", "target": 1_500_000,
-     "reward": {"credits": 1500, "nackl": 25}},
+     "reward": {"credits": 1500}},
     {"id": "predict_3", "title": "Oracolo", "desc": "Azzecca 3 pronostici", "target": 3,
-     "reward": {"credits": 1000, "nackl": 15}},
+     "reward": {"credits": 1000}},
 ]
 _BY_ID = {m["id"]: m for m in MISSIONS}
 
@@ -89,11 +86,9 @@ async def claim_mission(db, user_id, mission_id: str) -> dict:
         return {"claimed": False, "incomplete": True}
 
     now = utc_now()
+    # SOLO €: il riscatto missione NON accredita NACKL (NACKL = solo mining).
     cr = await grant_fixed_credits(db, user_id=user_id, event_id=f"mission:{user_id}:{mission_id}",
                                    amount=float(m["reward"]["credits"]), now=now)
-    nackl = float(m["reward"]["nackl"])
-    await RewardClient(db).accrue(user_id=user_id, amount=nackl, source="engagement_mission",
-                                  metadata={"mission_id": mission_id})
     await db.mission_claims.insert_one({"user_id": user_id, "mission_id": mission_id,
-                                        "credits": cr["credits"], "nackl": nackl, "ts": now})
-    return {"claimed": True, "credits": cr["credits"], "nackl": nackl}
+                                        "credits": cr["credits"], "ts": now})
+    return {"claimed": True, "credits": cr["credits"]}

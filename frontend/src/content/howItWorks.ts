@@ -111,9 +111,9 @@ export const HOW_IT_WORKS_SECTIONS: GuideSection[] = [
   {
     key: 'nackl',
     icon: 'sparkles-outline',
-    title: '13) NACKL (premio, in arrivo)',
-    body: `Oltre ai € c'è un premio chiamato NACKL: per ora è solo un'anteprima (non è reale) e NON si mischia coi tuoi € — non puoi usarlo per comprare quote.`,
-    example: `vedi crescere il NACKL usando l'app, ma per ora è un segnaposto.`,
+    title: '13) NACKL (dal mining, in arrivo)',
+    body: `Il NACKL è una cosa a parte: si ottiene SOLO dal mining, cioè in base al tempo in cui l'app resta attiva — MAI dalle attività di gioco (quelle danno solo €). È un sottosistema separato con iscrizione propria (opt-in), per ora solo anteprima (non reale). Non si mischia coi tuoi € e non compra quote.`,
+    example: `tieni l'app attiva e il NACKL cresce nel tempo; fare quiz o missioni invece dà €, non NACKL.`,
   },
   {
     key: 'classifica',

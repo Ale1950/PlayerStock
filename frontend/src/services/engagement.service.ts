@@ -13,15 +13,14 @@ export interface StreakClaimResult {
   reason?: string;
   current_streak: number;
   longest_streak: number;
-  reward_amount?: number;
-  reward_tx_id?: string;
-  new_nackl_balance?: number;
+  reward_amount?: number;   // engagement points (EP) → ricompensa in €
+  credit_bonus?: number;    // € accreditati (faucet). NIENTE NACKL dalle attività.
 }
 export interface QuizQuestion { id: number; text: string; options: string[]; }
 export interface QuizSummary { id: string; title: string; description: string; questions: QuizQuestion[]; active: boolean; }
 export interface QuizAttemptResult {
   ok: boolean; correct: number; total: number; score: number; perfect: boolean;
-  reward_amount: number; new_nackl_balance?: number;
+  reward_amount: number; credit_bonus?: number;   // € (faucet); nessun NACKL
 }
 export interface Prediction {
   id: string; athlete_id: string; direction: 'up' | 'down';
@@ -61,9 +60,9 @@ export async function submitPrediction(athleteId: string, direction: 'up' | 'dow
 export interface MissionItem {
   id: string; title: string; description: string;
   progress: number; target: number; completed: boolean; claimed: boolean;
-  reward_proposed: { credits: number; nackl: number };
+  reward_proposed: { credits: number };
 }
-export interface ChallengeStanding { rank: number; pseudonym: string; return_pct: number; is_self: boolean; prize_proposed: { credits: number; nackl: number } | null; }
+export interface ChallengeStanding { rank: number; pseudonym: string; return_pct: number; is_self: boolean; prize_proposed: { credits: number } | null; }
 export interface WeeklyChallenge { week_key: string; ends_at: string; metric: string; standings: ChallengeStanding[]; my_rank: number | null; total: number; }
 export interface MarketQuiz { id: string; title: string; questions: QuizQuestion[]; already_attempted: boolean; }
 export interface NewsItem { type: string; tone: string; title: string; detail: string; }
@@ -81,6 +80,6 @@ export async function getOverview() {
   return data;
 }
 export async function claimMission(missionId: string) {
-  const { data } = await api.post<{ claimed: boolean; credits?: number; nackl?: number }>(`/engagement/missions/${missionId}/claim`);
+  const { data } = await api.post<{ claimed: boolean; credits?: number }>(`/engagement/missions/${missionId}/claim`);
   return data;
 }

@@ -47,19 +47,19 @@ export default function Engage() {
 
   const onClaimStreak = async () => {
     setBusy('streak');
-    try { const r = await claimStreak(); if (r.claimed) setToast(`+${r.reward_amount?.toFixed(1)} NACKL · streak ${r.current_streak}`); await load(); } finally { setBusy(null); }
+    try { const r = await claimStreak(); if (r.claimed) setToast(`+€${(r.credit_bonus ?? 0).toFixed(0)} · streak ${r.current_streak}`); await load(); } finally { setBusy(null); }
   };
   const onSubmitQuiz = async () => {
     if (!ov) return; setBusy('quiz');
     try {
       const ans = ov.market_quiz.questions.map((q) => answers[q.id] ?? 0);
       const r = await submitQuiz(ov.market_quiz.id, ans);
-      setToast(`Quiz ${r.correct}/${r.total} · +${r.reward_amount.toFixed(1)} NACKL + €`); setOpen(null); await load();
+      setToast(`Quiz ${r.correct}/${r.total} · +€${(r.credit_bonus ?? 0).toFixed(0)}`); setOpen(null); await load();
     } catch (e) { setToast(translateError(e)); } finally { setBusy(null); }
   };
   const onClaimMission = async (m: MissionItem) => {
     setBusy(m.id);
-    try { const r = await claimMission(m.id); if (r.claimed) setToast(`Missione: +€${r.credits} + ${r.nackl} NACKL`); await load(); }
+    try { const r = await claimMission(m.id); if (r.claimed) setToast(`Missione: +€${r.credits}`); await load(); }
     catch (e) { setToast(translateError(e)); } finally { setBusy(null); }
   };
 
@@ -81,7 +81,7 @@ export default function Engage() {
       <GeometricBackground />
       <ScrollView contentContainerStyle={s.container}>
         <Text style={s.title}>Engage</Text>
-        <Text style={s.subtitle}>Premi su DUE economie: <Text style={{ color: colors.amber }}>€</Text> (gioco) e <Text style={{ color: colors.cyan }}>NACKL</Text> (placeholder) — distinte. Tocca un'attività per aprirla.</Text>
+        <Text style={s.subtitle}>Le attività premiano in <Text style={{ color: colors.amber }}>€</Text> (gioco). Il <Text style={{ color: colors.cyan }}>NACKL</Text> NON arriva da qui: si ottiene solo dal mining (tempo sull'app). Tocca un'attività per aprirla.</Text>
         {!!toast && <View style={s.toast}><Text style={s.toastTxt}>{toast}</Text></View>}
 
         {loading || error || !ov ? (
@@ -116,7 +116,7 @@ export default function Engage() {
               {ov && open === 'streak' && (
                 <>
                   <Text style={s.big}>{ov.streak.current_streak} giorni 🔥</Text>
-                  <Text style={s.pMeta}>Record {ov.streak.longest_streak} · prossimo +{ov.streak.next_reward_estimate?.toFixed(1)} NACKL</Text>
+                  <Text style={s.pMeta}>Record {ov.streak.longest_streak} · più giorni di fila = bonus € più alto</Text>
                   <Pressable disabled={!ov.streak.can_claim_today || busy === 'streak'} onPress={onClaimStreak} style={[s.cta, !ov.streak.can_claim_today && s.ctaOff]}>
                     <Text style={s.ctaTxt}>{ov.streak.can_claim_today ? 'RISCATTA OGGI' : 'GIÀ RISCATTATO'}</Text>
                   </Pressable>
@@ -138,7 +138,7 @@ export default function Engage() {
                       </View>
                     </View>
                   ))}
-                  <Pressable disabled={busy === 'quiz'} onPress={onSubmitQuiz} style={s.cta}><Text style={s.ctaTxt}>INVIA · +€ + NACKL</Text></Pressable>
+                  <Pressable disabled={busy === 'quiz'} onPress={onSubmitQuiz} style={s.cta}><Text style={s.ctaTxt}>INVIA · +€</Text></Pressable>
                 </>
               ))}
               {ov && open === 'predictions' && (
@@ -148,7 +148,7 @@ export default function Engage() {
                     <View key={p.id} style={s.listRow}>
                       <Text style={s.listTxt}>{p.direction === 'up' ? '▲ su' : '▼ giù'}</Text>
                       <Text style={[s.listTag, { color: p.status === 'won' ? colors.green : p.status === 'lost' ? colors.red : colors.muted }]}>
-                        {p.status === 'won' ? '✓ vinto' : p.status === 'lost' ? '✗ perso' : '… in corso'}{p.reward_amount ? ` · +${p.reward_amount} NACKL` : ''}
+                        {p.status === 'won' ? '✓ vinto · +€' : p.status === 'lost' ? '✗ perso' : '… in corso'}
                       </Text>
                     </View>
                   ))}
@@ -162,7 +162,7 @@ export default function Engage() {
                     <View key={st.rank} style={[s.listRow, st.is_self && { borderColor: colors.cyan, borderWidth: borderW }]}>
                       <Text style={s.listTxt}>{['🥇', '🥈', '🥉'][st.rank - 1] ?? `#${st.rank}`} {st.pseudonym}{st.is_self ? ' (TU)' : ''}</Text>
                       <Text style={[s.listTag, { color: st.return_pct >= 0 ? colors.green : colors.red }]}>
-                        {st.return_pct >= 0 ? '+' : ''}{st.return_pct.toFixed(1)}%{st.prize_proposed ? ` · ${st.prize_proposed.credits}cr+${st.prize_proposed.nackl}N` : ''}
+                        {st.return_pct >= 0 ? '+' : ''}{st.return_pct.toFixed(1)}%{st.prize_proposed ? ` · €${st.prize_proposed.credits}` : ''}
                       </Text>
                     </View>
                   ))}
@@ -190,7 +190,7 @@ export default function Engage() {
                   </View>
                   <Text style={s.pMeta}>{m.description}</Text>
                   <Bar value={Math.min(m.progress, m.target)} max={m.target} color={m.completed ? colors.green : colors.cyan} />
-                  <Text style={s.pMeta}>{Math.round(Math.min(m.progress, m.target)).toLocaleString('it-IT')} / {m.target.toLocaleString('it-IT')} · premio €{m.reward_proposed.credits} + {m.reward_proposed.nackl} NACKL</Text>
+                  <Text style={s.pMeta}>{Math.round(Math.min(m.progress, m.target)).toLocaleString('it-IT')} / {m.target.toLocaleString('it-IT')} · premio €{m.reward_proposed.credits}</Text>
                   {m.completed && !m.claimed && (
                     <Pressable disabled={busy === m.id} onPress={() => onClaimMission(m)} style={[s.cta, { alignSelf: 'flex-start' }]}><Text style={s.ctaTxt}>RISCATTA</Text></Pressable>
                   )}

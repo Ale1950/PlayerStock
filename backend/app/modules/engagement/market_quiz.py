@@ -1,7 +1,7 @@
 """Quiz a tema MERCATO (Engage) — domande generate dai DATI veri via /api/stats.
 
 Persistito in `db.quizzes` (1 quiz/giorno, idempotente) così il punteggio passa per il
-flusso quiz esistente (`submit_quiz_attempt` → Crediti via faucet + NACKL placeholder).
+flusso quiz esistente (`submit_quiz_attempt` → SOLO € via faucet; nessun NACKL).
 Le opzioni sono ordinate deterministicamente; `correct_index` MAI esposto al client.
 """
 from __future__ import annotations

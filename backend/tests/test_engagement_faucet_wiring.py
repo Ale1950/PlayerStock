@@ -1,7 +1,8 @@
-"""TDD: wiring faucet CREDITI nei gestori engagement.
+"""TDD: gli eventi engagement accreditano SOLO € (faucet), MAI NACKL.
 
-Ogni evento engagement accredita SIA NACKL (esistente) SIA Crediti (faucet), su
-LEDGER INDIPENDENTI, con event_id STABILE (idempotente). NACKL resta intatto.
+Vincolo permanente: il gioco non assegna NACKL (i NACKL derivano solo dal mining).
+Ogni evento engagement accredita € (faucet, event_id stabile/idempotente) e lascia
+il ledger NACKL a ZERO.
 """
 from __future__ import annotations
 
@@ -33,9 +34,9 @@ async def test_streak_grants_credits_and_keeps_nackl(mock_db):
     assert res["credit_bonus"] == pytest.approx(75.0)
     assert await _credits(mock_db, uid) == pytest.approx(75.0)
     assert await mock_db.engagement_credit_grants.count_documents({}) == 1
-    # NACKL intatto sul SUO ledger (path separato)
+    # NACKL NON accreditato dall'engagement (solo mining): resta a 0
     bal = await InternalRewardProvider().balance(mock_db, uid)
-    assert bal["amount"] == pytest.approx(1.0)
+    assert bal["amount"] == pytest.approx(0.0)
 
 
 async def test_streak_same_day_no_double_credit(mock_db):
@@ -65,7 +66,7 @@ async def test_quiz_grants_credits_and_keeps_nackl(mock_db):
     assert res["credit_bonus"] == pytest.approx(112.5)
     assert await mock_db.engagement_credit_grants.count_documents({}) == 1
     bal = await InternalRewardProvider().balance(mock_db, uid)
-    assert bal["amount"] == pytest.approx(1.5)
+    assert bal["amount"] == pytest.approx(0.0)  # NACKL mai da engagement
 
 
 async def test_quiz_reattempt_no_double_credit(mock_db):
@@ -98,7 +99,7 @@ async def test_prediction_settle_grants_credits_idempotent(mock_db):
     assert await _credits(mock_db, uid) == pytest.approx(187.5)
     assert await mock_db.engagement_credit_grants.count_documents({}) == 1
     bal = await InternalRewardProvider().balance(mock_db, uid)
-    assert bal["amount"] == pytest.approx(2.5)
+    assert bal["amount"] == pytest.approx(0.0)  # NACKL mai da engagement
     # re-settle: niente di nuovo (predizione già chiusa) → nessun doppio credito
     out2 = await settle_expired_predictions(mock_db)
     assert out2["settled"] == 0

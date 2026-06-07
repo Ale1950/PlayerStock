@@ -11,6 +11,10 @@ vanno validati da professionisti.
 placeholder, engagement). In aggiunta: **Fase 3b — prezzo ibrido** (impatto trading + rientro, DECISIONS
 D3b) e **backbone dati `/api/stats/*`** + P&L realizzato (DD).
 
+> **VINCOLO (D8):** il gioco non regala MAI NACKL. NACKL solo da **mining** (time-based sul tempo di app
+> attiva), sottosistema **separato / opt-in / in evoluzione**; boost e acquisto boost da definire. Le
+> attività di gioco premiano solo in €.
+
 **Sequenza:** tuning economico (fatto: k=1.5, faucet engagement wirato) → **design pass CHIUSO**
 (`DESIGN_SPEC.md`): chrome + Mercato + Portafoglio + Classifica + Engage + **Hub € + Profilo** fatti (in € · D7),
 **WEB target responsive** (tabella desktop / card mobile, DR.1). + guida "Come funziona" e valore €M (Fase 2c).

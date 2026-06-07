@@ -18,9 +18,10 @@ from typing import Any
 
 from app.economy.credit_faucet import grant_engagement_credits
 from app.models.common import utc_now
-from app.modules.engagement.reward_client import RewardClient
 
-# ───────── COSTANTI REWARD (in NACKL placeholder) ─────────
+# ───────── COSTANTI REWARD (in EP — punti engagement → ricompensa in € via faucet) ─────────
+# NB: il gioco NON assegna NACKL. Questi sono "engagement points" che alimentano il
+# faucet € (grant_engagement_credits). I NACKL derivano solo dal mining/heartbeat.
 REWARD_LOGIN_STREAK_BASE = 1.0
 REWARD_LOGIN_STREAK_BONUS_PER_DAY = 0.2  # +20% per giorno consecutivo, cap a 7
 REWARD_LOGIN_STREAK_CAP_DAYS = 7
@@ -34,7 +35,7 @@ PREDICTION_HORIZON_HOURS = 24
 # ───────── PURE FUNCTIONS (testabili senza DB) ─────────
 
 def compute_streak_reward(streak_days: int) -> float:
-    """Reward in NACKL per uno streak di N giorni consecutivi."""
+    """Engagement points (EP) per uno streak di N giorni → ricompensa in € (faucet)."""
     if streak_days < 1:
         return 0.0
     effective = min(streak_days, REWARD_LOGIN_STREAK_CAP_DAYS)
@@ -104,21 +105,15 @@ async def claim_daily_streak(db, user_id) -> dict:
         upsert=True,
     )
 
-    rc = RewardClient(db)
-    accrue = await rc.accrue(
-        user_id=user_id, amount=reward, source="engagement_login_streak",
-        metadata={"streak_days": new_streak},
-    )
-    # Faucet CREDITI (economia separata, ledger indipendente, idempotente per giorno)
+    # SOLO ricompensa in € (faucet). NESSUN NACKL: il gioco non assegna mai NACKL
+    # (i NACKL derivano unicamente dal mining/heartbeat — vincolo permanente).
     credit = await grant_engagement_credits(
         db, user_id=user_id, event_id=f"streak:{user_id}:{now.date().isoformat()}",
         ep=reward, now=now,
     )
     return {
         "claimed": True, "current_streak": new_streak, "longest_streak": longest,
-        "reward_amount": reward, "reward_tx_id": accrue.get("tx_id"),
-        "new_nackl_balance": accrue.get("new_balance"),
-        "credit_bonus": credit["credits"],
+        "reward_amount": reward, "credit_bonus": credit["credits"],
     }
 
 
@@ -144,18 +139,9 @@ async def submit_quiz_attempt(db, user_id, *, quiz_id: str, answers: list[int]) 
     reward = compute_quiz_reward(correct=result["correct"], perfect=result["perfect"])
     now = utc_now()
 
-    accrue_tx_id = None
-    new_balance = None
     credit_bonus = 0.0
     if reward > 0:
-        rc = RewardClient(db)
-        accrue = await rc.accrue(
-            user_id=user_id, amount=reward, source="engagement_quiz",
-            metadata={"quiz_id": str(qid), "correct": result["correct"], "total": result["total"]},
-        )
-        accrue_tx_id = accrue.get("tx_id")
-        new_balance = accrue.get("new_balance")
-        # Faucet CREDITI (event_id stabile per quiz/utente, idempotente)
+        # SOLO €: nessun accrual NACKL (NACKL = solo mining).
         credit = await grant_engagement_credits(
             db, user_id=user_id, event_id=f"quiz:{user_id}:{qid}", ep=reward, now=now,
         )
@@ -165,15 +151,12 @@ async def submit_quiz_attempt(db, user_id, *, quiz_id: str, answers: list[int]) 
         "user_id": user_id, "quiz_id": qid,
         "answers": answers, "correct": result["correct"], "total": result["total"],
         "score": result["score"], "perfect": result["perfect"],
-        "reward_amount": reward, "reward_tx_id": accrue_tx_id,
-        "created_at": now,
+        "reward_amount": reward, "created_at": now,
     })
     return {
         "ok": True, "correct": result["correct"], "total": result["total"],
         "score": result["score"], "perfect": result["perfect"],
-        "reward_amount": reward, "reward_tx_id": accrue_tx_id,
-        "new_nackl_balance": new_balance,
-        "credit_bonus": credit_bonus,
+        "reward_amount": reward, "credit_bonus": credit_bonus,
     }
 
 
@@ -223,7 +206,6 @@ async def settle_expired_predictions(db, *, limit: int = 200) -> dict:
     now = utc_now()
     cursor = db.predictions.find({"status": "open", "expires_at": {"$lte": now}}).limit(limit)
     items = await cursor.to_list(length=limit)
-    rc = RewardClient(db)
     settled = 0
     won = 0
     for p in items:
@@ -242,16 +224,9 @@ async def settle_expired_predictions(db, *, limit: int = 200) -> dict:
             (direction == "down" and cur < base)
         ) else "lost"
         reward_amt = 0.0
-        tx_id = None
         if outcome == "won":
-            accrue = await rc.accrue(
-                user_id=p["user_id"], amount=REWARD_PREDICTION_CORRECT,
-                source="engagement_prediction",
-                metadata={"prediction_id": str(p["_id"]), "athlete_id": str(p["athlete_id"])},
-            )
             reward_amt = REWARD_PREDICTION_CORRECT
-            tx_id = accrue.get("tx_id")
-            # Faucet CREDITI (event_id stabile per predizione, idempotente)
+            # SOLO €: nessun accrual NACKL (NACKL = solo mining).
             await grant_engagement_credits(
                 db, user_id=p["user_id"], event_id=f"prediction:{p['_id']}",
                 ep=REWARD_PREDICTION_CORRECT, now=now,
@@ -260,7 +235,7 @@ async def settle_expired_predictions(db, *, limit: int = 200) -> dict:
         await db.predictions.update_one(
             {"_id": p["_id"]},
             {"$set": {"status": outcome, "settled_at": now, "settled_price": cur,
-                      "outcome": outcome, "reward_amount": reward_amt, "reward_tx_id": tx_id}},
+                      "outcome": outcome, "reward_amount": reward_amt, "reward_tx_id": None}},
         )
         settled += 1
     return {"settled": settled, "won": won, "lost": settled - won}

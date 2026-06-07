@@ -1,7 +1,7 @@
 """Sfide settimanali (Engage, Gruppo 3a) — competizione "miglior rendimento" sul periodo.
 
 Standing legato alla classifica (rendimento 1S ricostruito). Si chiude a fine settimana:
-premia i top-3 (Crediti via faucet-cap + NACKL placeholder), idempotente per (settimana, utente).
+premia i top-3 SOLO in € (faucet-cap); nessun NACKL (il gioco non assegna NACKL). Idempotente per (settimana, utente).
 Premi = **APPROVATI** (definitivi, DECISIONS DE.3).
 """
 from __future__ import annotations
@@ -11,15 +11,14 @@ import datetime as dt
 from app.economy.credit_faucet import grant_fixed_credits
 from app.economy.indices import choose_granularity, total_return_pct
 from app.models.common import utc_now
-from app.modules.engagement.reward_client import RewardClient
 from app.modules.portfolio.service import anonymize_display_name
 from app.modules.stats.analytics import reconstruct_equity
 
-# premio per posizione (top-3). Migrazione € (D7): credits (=€) ×100; NACKL invariato.
+# premio per posizione (top-3) in €. SOLO €: il gioco non assegna NACKL (solo mining).
 PROPOSED_PRIZES: list[dict] = [
-    {"credits": 2000, "nackl": 50},
-    {"credits": 1000, "nackl": 30},
-    {"credits": 500, "nackl": 20},
+    {"credits": 2000},
+    {"credits": 1000},
+    {"credits": 500},
 ]
 
 
@@ -85,11 +84,10 @@ async def settle_weekly_challenge(db, week_key: str, *, period: str = "1S") -> d
         if await db.challenge_claims.find_one({"week_key": week_key, "user_id": uid}):
             continue  # idempotente per (settimana, utente)
         prize = PROPOSED_PRIZES[i]
+        # SOLO €: la sfida NON accredita NACKL (NACKL = solo mining).
         cr = await grant_fixed_credits(db, user_id=uid, event_id=f"challenge:{week_key}:{uid}",
                                        amount=float(prize["credits"]), now=now)
-        await RewardClient(db).accrue(user_id=uid, amount=float(prize["nackl"]),
-                                      source="engagement_challenge", metadata={"week_key": week_key, "rank": i + 1})
         await db.challenge_claims.insert_one({"week_key": week_key, "user_id": uid, "rank": i + 1,
-                                              "credits": cr["credits"], "nackl": float(prize["nackl"]), "ts": now})
+                                              "credits": cr["credits"], "ts": now})
         winners += 1
     return {"week_key": week_key, "winners": winners}

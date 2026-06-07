@@ -485,6 +485,26 @@ La valuta di trading passa da "Crediti" a **€ virtuali**. **Una sola fonte di 
 
 ---
 
+## D8 — Principio NACKL: solo mining, mai dal gioco (VINCOLO permanente) (2026-06-07, Claude Code)
+**Il gioco non regala MAI NACKL.** I NACKL derivano UNICAMENTE dal **mining** — *time-based*, in
+funzione del tempo in cui l'account/app resta attivo su una qualsiasi schermata. Il mining è un
+**sottosistema SEPARATO** con registrazione propria (**opt-in**), in continua evoluzione (boost e
+acquisto boost **da definire**). Il NACKL resta placeholder/inerte fino all'integrazione reale Acki
+Nacki (Q1/Q5), separato dai € e **non compra quote**.
+
+- **Engagement disaccoppiato dal NACKL**: le attività (streak, quiz, pronostici, missioni, sfide)
+  accreditano **solo €** (faucet `grant_engagement_credits`/`grant_fixed_credits`). Rimossi tutti gli
+  accrual NACKL: `service.py` (streak/quiz/prediction), `missions.py`, `challenges.py`; eliminato
+  l'adapter `engagement/reward_client.py` (orfano) → engagement non può più accreditare NACKL.
+- **Unica fonte di accrual NACKL** = `app/reward/` (heartbeat/mining: `process_heartbeat` →
+  `compute_accrual` time-based con cap → `InternalRewardProvider.accrue`). Verificato: nessun altro
+  `.accrue()` nel codebase.
+- **Copy**: rimossi i riferimenti "NACKL dalle attività" da Engage (intro, toast, premi, CTA),
+  guida "Come funziona" (§13) e blocco "Reward · NACKL" dell'Hub €. Premi missioni/sfide = solo €.
+- Test: `test_engagement_faucet_wiring` ora assert NACKL = 0 dopo ogni evento engagement.
+
+---
+
 ## ❓ DOMANDE APERTE (da risolvere col fondatore / terzi)
 
 | # | Domanda | Per chi | Blocca fase |
