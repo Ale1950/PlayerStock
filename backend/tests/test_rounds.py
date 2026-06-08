@@ -12,6 +12,7 @@ from bson import ObjectId
 
 from app.config.pricing_constants import RANGE_CLAMP
 from app.market.rounds import run_round, seed_previous_season
+from app.models.common import utc_now
 from app.pricing.feed import SyntheticPerformanceProvider, get_performance_feed
 from app.valuation.synthetic_stats import season_stats_of
 
@@ -92,6 +93,20 @@ async def test_clamp_respected_with_high_gain(mock_db):
         ev_doc = await mock_db.athletes.find_one({"_id": e["athlete_id"]})
         rng = RANGE_CLAMP[ev_doc["role"]]
         assert rng["down"] - 1e-9 <= e["perf_pct"] <= rng["up"] + 1e-9
+
+
+@pytest.mark.asyncio
+async def test_round_guard_blocks_duplicate(mock_db):
+    """Deploy rolling: due fire ravvicinati → il mercato avanza UNA sola volta (no-op il 2°)."""
+    await mock_db.athletes.insert_many([_athlete(role="ATT") for _ in range(4)])
+    now = utc_now()
+    r1 = await run_round(mock_db, feed=FEED, gain=1.0, now=now, min_gap_seconds=900)
+    r2 = await run_round(mock_db, feed=FEED, gain=1.0, now=now, min_gap_seconds=900)
+    assert r1["round"] == 1
+    assert r2.get("skipped") is True                       # secondo fire = no-op
+    st = await mock_db.market_state.find_one({"_id": "market"})
+    assert st["current_round"] == 1                        # avanzato una sola volta
+    assert await mock_db.round_events.count_documents({}) == 4   # un solo round di eventi
 
 
 @pytest.mark.asyncio

@@ -1,0 +1,42 @@
+# Render Blueprint — PlayerStock (single service, always-on, single-origin).
+# Founder: Render → New → Blueprint → collega il repo. I segreti (sync:false) si
+# inseriscono nel dashboard (mai nel repo). Piano Starter = sempre acceso, 1 istanza
+# → lo scheduler round in-process NON si duplica.
+services:
+  - type: web
+    name: playerstock
+    runtime: docker
+    plan: starter            # always-on (~$7/mo). NON usare free (dorme) né autoscaling.
+    region: frankfurt        # EU, vicino all'Italia
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    numInstances: 1          # 1 istanza → 1 scheduler (vincolo critico)
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      # ── Segreti: valori SOLO nel dashboard Render (mai committati) ──
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: JWT_SECRET                # PROD: nuovo, NON il dev
+        sync: false
+      - key: GOOGLE_OAUTH_CLIENT_ID
+        sync: false
+      - key: GOOGLE_OAUTH_CLIENT_SECRET
+        sync: false
+      - key: REWARD_HEARTBEAT_SECRET   # PROD: nuovo, NON il dev
+        sync: false
+      - key: INTERNAL_API_SECRET       # vuoto/non impostato ⇒ endpoint interno disabilitato
+        sync: false
+      # ── Config non segreta ──
+      - key: STATIC_DIR
+        value: /app/static
+      - key: PERFORMANCE_FEED
+        value: synthetic
+      - key: ROUND_ENABLED
+        value: "true"
+      - key: ROUND_INTERVAL_MIN
+        value: "30"
+      - key: PERF_PRICE_GAIN
+        value: "2.5"

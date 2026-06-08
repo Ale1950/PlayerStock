@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse
 from starlette.middleware.cors import CORSMiddleware
 
 from app.config.settings import get_settings
@@ -88,7 +90,42 @@ def create_app() -> FastAPI:
     api.include_router(admin_routes.router)
     api.include_router(stats_routes.router)
 
+    # Endpoint INTERNO (cron futuro): muove i prezzi → richiede il segreto, inerte senza.
+    @api.post("/internal/run-round")
+    async def internal_run_round(request: Request):
+        if not settings.INTERNAL_API_SECRET:
+            raise HTTPException(status_code=503, detail="internal endpoint disabled")
+        if request.headers.get("x-internal-secret") != settings.INTERNAL_API_SECRET:
+            raise HTTPException(status_code=401, detail="unauthorized")
+        from app.market.rounds import run_round
+        from app.pricing.feed import get_performance_feed
+        return await run_round(
+            get_db(), feed=get_performance_feed(settings), gain=settings.PERF_PRICE_GAIN,
+            min_gap_seconds=settings.ROUND_INTERVAL_MIN * 60 * 0.5,
+        )
+
     app.include_router(api)
+
+    # ── Serving statico SINGLE-ORIGIN (prod): / → export web Expo, SPA fallback.
+    # Le rotte /api hanno precedenza (registrate prima). Niente CORS necessario.
+    static_dir = Path(settings.STATIC_DIR)
+    if static_dir.is_dir():
+        root = static_dir.resolve()
+        index = root / "index.html"
+
+        @app.get("/{full_path:path}")
+        async def spa(full_path: str):
+            # le API non passano di qui (404 JSON-friendly invece di servire index.html)
+            if full_path.startswith(settings.API_PREFIX.strip("/")):
+                raise HTTPException(status_code=404, detail="not found")
+            candidate = (root / full_path).resolve()
+            if full_path and str(candidate).startswith(str(root)) and candidate.is_file():
+                return FileResponse(candidate)
+            return FileResponse(index)   # deep-link SPA → index.html
+
+        logger.info("Static single-origin attivo: %s", root)
+    else:
+        logger.info("Static dir assente (%s) — solo API (dev usa dev_proxy.cjs)", static_dir)
 
     return app
 

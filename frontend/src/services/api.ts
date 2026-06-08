@@ -6,13 +6,13 @@ import i18n from '@/src/i18n';
 
 import { clearAuth, getToken } from './authStorage';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-if (!BACKEND_URL) {
-  console.warn('EXPO_PUBLIC_BACKEND_URL is not defined; API calls will fail');
-}
+// Single-origin (deploy web prod): EXPO_PUBLIC_BACKEND_URL vuoto → base RELATIVA "/api"
+// (stesso dominio del backend, niente CORS). Per l'app NATIVA contro il prod va invece
+// impostato all'URL ASSOLUTO del dominio. In dev (Expo :8081) punta al tunnel.
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL ?? '';
 
 const api: AxiosInstance = axios.create({
-  baseURL: `${BACKEND_URL ?? ''}/api`,
+  baseURL: `${BACKEND_URL}/api`,   // "" ⇒ "/api" relativo (single-origin)
   timeout: 20000,
 });
 

@@ -11,7 +11,9 @@ NON inietta valuta → nessun impatto su inflazione/faucet/economia €.
 """
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
+
+from pymongo import ReturnDocument
 
 from app.market.hybrid_pricing import anchor_price, effective_deviation, market_price
 from app.models.common import utc_now
@@ -56,11 +58,43 @@ async def _get_round(db) -> int:
     return int(st.get("current_round", 0)) if st else 0
 
 
+async def _claim_round(db, now: datetime, min_gap_seconds: float) -> int | None:
+    """Claim ATOMICO del prossimo numero di round (anti-doppio avanzamento).
+
+    Incremento atomico di `current_round` su singolo documento. Con `min_gap_seconds>0`
+    avanza SOLO se è passato abbastanza tempo dall'ultimo round → durante un deploy
+    rolling il secondo scheduler (istanza vecchia+nuova) NON matcha il filtro e fa no-op.
+    Ritorna il numero di round assegnato, o None se l'avanzamento è stato saltato.
+    """
+    await db.market_state.update_one(
+        {"_id": "market"},
+        {"$setOnInsert": {"current_round": 0, "last_round_at": None}},
+        upsert=True,
+    )
+    filt: dict = {"_id": "market"}
+    if min_gap_seconds and min_gap_seconds > 0:
+        cutoff = now - timedelta(seconds=min_gap_seconds)
+        filt = {"_id": "market", "$or": [{"last_round_at": None},
+                                         {"last_round_at": {"$lte": cutoff}}]}
+    doc = await db.market_state.find_one_and_update(
+        filt, {"$inc": {"current_round": 1}, "$set": {"last_round_at": now}},
+        return_document=ReturnDocument.AFTER,
+    )
+    return int(doc["current_round"]) if doc else None
+
+
 async def run_round(db, *, feed: PerformanceFeedProvider, gain: float = 1.0,
-                    now: datetime | None = None, sport_id: str = "calcio") -> dict:
-    """Esegue UN round su tutti gli atleti attivi. Ritorna riepilogo + top movers."""
+                    now: datetime | None = None, sport_id: str = "calcio",
+                    min_gap_seconds: float = 0.0) -> dict:
+    """Esegue UN round su tutti gli atleti attivi. Ritorna riepilogo + top movers.
+
+    `min_gap_seconds>0` (usato dallo scheduler) attiva la guardia anti-doppio: un
+    secondo fire ravvicinato (es. deploy rolling) è no-op (`skipped`). CLI/seed/test
+    usano 0 = avanzamento sempre (claim comunque atomico)."""
     now = now or utc_now()
-    rnd = await _get_round(db) + 1
+    rnd = await _claim_round(db, now, min_gap_seconds)
+    if rnd is None:
+        return {"skipped": True, "reason": "guard", "round": await _get_round(db)}
     athletes = await db.athletes.find({"sport_id": sport_id, "status": "ACTIVE"}).to_list(length=100_000)
 
     movers: list[dict] = []
@@ -102,11 +136,7 @@ async def run_round(db, *, feed: PerformanceFeedProvider, gain: float = 1.0,
             movers.append({"athlete_id": str(a["_id"]), "label": a.get("display_label"),
                            "role": role, "perf_pct": pct, "reason": reason})
 
-    await db.market_state.update_one(
-        {"_id": "market"},
-        {"$set": {"current_round": rnd, "last_round_at": now}},
-        upsert=True,
-    )
+    # NB: current_round/last_round_at sono già stati impostati ATOMICAMENTE da _claim_round.
     movers.sort(key=lambda m: m["perf_pct"], reverse=True)
     return {
         "round": rnd, "athletes": len(athletes), "moved": len(movers),

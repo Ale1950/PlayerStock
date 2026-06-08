@@ -49,10 +49,18 @@ def start_scheduler(db) -> AsyncIOScheduler:
     settings = get_settings()
     feed = get_performance_feed(settings)
 
+    # guardia anti-doppio: nessun avanzamento più frequente di ~metà intervallo
+    # (durante un deploy rolling il secondo scheduler fa no-op).
+    round_min_gap = settings.ROUND_INTERVAL_MIN * 60 * 0.5
+
     async def _round_job() -> None:
         try:
-            rep = await run_round(db, feed=feed, gain=settings.PERF_PRICE_GAIN)
-            logger.info("round %s: %d atleti, %d mossi", rep["round"], rep["athletes"], rep["moved"])
+            rep = await run_round(db, feed=feed, gain=settings.PERF_PRICE_GAIN,
+                                  min_gap_seconds=round_min_gap)
+            if rep.get("skipped"):
+                logger.info("round saltato (guardia anti-doppio, round %s)", rep.get("round"))
+            else:
+                logger.info("round %s: %d atleti, %d mossi", rep["round"], rep["athletes"], rep["moved"])
         except Exception as e:  # noqa: BLE001
             logger.warning("round job error: %s", e)
 

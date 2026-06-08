@@ -56,6 +56,13 @@ class Settings:
     # Game economy constants (mirrored from pricing_constants for quick access)
     BUDGET_INIZIALE_UTENTE: float = 10_000.0
 
+    # ── Deploy single-origin (D-deploy) ──
+    # Cartella dell'export web Expo servita dal backend (/ → SPA). In Docker: /app/static.
+    STATIC_DIR: str = os.getenv("STATIC_DIR", str(ROOT_DIR / "frontend" / "dist"))
+    # Segreto per l'endpoint interno POST /api/internal/run-round (cron futuro).
+    # VUOTO ⇒ endpoint DISABILITATO (503). Inerte senza segreto.
+    INTERNAL_API_SECRET: str = os.getenv("INTERNAL_API_SECRET", "")
+
     # ── Prezzo guidato dalla performance (D10) — round forward che muovono il prezzo equo ──
     # Sorgente prestazioni a INNESTO: 'synthetic' (unica impl). Futuro: 'real' (post-legale).
     PERFORMANCE_FEED: str = os.getenv("PERFORMANCE_FEED", "synthetic")
