@@ -16,7 +16,7 @@ import { useTheme } from '@/src/theme/ThemeProvider';
 import { type ThemeColors } from '@/src/theme/tokens';
 import { borderW, radius, spacing, typography } from '@/src/theme/spacing';
 
-const INK = '#05070A';
+const INK = '#1d1a16';
 type Key = 'streak' | 'quiz' | 'predictions' | 'challenge' | 'missions' | 'news';
 type Variant = 'cyan' | 'teal' | 'purple' | 'green' | 'amber' | 'pink';
 

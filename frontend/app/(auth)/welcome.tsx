@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent, paddingVertical: 16, borderRadius: radius.md,
     alignItems: 'center', justifyContent: 'center', minHeight: 52,
   },
-  buttonText: { ...typography.h3, color: '#FFFFFF', fontWeight: '600' },
+  buttonText: { ...typography.h3, color: colors.onAccent, fontWeight: '600' },
   terms: { ...typography.small, color: colors.textMuted, textAlign: 'center', marginTop: spacing.md },
   disclaimer: {
     marginTop: spacing.xl, padding: spacing.md, borderRadius: radius.md,

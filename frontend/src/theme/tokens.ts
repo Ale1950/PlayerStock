@@ -1,14 +1,13 @@
 /**
- * PlayerStock — Design tokens (Fase Design).
- * Direzione: DARK NATIVO, neon su nero. PRIMARIO = CYAN/TEAL, viola secondario,
- * AMBRA = accento prezzo/valore (oro NON più primario). Intensità MISTA:
- *   - schermate DATI → sobrie (nero pieno, niente glow)
- *   - schermate REWARD/ENGAGE → vivide (gradiente + glow)
- * Fonte di verità: DESIGN_SPEC.md. Due temi: SCURO (default) e CHIARO.
- * Le schermate NON hardcodano colori: useTheme().colors (o `@/src/theme/colors` = scuro).
+ * PlayerStock — Design tokens.
+ * Identità: LUXURY — carbone + oro. Finestre con BORDO LIME 2px. Tema UNICO scuro.
+ * ACCENTO = ORO (#cda24f): prezzo/valore, stato attivo, CTA. Lime (#c6ff00) = SOLO
+ * bordo delle card "finestra" top-level (mai sui sotto-elementi).
+ * Fonte di verità: docs/DESIGN_SYSTEM.md (DESIGN_SPEC.md è SUPERSEDED — D11/D12).
+ * Le schermate NON hardcodano colori: useTheme().colors (o `@/src/theme/colors`).
  */
 
-export type Scheme = 'dark' | 'light';
+export type Scheme = 'dark';
 
 interface RawColors {
   bg: string; surface: string; surfaceAlt: string; border: string;
@@ -17,42 +16,32 @@ interface RawColors {
   green: string; amber: string; red: string; chartBlue: string;
 }
 
+// Tema unico Luxury. NB: le CHIAVI storiche (cyan/teal/purple/amber…) sono mantenute
+// per compat con i call-site, ma i VALORI sono rimappati sulla palette carbone+oro.
 const darkRaw: RawColors = {
-  bg: '#0E1320',        // slate-navy morbido (era #05070A quasi-nero, troppo duro)
-  surface: '#171E2E',
-  surfaceAlt: '#212B40',
-  border: 'rgba(255,255,255,0.12)',  // più leggibile (con bordi ~1.75px)
-  text: '#EAF2F7',
-  muted: '#7E8A99',
-  cyan: '#22D3EE',
-  teal: '#2DD4BF',
-  purple: '#A78BFA',
-  green: '#4ADE80',   // positivo / live
-  amber: '#F5B544',   // prezzo / valore
-  red: '#FB7185',     // negativo
-  chartBlue: '#5B8DEF',
-};
-
-const lightRaw: RawColors = {
-  bg: '#F5F7F9',
-  surface: '#FFFFFF',
-  surfaceAlt: '#EEF1F4',
-  border: 'rgba(0,0,0,0.14)',  // bordi ~1.75px, un filo più marcati
-  text: '#121821',
-  muted: '#5A6472',
-  cyan: '#0E9BB5',
-  teal: '#0D9488',
-  purple: '#7C3AED',
-  green: '#15A150',
-  amber: '#B8860B',
-  red: '#DC4C4C',
-  chartBlue: '#3B6FD4',
+  bg: '#12110f',        // carbone
+  surface: '#1d1a16',
+  surfaceAlt: '#26221b', // surface-2
+  border: '#34302a',     // border-subtle (DEFAULT, NON lime)
+  text: '#f3eee4',
+  muted: '#9a907f',
+  cyan: '#cda24f',    // ex-primario → oro
+  teal: '#cda24f',    // accento oro
+  purple: '#b8893f',  // bronzo (distinzione tenue per tint ruoli/chart)
+  green: '#9bc08a',   // positivo / up
+  amber: '#cda24f',   // prezzo / valore = oro (coerente con accent)
+  red: '#cf8170',     // negativo / down
+  chartBlue: '#9a907f', // neutro caldo
 };
 
 interface Extra {
   scheme: Scheme;
   isDark: boolean;
-  onAccent: string;      // inchiostro scuro su riempimenti cyan/amber/teal
+  onAccent: string;      // inchiostro scuro su riempimenti oro
+  barBg: string;         // header + bottom tab bar
+  borderWindow: string;  // LIME — bordo finestra 2px (solo card top-level)
+  avatarBg: string;
+  avatarFg: string;
   borderStrong: string;
   grid: string;          // texture geometrica (bassissima opacità)
   overlay: string;       // velo stati premuti
@@ -60,11 +49,11 @@ interface Extra {
   bannerBorder: string;
   bannerText: string;
   // alias semantici / legacy
-  accent: string;        // PRIMARIO = cyan
-  accentHover: string;   // teal
-  gold: string;          // compat → amber (prezzo/valore)
+  accent: string;        // ORO
+  accentHover: string;
+  gold: string;          // = accent
   goldDim: string;
-  onGold: string;        // compat → onAccent
+  onGold: string;        // = onAccent
   up: string;
   down: string;
   success: string;
@@ -80,24 +69,27 @@ interface Extra {
 }
 
 function build(raw: RawColors, scheme: Scheme): RawColors & Extra {
-  const isDark = scheme === 'dark';
   return {
     ...raw,
     scheme,
-    isDark,
-    onAccent: '#05070A',
-    borderStrong: isDark ? '#222B36' : 'rgba(0,0,0,0.18)',
-    grid: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
-    overlay: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-    bannerBg: isDark ? '#14110A' : '#FBF3DD',
-    bannerBorder: isDark ? '#3A2E12' : '#E4CF92',
-    bannerText: isDark ? '#F5D98C' : '#7A5B12',
+    isDark: true,
+    onAccent: '#1d1a16',
+    barBg: '#1a1813',
+    borderWindow: '#c6ff00',
+    avatarBg: '#2c281f',
+    avatarFg: '#cda24f',
+    borderStrong: '#403a31',
+    grid: 'rgba(243,238,228,0.04)',
+    overlay: 'rgba(243,238,228,0.06)',
+    bannerBg: '#1f1a10',
+    bannerBorder: '#3a2e12',
+    bannerText: '#cda24f',
     // alias
-    accent: raw.cyan,
-    accentHover: raw.teal,
+    accent: raw.amber,        // oro
+    accentHover: raw.amber,
     gold: raw.amber,
-    goldDim: raw.amber,
-    onGold: '#05070A',
+    goldDim: '#a8843f',
+    onGold: '#1d1a16',
     up: raw.green,
     down: raw.red,
     success: raw.green,
@@ -115,25 +107,24 @@ function build(raw: RawColors, scheme: Scheme): RawColors & Extra {
 
 export const themes = {
   dark: build(darkRaw, 'dark'),
-  light: build(lightRaw, 'light'),
 } as const;
 
 export type ThemeColors = typeof themes.dark;
 
-/** Gradienti di brand (per bordi-superiori sobri e card vivide). 6 varianti neon. */
+/** Gradienti di brand — Luxury PIATTO (oro/bronzo), niente neon/glow forte. */
 export const gradients = {
-  cyanTeal: ['#22D3EE', '#2DD4BF'] as [string, string],
-  teal: ['#2DD4BF', '#22D3EE'] as [string, string],
-  purple: ['#A78BFA', '#7C3AED'] as [string, string],
-  green: ['#4ADE80', '#2DD4BF'] as [string, string],
-  amber: ['#F5B544', '#B8860B'] as [string, string],
-  pink: ['#FB7185', '#A78BFA'] as [string, string],
+  cyanTeal: ['#cda24f', '#b8893f'] as [string, string],
+  teal: ['#cda24f', '#b8893f'] as [string, string],
+  purple: ['#b8893f', '#cda24f'] as [string, string],
+  green: ['#9bc08a', '#7fa06f'] as [string, string],
+  amber: ['#cda24f', '#b8893f'] as [string, string],
+  pink: ['#cf8170', '#b86a5a'] as [string, string],
 };
 
-/** Font families (web via app/+html.tsx; expo-font su nativo). */
+/** Font: Manrope (web via app/+html.tsx; @expo-google-fonts/manrope su nativo). */
 export const fonts = {
-  title: '"Space Grotesk", "Inter", system-ui, sans-serif',
-  sans: '"Inter", system-ui, -apple-system, sans-serif',
-  mono: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
-  serif: '"Fraunces", "Playfair Display", Georgia, serif',
+  title: '"Manrope", system-ui, -apple-system, sans-serif',
+  sans: '"Manrope", system-ui, -apple-system, sans-serif',
+  mono: '"Manrope", ui-monospace, system-ui, sans-serif',
+  serif: '"Manrope", system-ui, -apple-system, sans-serif',
 } as const;

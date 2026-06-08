@@ -13,7 +13,7 @@ SplashScreen.preventAutoHideAsync();
 
 function RootNavigator() {
   const { isLoading, isAuthenticated, user } = useAuth();
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const segments = useSegments();
   const router = useRouter();
   const [fontsLoaded, fontsError] = useIconFonts();
@@ -40,7 +40,7 @@ function RootNavigator() {
   if (!fontsLoaded && !fontsError) return null;
   return (
     <>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <StatusBar style="light" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }} />
     </>
   );

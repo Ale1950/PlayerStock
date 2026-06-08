@@ -80,7 +80,7 @@ export default function Login() {
             onPress={() => promptAsync()}
           >
             {busy ? (
-              <ActivityIndicator color="#FFFFFF" />
+              <ActivityIndicator color={colors.onAccent} />
             ) : (
               <Text style={styles.buttonText}>{t('login.googleButton')}</Text>
             )}
@@ -120,13 +120,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent, paddingVertical: 16, borderRadius: radius.md,
     alignItems: 'center', minHeight: 52, justifyContent: 'center',
   },
-  buttonText: { ...typography.h3, color: '#FFFFFF', fontWeight: '600' },
+  buttonText: { ...typography.h3, color: colors.onAccent, fontWeight: '600' },
   configError: { padding: spacing.md, backgroundColor: colors.bannerBg, borderRadius: radius.md, borderWidth: 1, borderColor: colors.bannerBorder },
   configErrorTitle: { ...typography.bodyBold, color: colors.warning, marginBottom: spacing.xs },
   configErrorText: { ...typography.small, color: colors.bannerText },
-  errorBox: { marginTop: spacing.lg, padding: spacing.md, backgroundColor: '#2D0F12', borderRadius: radius.md, borderWidth: 1, borderColor: colors.danger },
+  errorBox: { marginTop: spacing.lg, padding: spacing.md, backgroundColor: colors.surfaceAlt, borderRadius: radius.md, borderWidth: 1, borderColor: colors.danger },
   errorTitle: { ...typography.bodyBold, color: colors.danger, marginBottom: spacing.xs },
-  errorText: { ...typography.small, color: '#FFC9CC' },
+  errorText: { ...typography.small, color: colors.danger },
   devBox: { marginTop: spacing.xl, padding: spacing.md, backgroundColor: colors.bgElevated, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border },
   devLabel: { ...typography.small, color: colors.textMuted, marginBottom: spacing.xs },
   devValue: { ...typography.small, color: colors.accent, fontFamily: 'monospace' },

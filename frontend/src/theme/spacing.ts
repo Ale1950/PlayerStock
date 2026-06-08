@@ -18,12 +18,15 @@ export const radius = {
   sm: 6,
   md: 10,
   lg: 14,
-  card: 18,   // card standard (DESIGN_SPEC)
+  card: 16,    // card standard (DESIGN_SYSTEM: finestra radius 16)
+  window: 16,  // card "finestra" top-level (bordo lime 2px)
   pill: 999,
 } as const;
 
-/** Spessore bordo box standard (token globale: ~1.5–2px, era 1px). */
+/** Spessore bordo box standard (sotto-elementi/subtle). */
 export const borderW = 1.75;
+/** Spessore bordo finestra (card top-level, lime). */
+export const borderWindowW = 2;
 
 /**
  * Tipografia. Tre famiglie (DESIGN_SPEC):

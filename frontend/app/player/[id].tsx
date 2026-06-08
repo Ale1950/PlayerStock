@@ -238,7 +238,7 @@ export default function PlayerDetail() {
                 </Pressable>
                 <Pressable testID="trade-sell" disabled={qtyNum < 1 || owned < 1 || submitting != null} onPress={() => onTrade('sell')}
                   style={({ pressed }) => [styles.actionBtn, styles.sellBtn, (pressed || submitting === 'sell') && styles.btnPressed, (qtyNum < 1 || owned < 1 || submitting != null) && styles.btnDisabled]}>
-                  {submitting === 'sell' ? <ActivityIndicator color="#FFF" size="small" /> : <Text style={[styles.actionText, { color: '#FFF' }]}>{t('player.sell')}</Text>}
+                  {submitting === 'sell' ? <ActivityIndicator color={colors.onAccent} size="small" /> : <Text style={styles.actionText}>{t('player.sell')}</Text>}
                 </Pressable>
               </View>
             </View>

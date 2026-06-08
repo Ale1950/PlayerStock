@@ -12,7 +12,7 @@ function initials(name?: string | null): string {
 export function TeamBadge({ primary, secondary, name, size = 28 }: {
   primary?: string | null; secondary?: string | null; name?: string | null; size?: number;
 }) {
-  const bg = primary || '#222A36';
+  const bg = primary || '#2c281f';
   const ring = secondary || 'rgba(255,255,255,0.4)';
   return (
     <View style={[styles.badge, { width: size, height: size, borderRadius: size / 4, backgroundColor: bg, borderColor: ring }]}>

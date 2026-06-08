@@ -47,16 +47,16 @@ export default function TabsLayout() {
       <Tabs
         screenOptions={{
           header: () => (
-            <SafeAreaView edges={['top']} style={{ backgroundColor: colors.surface }}>
+            <SafeAreaView edges={['top']} style={{ backgroundColor: colors.barBg }}>
               <AppHeader />
               <StatusTicker />
             </SafeAreaView>
           ),
           headerShown: true,
-          tabBarActiveTintColor: colors.gold,
+          tabBarActiveTintColor: colors.accent,
           tabBarInactiveTintColor: colors.muted,
           tabBarStyle: {
-            backgroundColor: colors.surface,
+            backgroundColor: colors.barBg,
             borderTopColor: colors.border,
             borderTopWidth: 1,
             paddingTop: 6,

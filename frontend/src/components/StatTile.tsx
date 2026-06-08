@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
 
 import { useTheme } from '@/src/theme/ThemeProvider';
-import { borderW, radius, spacing, typography } from '@/src/theme/spacing';
+import { borderWindowW, radius, spacing, typography } from '@/src/theme/spacing';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -27,7 +27,7 @@ export function StatTile({
   const { colors } = useTheme();
   const grad = gradient ?? [tint, tint];
   return (
-    <View testID={testID} style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }, style]}>
+    <View testID={testID} style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.borderWindow }, style]}>
       <LinearGradient colors={grad} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topBar} />
       <View style={styles.body}>
         <View style={[styles.iconChip, { backgroundColor: tint + '22' }]}>
@@ -42,7 +42,7 @@ export function StatTile({
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: radius.card, borderWidth: borderW, overflow: 'hidden', minWidth: 150, flex: 1 },
+  card: { borderRadius: radius.window, borderWidth: borderWindowW, overflow: 'hidden', minWidth: 150, flex: 1 },
   topBar: { height: 2, width: '100%' },
   body: { padding: spacing.md, gap: 6 },
   iconChip: { width: 34, height: 34, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },

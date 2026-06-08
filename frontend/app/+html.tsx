@@ -12,12 +12,12 @@ export default function Root({ children }: PropsWithChildren) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        {/* Google Fonts — JetBrains Mono (mono), Fraunces (serif), Inter (sans) */}
+        {/* Google Fonts — Manrope (400–800), unica famiglia (DESIGN_SYSTEM) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
         />
         {/*
           Disable body scrolling on web to make ScrollView components work correctly.
@@ -42,7 +42,7 @@ export default function Root({ children }: PropsWithChildren) {
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          backgroundColor: "#0E1320",
+          backgroundColor: "#12110f",
         }}
       >
         {children}

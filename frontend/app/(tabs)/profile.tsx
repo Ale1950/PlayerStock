@@ -5,7 +5,6 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 
 import { GeometricBackground } from '@/src/components/chrome/GeometricBackground';
 import { LanguageSelector } from '@/src/components/chrome/LanguageSelector';
-import { ThemeToggle } from '@/src/components/chrome/ThemeToggle';
 import { StateView } from '@/src/components/StateView';
 import { useAuth } from '@/src/hooks/useAuth';
 import { deleteAccount } from '@/src/services/auth.service';
@@ -20,7 +19,7 @@ const eur = (v: number | null | undefined) => (v == null ? '—' : `${v >= 0 ? '
 export default function Profile() {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -124,11 +123,6 @@ export default function Profile() {
           <LanguageSelector />
         </View>
         <Text style={styles.settingHint}>{t('profile.lang_active')}</Text>
-
-        <View style={styles.row}>
-          <Text style={styles.rowLabel}>{isDark ? t('profile.theme_dark') : t('profile.theme_light')}</Text>
-          <ThemeToggle />
-        </View>
 
         <Pressable testID="profile-how-it-works" onPress={() => router.push('/how-it-works')} style={({ pressed }) => [styles.linkRow, pressed && { opacity: 0.85 }]}>
           <Text style={styles.linkRowText}>{t('guide.open')}</Text>

@@ -85,6 +85,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent, paddingVertical: 16, borderRadius: radius.md,
     alignItems: 'center', marginTop: spacing.xl, minHeight: 52, justifyContent: 'center',
   },
-  buttonText: { ...typography.h3, color: '#FFFFFF', fontWeight: '600' },
+  buttonText: { ...typography.h3, color: colors.onAccent, fontWeight: '600' },
   error: { ...typography.small, color: colors.danger, marginTop: spacing.md, textAlign: 'center' },
 });

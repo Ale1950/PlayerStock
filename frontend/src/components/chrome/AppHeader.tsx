@@ -7,16 +7,15 @@ import { useTheme } from '@/src/theme/ThemeProvider';
 import { borderW, spacing, typography } from '@/src/theme/spacing';
 import { BrandMark } from './BrandMark';
 import { LanguageSelector } from './LanguageSelector';
-import { ThemeToggle } from './ThemeToggle';
 
-/** Chrome globale: wordmark + dot stato + lingua + tema + profilo/login. */
+/** Chrome globale: wordmark + dot stato + lingua + profilo/login. */
 export function AppHeader() {
   const { colors } = useTheme();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   return (
-    <View style={[styles.bar, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+    <View style={[styles.bar, { backgroundColor: colors.barBg, borderBottomColor: colors.border }]}>
       <Pressable style={styles.brand} onPress={() => router.push('/(tabs)/home')} testID="header-brand">
         <BrandMark size={24} />
         <Text style={[typography.wordmark, { color: colors.text }]}>PLAYERSTOCK</Text>
@@ -35,7 +34,6 @@ export function AppHeader() {
           <Ionicons name="help-circle-outline" size={20} color={colors.text} />
         </Pressable>
         <LanguageSelector />
-        <ThemeToggle />
         {isAuthenticated ? (
           <Pressable
             testID="header-profile"
@@ -49,7 +47,7 @@ export function AppHeader() {
           <Pressable
             testID="header-login"
             onPress={() => router.push('/(auth)/welcome')}
-            style={({ pressed }) => [styles.loginBtn, { backgroundColor: colors.cyan }, pressed && { opacity: 0.85 }]}
+            style={({ pressed }) => [styles.loginBtn, { backgroundColor: colors.accent }, pressed && { opacity: 0.85 }]}
           >
             <Text style={[typography.monoLabel, { color: colors.onAccent }]}>LOGIN</Text>
           </Pressable>
