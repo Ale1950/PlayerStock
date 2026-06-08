@@ -1,5 +1,10 @@
 # PlayerStock — DESIGN SPEC (Fase Design · parte 1: fondamenta)
 
+> ⚠️ **SUPERSEDED da `docs/DESIGN_SYSTEM.md`** (vedi DECISIONS **D11/D12**, 2026-06-09).
+> La direzione qui sotto (**neon su nero / cyan primario / dark+light**) **non è più valida**:
+> l'identità attuale è **Luxury carbone+oro, bordo finestra lime 2px, Manrope, tema unico scuro**.
+> Documento mantenuto solo come **storico**.
+
 Fonte di verità del design. Direzione: **DARK NATIVO — neon su nero**. Marchio e icone
 **proprietari** (tema calcio + mercato). Texture geometrica **generica** (griglia), non un brand.
 NESSUN richiamo a loghi/mascotte altrui.

@@ -46,6 +46,7 @@ modello azioni "finito-duro", DR.7) → layer futuro quando la liquidità lo giu
 | 6 — Engagement | Emergent | ✅ fatta |
 | — Tuning economico + backbone dati `/api/stats/*` | **Claude Code** | 🔄 in corso |
 | — Design pass (`DESIGN_SPEC.md`) | **Claude Code** | ✅ CHIUSO (Gruppo 3b in €: Hub € + Profilo /stats/me; + Fase 2c valore €M, backfill, storico sparkline; migrazione € D7) |
+| — Identità "Luxury" (`docs/DESIGN_SYSTEM.md`) | **Claude Code** | ✅ applicata a tutte le schermate (carbone+oro, bordo finestra lime 2px, Manrope, **tema unico scuro**; D11/D12). Bento "impaginazione B" = step futuro (dipende da match-day #2 + talento #6) |
 | 7 — Abbonamento + donazioni + ads | Emergent | ⏸ RINVIATA pre-lancio |
 | 8 — Anti-cheat + hardening | **Claude Code** | ⏸ RINVIATA pre-lancio |
 | 8b — Polish UI finale | Emergent | (confluisce nel design pass) |

@@ -561,6 +561,23 @@ prodotto (gioco a € su persone reali). **3 domande per il legale**: (1) dati, 
 
 ---
 
+## D11 — Identità visiva BLOCCATA: "Luxury" (2026-06-09, Claude Code)
+Identità visiva congelata. Fonte di verità: **`docs/DESIGN_SYSTEM.md`** (sostituisce `DESIGN_SPEC.md`).
+- **Stile:** bento "impaginazione B"; palette **Luxury carbone + oro**; **bordo finestra lime 2px**; font **Manrope** (400–800).
+- **Token colore** centralizzati in `frontend/src/theme/tokens.ts` (chiavi storiche mantenute, valori rimappati — niente hex sparsi):
+  `bg #12110f · surface #1d1a16 · barBg #1a1813 · surfaceAlt #26221b · borderWindow(lime) #c6ff00 · border(subtle) #34302a · text #f3eee4 · muted #9a907f · accent(oro) #cda24f · onAccent #1d1a16 · up #9bc08a · down #cf8170 · avatarBg #2c281f · avatarFg #cda24f`.
+- **Regola FINESTRA:** card top-level = surface + bordo lime 2px + radius 16; **sotto-elementi** = border-subtle (mai lime).
+- **Bento "impaginazione B"** (home a 2 colonne: principale 2/3 + News 1/3; mobile a 1 colonna) = **STEP FUTURO**, dipende da feature non ancora presenti (match-day #2, talento #6). In questo step la home resta la **tabella mercato ri-vestita**.
+- **Scope dello step (2026-06-09):** solo grafica + applicazione identità a tutte le schermate esistenti; nessuna nuova feature di gioco.
+
+## D12 — Tema SINGOLO scuro; DESIGN_SPEC superato (2026-06-09, Claude Code)
+- L'app passa a **un solo tema** (Luxury scuro). **Ritirati** `ThemeToggle` e il tema chiaro; `ThemeProvider`
+  espone `colors` fisso (+`isDark` sempre true per compat). Rimossa la persistenza `playerstock.theme.scheme`.
+- **`DESIGN_SPEC.md` è SUPERSEDED** da `docs/DESIGN_SYSTEM.md` (mantenuto come storico; la direzione "neon su nero / cyan primario" non è più valida — superata da D11).
+- **Font su native:** invariato rispetto a prima (fallback di sistema; nessun font testo era bundlato su native). Manrope è applicato su **web** (target di deploy) via Google Fonts. Bundling Manrope su native = follow-up se/quando si punterà a build native.
+
+---
+
 ## ❓ DOMANDE APERTE (da risolvere col fondatore / terzi)
 
 | # | Domanda | Per chi | Blocca fase |
