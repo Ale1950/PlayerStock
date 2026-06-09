@@ -6,6 +6,7 @@ services:
   - type: web
     name: playerstock
     runtime: docker
+    branch: feat/run-app-web # deploy da questo branch (Dockerfile/render.yaml vivono qui, non su main). Dopo verifica → merge a main e cambia in main.
     plan: starter            # always-on (~$7/mo). NON usare free (dorme) né autoscaling.
     region: frankfurt        # EU, vicino all'Italia
     dockerfilePath: ./Dockerfile
