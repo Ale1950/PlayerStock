@@ -33,13 +33,14 @@
     "privacyLink": "Leggi la Privacy Policy"
   },
   "tabs": {
-    "home": "Mercato",
+    "home": "Home",
     "portfolio": "Portafoglio",
     "leaderboard": "Classifica",
     "wallet": "€",
     "reward": "Reward",
     "profile": "Profilo",
-    "engage": "Engage"
+    "engage": "Engage",
+    "market": "Mercato"
   },
   "home": {
     "title": "Mercato",
@@ -54,7 +55,23 @@
     "loadMore": "Carica altri",
     "col_market_value": "Val. mercato",
     "value_market": "Valore di mercato",
-    "price_quote": "Prezzo quota (€)"
+    "price_quote": "Prezzo quota (€)",
+    "dashboard_title": "La tua dashboard",
+    "matchday_title": "Match day",
+    "matchday_subtitle": "Presto: la giornata live muoverà i prezzi.",
+    "matchday_soon": "IN ARRIVO",
+    "portfolio": "Portafoglio",
+    "position": "Posizione",
+    "market": "Mercato",
+    "talent": "Talento del giorno",
+    "news_title": "News del giorno",
+    "open": "Apri",
+    "leaderboard": "Classifica",
+    "see_all": "Vedi tutto",
+    "detail": "Dettaglio",
+    "of": "su",
+    "talent_hint": "Miglior variazione di oggi",
+    "news_preview": "ANTEPRIMA"
   },
   "player": {
     "back": "Indietro",

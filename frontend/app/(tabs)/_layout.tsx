@@ -13,7 +13,8 @@ import { fonts } from '@/src/theme/tokens';
 type IconName = keyof typeof Ionicons.glyphMap;
 
 const TAB_ICON: Record<string, IconName> = {
-  home: 'stats-chart-outline',
+  home: 'grid-outline',
+  market: 'stats-chart-outline',
   portfolio: 'briefcase-outline',
   leaderboard: 'trophy-outline',
   engage: 'flame-outline',
@@ -73,6 +74,7 @@ export default function TabsLayout() {
         }}
       >
         {screen('home', t('tabs.home'))}
+        {screen('market', t('tabs.market'))}
         {screen('portfolio', t('tabs.portfolio'))}
         {screen('leaderboard', t('tabs.leaderboard'))}
         {screen('engage', t('tabs.engage'))}
