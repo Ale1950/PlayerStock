@@ -5,6 +5,8 @@
 FROM node:20-bookworm-slim AS web
 WORKDIR /web
 COPY frontend/package.json frontend/package-lock.json ./
+# il preinstall (scripts/check-pkg.js) gira durante `npm ci`: serve PRIMA di npm ci
+COPY frontend/scripts ./scripts
 RUN npm ci
 COPY frontend/ ./
 # Variabili EXPO_PUBLIC_* inlinate al build:
