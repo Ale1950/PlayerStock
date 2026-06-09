@@ -292,5 +292,6 @@ vendita (`cost_basis_sold` + `realized_pnl`). Vedi DECISIONS DD.
 Direzione e token in **`docs/DESIGN_SYSTEM.md`** (sorgente di verità; `DESIGN_SPEC.md` è SUPERSEDED).
 Identità **"Luxury"**: palette **carbone + oro**, card "finestra" con **bordo lime 2px** (radius 16),
 **tema UNICO scuro** (niente toggle/tema chiaro), font **Manrope** (400–800). Token centralizzati in
-`frontend/src/theme/tokens.ts` (niente hex sparsi). Bento "impaginazione B" (home a 2 colonne) = step
-futuro (dipende da match-day #2 e talento #6). NACKL sempre etichettato placeholder. Vedi DECISIONS **D11/D12** (storico: DG).
+`frontend/src/theme/tokens.ts` (niente hex sparsi). Home = **dashboard bento "impaginazione B"** (2 colonne web / 1 mobile: principale + "News del giorno");
+la tabella mercato è nella tab **Mercato**. Moduli reali (portafoglio/posizione/mercato/talento) da dati esistenti;
+*Match day* e *News* restano placeholder (feature #2 e feed RSS). NACKL sempre etichettato placeholder. Vedi DECISIONS **D11/D12** (storico: DG).

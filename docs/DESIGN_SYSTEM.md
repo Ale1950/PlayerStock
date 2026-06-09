@@ -35,14 +35,15 @@
 - **Sotto-elementi** (righe lista, chip, sotto-card dentro una finestra) = bordo `border` (subtle), **mai lime**.
 - Il lime è la firma visiva: usarlo con parsimonia, solo sui contenitori principali.
 
-## 3. Bento — "impaginazione B" (STEP FUTURO)
-> Non implementato in questo step. **Dipende da feature non ancora presenti:** match-day (#2) e talento (#6).
-> Oggi la home resta la tabella mercato ri-vestita Luxury.
-
-Layout target della homepage:
-- **Colonna principale 2/3:** bento con card *hero match day · portafoglio · posizione · mercato · talento*.
+## 3. Bento — "impaginazione B" (IMPLEMENTATO)
+La home è la **dashboard bento** (`app/(tabs)/home.tsx`); la tabella mercato è nella tab **Mercato** (`app/(tabs)/market.tsx`).
+- **Colonna principale 2/3:** card *hero match day · portafoglio · posizione · mercato · talento del giorno*.
 - **Colonna destra 1/3 "News del giorno":** lista di card (fonte in **oro** + titolo, link esterni).
 - **Mobile:** collassa a 1 colonna, News in fondo.
+- Pannelli = `BentoCard` (finestra lime 2px); righe interne su border-subtle.
+
+**Ancora placeholder (in attesa di feature dedicate):** *Match day* (motore giornata live, feature #2) e
+*News del giorno* (feed RSS reale). Gli altri moduli usano dati reali esistenti (Talento = best gainer da `/stats/market`).
 
 ## 4. Gradienti
 Luxury è **piatto**: niente neon/glow forte. I pochi gradienti residui usano coppie **oro/bronzo**
