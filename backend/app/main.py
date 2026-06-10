@@ -17,6 +17,7 @@ from app.modules.admin import routes as admin_routes
 from app.modules.auth import routes as auth_routes
 from app.modules.engagement import routes as engagement_routes
 from app.modules.market import routes as market_routes
+from app.modules.match_day import routes as match_day_routes
 from app.modules.player import routes as player_routes
 from app.modules.portfolio import routes as portfolio_routes
 from app.modules.reward import routes as reward_routes
@@ -84,6 +85,7 @@ def create_app() -> FastAPI:
     api.include_router(user_routes.router)
     api.include_router(player_routes.router)
     api.include_router(market_routes.router)
+    api.include_router(match_day_routes.router)
     api.include_router(portfolio_routes.router)
     api.include_router(reward_routes.router)
     api.include_router(engagement_routes.router)

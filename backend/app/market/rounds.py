@@ -95,7 +95,11 @@ async def run_round(db, *, feed: PerformanceFeedProvider, gain: float = 1.0,
     rnd = await _claim_round(db, now, min_gap_seconds)
     if rnd is None:
         return {"skipped": True, "reason": "guard", "round": await _get_round(db)}
-    athletes = await db.athletes.find({"sport_id": sport_id, "status": "ACTIVE"}).to_list(length=100_000)
+    # Esclude gli atleti in un evento Match Day LIVE (in_event): i loro prezzi sono
+    # mossi dai tick-evento, non dal round globale (no doppio movimento).
+    athletes = await db.athletes.find(
+        {"sport_id": sport_id, "status": "ACTIVE", "in_event": {"$ne": True}}
+    ).to_list(length=100_000)
 
     movers: list[dict] = []
     for a in athletes:

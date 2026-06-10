@@ -48,6 +48,7 @@ modello azioni "finito-duro", DR.7) → layer futuro quando la liquidità lo giu
 | — Design pass (`DESIGN_SPEC.md`) | **Claude Code** | ✅ CHIUSO (Gruppo 3b in €: Hub € + Profilo /stats/me; + Fase 2c valore €M, backfill, storico sparkline; migrazione € D7) |
 | — Identità "Luxury" (`docs/DESIGN_SYSTEM.md`) | **Claude Code** | ✅ applicata a tutte le schermate (carbone+oro, bordo finestra lime 2px, Manrope, **tema unico scuro**; D11/D12) |
 | — Home bento "impaginazione B" | **Claude Code** | ✅ dashboard bento (portafoglio/posizione/mercato/talento da dati esistenti); tabella mercato in tab **Mercato**. *Match day* + *News* = placeholder (feature #2 + feed RSS) |
+| — Match Day #2 (motore live) — Fase 1 backend | **Claude Code** | ✅ event generico (`kind` friendly/tournament_match, riusabile dal torneo) + slate + `run_event_tick` (motore sorpresa, prezzi condivisi, idempotente) + round globale esclude lo slate LIVE + `GET /api/match-day/current`. No leva/premi. Test `test_match_day.py`. Design: `docs/superpowers/plans/2026-06-10-tournament-and-matchday.md` |
 | 7 — Abbonamento + donazioni + ads | Emergent | ⏸ RINVIATA pre-lancio |
 | 8 — Anti-cheat + hardening | **Claude Code** | ⏸ RINVIATA pre-lancio |
 | 8b — Polish UI finale | Emergent | (confluisce nel design pass) |
