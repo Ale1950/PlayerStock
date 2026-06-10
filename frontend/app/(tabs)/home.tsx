@@ -5,6 +5,7 @@ import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-na
 
 import { BentoCard } from '@/src/components/BentoCard';
 import { GeometricBackground } from '@/src/components/chrome/GeometricBackground';
+import { NewsThumb } from '@/src/components/NewsThumb';
 import { Sparkline } from '@/src/components/Sparkline';
 import { NEWS_PLACEHOLDER } from '@/src/content/newsPlaceholder';
 import { useResponsive } from '@/src/hooks/use-responsive';
@@ -154,8 +155,11 @@ export default function Home() {
           key={i} onPress={() => Linking.openURL(n.url)}
           style={[styles.newsRow, i < arr.length - 1 && styles.moverBorder]}
         >
-          <Text style={styles.newsSource}>{n.source}</Text>
-          <Text style={styles.newsTitle}>{n.title}</Text>
+          <NewsThumb icon={n.icon} index={i} />
+          <View style={styles.newsText}>
+            <Text style={styles.newsSource}>{n.source}</Text>
+            <Text style={styles.newsTitle}>{n.title}</Text>
+          </View>
         </Pressable>
       ))}
     </BentoCard>
@@ -220,7 +224,8 @@ const makeStyles = (colors: ThemeColors) => StyleSheet.create({
   talentName: { ...typography.bodyBold, color: colors.text },
   // news
   previewPill: { alignSelf: 'flex-start', backgroundColor: colors.surfaceAlt, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 3, borderWidth: borderW, borderColor: colors.border },
-  newsRow: { paddingVertical: 10, gap: 2 },
+  newsRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: 10 },
+  newsText: { flex: 1, gap: 2 },
   newsSource: { ...typography.monoLabel, fontSize: 10, color: colors.accent },
   newsTitle: { ...typography.body, color: colors.text },
   disclaimer: { ...typography.caption, color: colors.muted, textAlign: 'center', marginTop: spacing.md },
