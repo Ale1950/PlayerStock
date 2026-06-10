@@ -13,6 +13,7 @@ import {
   getLeaderboard, getPortfolio, getPriceHistory,
   type LeaderboardResponse, type PortfolioResponse,
 } from '@/src/services/portfolio.service';
+import { getCurrentMatchDay, type MatchDayState } from '@/src/services/matchday.service';
 import { getMarketOverview, type MarketOverview } from '@/src/services/stats.service';
 import { useTheme } from '@/src/theme/ThemeProvider';
 import { type ThemeColors } from '@/src/theme/tokens';
@@ -31,6 +32,7 @@ export default function Home() {
   const [portfolio, setPortfolio] = useState<PortfolioResponse | null>(null);
   const [rank, setRank] = useState<LeaderboardResponse | null>(null);
   const [market, setMarket] = useState<MarketOverview | null>(null);
+  const [matchDay, setMatchDay] = useState<MatchDayState | null>(null);
   const [talentSpark, setTalentSpark] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,6 +41,7 @@ export default function Home() {
     setLoading(true);
     getPortfolio().then((d) => active && setPortfolio(d)).catch(() => {});
     getLeaderboard(50).then((d) => active && setRank(d)).catch(() => {});
+    getCurrentMatchDay().then((m) => active && setMatchDay(m)).catch(() => {});
     getMarketOverview().then(async (d) => {
       if (!active) return;
       setMarket(d);
@@ -54,14 +57,19 @@ export default function Home() {
   const fallback = () => <Text style={styles.fallback}>{loading ? '…' : '—'}</Text>;
 
   // ── moduli ──────────────────────────────────────────────────────────────
+  const mdLive = matchDay?.live === true;
   const MatchDayHero = (
-    <BentoCard testID="home-matchday">
-      <View style={styles.soonRow}>
-        <View style={styles.soonPill}><Text style={styles.soonTxt}>{t('home.matchday_soon')}</Text></View>
-      </View>
-      <Text style={styles.heroTitle}>{t('home.matchday_title')}</Text>
-      <Text style={styles.heroSub}>{t('home.matchday_subtitle')}</Text>
-    </BentoCard>
+    <Pressable onPress={() => router.push('/match-day')} testID="home-matchday">
+      <BentoCard>
+        <View style={styles.soonRow}>
+          {mdLive
+            ? <View style={styles.liveBadge}><Text style={styles.liveBadgeTxt}>{t('matchday.live')}</Text></View>
+            : <View style={styles.soonPill}><Text style={styles.soonTxt}>{t('home.matchday_soon')}</Text></View>}
+        </View>
+        <Text style={styles.heroTitle}>{t('home.matchday_title')}</Text>
+        <Text style={styles.heroSub}>{mdLive ? t('matchday.live_sub') : t('home.matchday_subtitle')}</Text>
+      </BentoCard>
+    </Pressable>
   );
 
   const PortfolioMini = (
@@ -204,6 +212,8 @@ const makeStyles = (colors: ThemeColors) => StyleSheet.create({
   soonRow: { flexDirection: 'row' },
   soonPill: { backgroundColor: colors.surfaceAlt, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 3, borderWidth: borderW, borderColor: colors.border },
   soonTxt: { ...typography.monoLabel, fontSize: 9, color: colors.muted },
+  liveBadge: { alignSelf: 'flex-start', backgroundColor: colors.accent, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 3 },
+  liveBadgeTxt: { ...typography.monoLabel, fontSize: 9, color: colors.onAccent },
   heroTitle: { ...typography.h2, color: colors.text },
   heroSub: { ...typography.small, color: colors.muted },
   // metriche

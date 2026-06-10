@@ -227,7 +227,8 @@
     "confirm": "Conferma",
     "retry": "Riprova",
     "loading": "Caricamento...",
-    "error_generic": "Si è verificato un errore. Riprova."
+    "error_generic": "Si è verificato un errore. Riprova.",
+    "back": "Indietro"
   },
   "error": {
     "auth.missing_token": "Effettua l'accesso per continuare.",
@@ -271,5 +272,15 @@
     "pred_down": "Scenderà",
     "no_predictions": "Nessuna predizione. Vai al Mercato per crearne una.",
     "reward_note": "I NACKL guadagnati qui sono separati dai € del trading e non possono essere usati per comprare azioni."
+  },
+  "matchday": {
+    "title": "Match Day",
+    "live": "LIVE",
+    "live_sub": "Evento in corso — tocca per entrare",
+    "tick": "Tick",
+    "ends_in": "la finestra si sta chiudendo",
+    "players": "GIOCATORI IN CAMPO",
+    "soon_title": "Match day — in arrivo",
+    "soon_body": "Nessun evento in corso. Presto: la giornata live muoverà i prezzi in tempo reale."
   }
 }
